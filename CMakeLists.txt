@@ -17,25 +17,45 @@ add_subdirectory(vendor/glm)
 find_package(OpenGL REQUIRED)
 
 add_executable(LechugaEngine
-    src/main.cpp
+    src/main.cc
 
-    #src/core/Logger.cpp
-    #src/core/Timer.cpp
-    #src/core/FileSystem.cpp
+    src/core/Logger.cc
+    src/core/Timer.cc
+    src/core/FileSystem.cc
+    src/core/ResourceManager.cc
+    src/core/OBJParser.cc
+    src/core/MTLParser.cc
+    src/core/stb_image_impl.cc
 
-    #src/window/Window.cpp
-    #src/input/InputManager.cpp
+    src/application/Application.cc
+    src/window/Window.cc
+    src/input/InputManager.cc
 
-    #src/renderer/Renderer.cpp
-    #src/renderer/ShaderProgram.cpp
-    #src/renderer/Mesh.cpp
+    src/scene/Camera.cc
+    src/scene/Scene.cc
+
+    src/renderer/Renderer.cc
+    src/renderer/ShaderProgram.cc
+    src/renderer/Mesh.cc
+    src/renderer/Texture.cc
 
     vendor/glad/src/glad.c
 )
 
 target_include_directories(LechugaEngine PRIVATE
     src/
+    src/application/
+    src/core/
+    src/input/
+    src/renderer/
+    src/scene/
+    src/window/
+)
+
+target_include_directories(LechugaEngine SYSTEM PRIVATE
     vendor/glad/include
+    vendor/SDL3/include
+    vendor/stb
 )
 
 target_link_libraries(LechugaEngine PRIVATE
