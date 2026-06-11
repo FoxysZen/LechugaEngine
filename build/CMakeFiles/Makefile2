@@ -132,8 +132,8 @@ vendor/glm/glm/clean: vendor/glm/glm/CMakeFiles/glm.dir/clean
 # Target rules for target CMakeFiles/LechugaEngine.dir
 
 # All Build rule for target.
-CMakeFiles/LechugaEngine.dir/all: vendor/SDL3/CMakeFiles/SDL3-shared.dir/all
 CMakeFiles/LechugaEngine.dir/all: vendor/glm/glm/CMakeFiles/glm.dir/all
+CMakeFiles/LechugaEngine.dir/all: vendor/SDL3/CMakeFiles/SDL3-shared.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target LechugaEngine"

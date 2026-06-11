@@ -496,9 +496,11 @@ CMakeFiles/LechugaEngine.dir/src/main.cc.o: \
  /home/noru/Documents/Projects/LechugaEngine/src/core/ResourceManager.h \
  /home/noru/Documents/Projects/LechugaEngine/src/core/MTLParser.h \
  /home/noru/Documents/Projects/LechugaEngine/src/core/OBJParser.h \
+ /home/noru/Documents/Projects/LechugaEngine/src/renderer/Skydome.h \
  /home/noru/Documents/Projects/LechugaEngine/src/scene/TransformComponent.h \
  /home/noru/Documents/Projects/LechugaEngine/src/scene/Scene.h \
  /home/noru/Documents/Projects/LechugaEngine/src/scene/EntityID.h \
+ /home/noru/Documents/Projects/LechugaEngine/src/core/SceneLoader.h \
  /home/noru/Documents/Projects/LechugaEngine/src/core/Timer.h \
  /usr/include/c++/13/chrono \
  /home/noru/Documents/Projects/LechugaEngine/src/window/Window.h

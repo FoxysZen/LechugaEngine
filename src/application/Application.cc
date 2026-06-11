@@ -19,6 +19,16 @@ bool Application::init()
     resourceManager = std::make_unique<ResourceManager>();
     Logger::info("Creating renderer...");
     renderer = std::make_unique<Renderer>();
+
+    Logger::info("Creating skydome...");
+    skydome = std::make_unique<Skydome>();
+    skydome->init(
+        resourceManager->loadShader(Config::getInstance().skydomeVertShader, 
+            Config::getInstance().skydomeFragShader),
+        resourceManager->loadTexture(Config::getInstance().skydomeTexture)
+    );
+    renderer->setSkydome(skydome.get());
+
     Logger::info("Creating camera...");
     float fov = Config::getInstance().cameraFov;
     float zN = Config::getInstance().cameraNear;
@@ -30,9 +40,10 @@ bool Application::init()
     Logger::info("Creating scene...");
     scene = std::make_unique<Scene>();
 
-    Logger::info("Creating light...");
+    /*Logger::info("Creating light...");
     EntityID light = scene->createEntity();
     scene->addLight(light, {glm::vec3(5.0f, 5.0f, 5.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f});
+    scene->addLight(scene->createEntity(), {glm::vec3(-5.0f, 5.0f, 5.0f), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f});
 
     // Test object
     Logger::info("Creating entity...");
@@ -43,11 +54,25 @@ bool Application::init()
     Logger::info("Entity created");
     scene->addTransform(entity, {glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f)});
     Logger::info("Transform added");
-    Mesh* mesh = resourceManager->loadMesh("assets/meshes/character.obj");
+    Mesh* meshLod0 = resourceManager->loadMesh("assets/meshes/character_lod0.obj");
+    Mesh* meshLod1 = resourceManager->loadMesh("assets/meshes/character_lod1.obj");
+    Mesh* meshLod2 = resourceManager->loadMesh("assets/meshes/character_lod2.obj");
     Texture* tex0 = resourceManager->loadTexture("assets/textures/char_body_texture.png");
     Texture* tex1 = resourceManager->loadTexture("assets/textures/char_face_texture.png");
-    scene->addMesh(entity, {mesh, shader, {tex0, tex1}});
-    Logger::info("Mesh added");
+    scene->addMesh(entity, {
+        {
+            {meshLod0, 10.0f},
+            {meshLod1, 50.0f},
+            {meshLod2, FLT_MAX}
+        },
+        shader,
+        {tex0, tex1}
+    });
+    Logger::info("Mesh added");*/
+
+    Logger::info("CreatingScene");
+    sceneLoader = std::make_unique<SceneLoader>(scene.get(), resourceManager.get());
+    sceneLoader->loadScene("testScene.json");
 
     Logger::info("Adding subscriptions");
     // Cerrar la ventana cuando se publique QuitEvent
@@ -87,7 +112,7 @@ void Application::run()
         input->pollEvents();
 
         camera->update(input.get(), deltaTime);
-        renderer->beginFrame(camera.get());
+        renderer->beginFrame(camera.get(), deltaTime);
 
         scene->render(renderer.get());
 

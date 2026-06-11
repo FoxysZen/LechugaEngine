@@ -195,10 +195,24 @@ CMakeFiles/LechugaEngine.dir/src/core/Config.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LechugaEngine.dir/src/core/Config.cc.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/noru/Documents/Projects/LechugaEngine/src/core/Config.cc -o CMakeFiles/LechugaEngine.dir/src/core/Config.cc.s
 
+CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
+CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/core/SceneLoader.cc
+CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.o -MF CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/core/SceneLoader.cc
+
+CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/noru/Documents/Projects/LechugaEngine/src/core/SceneLoader.cc > CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.i
+
+CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/noru/Documents/Projects/LechugaEngine/src/core/SceneLoader.cc -o CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.s
+
 CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
 CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/application/Application.cc
 CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o -MF CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/application/Application.cc
 
 CMakeFiles/LechugaEngine.dir/src/application/Application.cc.i: cmake_force
@@ -212,7 +226,7 @@ CMakeFiles/LechugaEngine.dir/src/application/Application.cc.s: cmake_force
 CMakeFiles/LechugaEngine.dir/src/window/Window.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
 CMakeFiles/LechugaEngine.dir/src/window/Window.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/window/Window.cc
 CMakeFiles/LechugaEngine.dir/src/window/Window.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/LechugaEngine.dir/src/window/Window.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/LechugaEngine.dir/src/window/Window.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/window/Window.cc.o -MF CMakeFiles/LechugaEngine.dir/src/window/Window.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/window/Window.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/window/Window.cc
 
 CMakeFiles/LechugaEngine.dir/src/window/Window.cc.i: cmake_force
@@ -226,7 +240,7 @@ CMakeFiles/LechugaEngine.dir/src/window/Window.cc.s: cmake_force
 CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
 CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/input/InputManager.cc
 CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.o -MF CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/input/InputManager.cc
 
 CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.i: cmake_force
@@ -240,7 +254,7 @@ CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.s: cmake_force
 CMakeFiles/LechugaEngine.dir/src/scene/Camera.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
 CMakeFiles/LechugaEngine.dir/src/scene/Camera.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/scene/Camera.cc
 CMakeFiles/LechugaEngine.dir/src/scene/Camera.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/LechugaEngine.dir/src/scene/Camera.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/LechugaEngine.dir/src/scene/Camera.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/scene/Camera.cc.o -MF CMakeFiles/LechugaEngine.dir/src/scene/Camera.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/scene/Camera.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/scene/Camera.cc
 
 CMakeFiles/LechugaEngine.dir/src/scene/Camera.cc.i: cmake_force
@@ -254,7 +268,7 @@ CMakeFiles/LechugaEngine.dir/src/scene/Camera.cc.s: cmake_force
 CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
 CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/scene/Scene.cc
 CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.o -MF CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/scene/Scene.cc
 
 CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.i: cmake_force
@@ -268,7 +282,7 @@ CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.s: cmake_force
 CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
 CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/renderer/Renderer.cc
 CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o -MF CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/renderer/Renderer.cc
 
 CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.i: cmake_force
@@ -282,7 +296,7 @@ CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.s: cmake_force
 CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
 CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/renderer/ShaderProgram.cc
 CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.o -MF CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/renderer/ShaderProgram.cc
 
 CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.i: cmake_force
@@ -296,7 +310,7 @@ CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.s: cmake_force
 CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
 CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/renderer/Mesh.cc
 CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o -MF CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/renderer/Mesh.cc
 
 CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.i: cmake_force
@@ -310,7 +324,7 @@ CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.s: cmake_force
 CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
 CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/renderer/Texture.cc
 CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.o -MF CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/renderer/Texture.cc
 
 CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.i: cmake_force
@@ -324,7 +338,7 @@ CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.s: cmake_force
 CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
 CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/renderer/Frustum.cc
 CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o -MF CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/renderer/Frustum.cc
 
 CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.i: cmake_force
@@ -335,10 +349,24 @@ CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/noru/Documents/Projects/LechugaEngine/src/renderer/Frustum.cc -o CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.s
 
+CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.o: CMakeFiles/LechugaEngine.dir/flags.make
+CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.o: /home/noru/Documents/Projects/LechugaEngine/src/renderer/Skydome.cc
+CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.o -MF CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.o.d -o CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.o -c /home/noru/Documents/Projects/LechugaEngine/src/renderer/Skydome.cc
+
+CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/noru/Documents/Projects/LechugaEngine/src/renderer/Skydome.cc > CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.i
+
+CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/noru/Documents/Projects/LechugaEngine/src/renderer/Skydome.cc -o CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.s
+
 CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: CMakeFiles/LechugaEngine.dir/flags.make
 CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Projects/LechugaEngine/vendor/glad/src/glad.c
 CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: CMakeFiles/LechugaEngine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building C object CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building C object CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o -MF CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o.d -o CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o -c /home/noru/Documents/Projects/LechugaEngine/vendor/glad/src/glad.c
 
 CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.i: cmake_force
@@ -360,6 +388,7 @@ LechugaEngine_OBJECTS = \
 "CMakeFiles/LechugaEngine.dir/src/core/MTLParser.cc.o" \
 "CMakeFiles/LechugaEngine.dir/src/core/stb_image_impl.cc.o" \
 "CMakeFiles/LechugaEngine.dir/src/core/Config.cc.o" \
+"CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.o" \
 "CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o" \
 "CMakeFiles/LechugaEngine.dir/src/window/Window.cc.o" \
 "CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.o" \
@@ -370,6 +399,7 @@ LechugaEngine_OBJECTS = \
 "CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o" \
 "CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.o" \
 "CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o" \
+"CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.o" \
 "CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o"
 
 # External object files for target LechugaEngine
@@ -384,6 +414,7 @@ LechugaEngine: CMakeFiles/LechugaEngine.dir/src/core/OBJParser.cc.o
 LechugaEngine: CMakeFiles/LechugaEngine.dir/src/core/MTLParser.cc.o
 LechugaEngine: CMakeFiles/LechugaEngine.dir/src/core/stb_image_impl.cc.o
 LechugaEngine: CMakeFiles/LechugaEngine.dir/src/core/Config.cc.o
+LechugaEngine: CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.o
 LechugaEngine: CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o
 LechugaEngine: CMakeFiles/LechugaEngine.dir/src/window/Window.cc.o
 LechugaEngine: CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.o
@@ -394,6 +425,7 @@ LechugaEngine: CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.o
 LechugaEngine: CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o
 LechugaEngine: CMakeFiles/LechugaEngine.dir/src/renderer/Texture.cc.o
 LechugaEngine: CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o
+LechugaEngine: CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.o
 LechugaEngine: CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o
 LechugaEngine: CMakeFiles/LechugaEngine.dir/build.make
 LechugaEngine: vendor/SDL3/libSDL3.so.0.5.0
@@ -402,7 +434,7 @@ LechugaEngine: /usr/lib/x86_64-linux-gnu/libGLX.so
 LechugaEngine: /usr/lib/x86_64-linux-gnu/libOpenGL.so
 LechugaEngine: /home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/src/dynapi/SDL_dynapi.sym
 LechugaEngine: CMakeFiles/LechugaEngine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Linking CXX executable LechugaEngine"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/noru/Documents/Projects/LechugaEngine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Linking CXX executable LechugaEngine"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/LechugaEngine.dir/link.txt --verbose=$(VERBOSE)
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold "Copiando assets..."
 	/usr/bin/cmake -E copy_directory /home/noru/Documents/Projects/LechugaEngine/assets /home/noru/Documents/Projects/LechugaEngine/build/assets

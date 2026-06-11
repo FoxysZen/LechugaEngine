@@ -13,5 +13,10 @@
     },
     "renderer": {
         "clearColor": [0.04, 0.32, 0.30, 1.0]
+    },
+    "skydome": {
+        "texture": "assets/textures/sky.png",
+        "vertexShader": "assets/shaders/skydome.vert",
+        "fragmentShader": "assets/shaders/skydome.frag"
     }
 }

@@ -9,6 +9,7 @@
 #include <ResourceManager.h>
 #include <SDL3/SDL.h>
 #include <ShaderProgram.h>
+#include <Skydome.h>
 #include <TransformComponent.h>
 
 class Renderer
@@ -17,11 +18,12 @@ class Renderer
         Renderer();
         ~Renderer();
 
-        void beginFrame(Camera *camera);
+        void beginFrame(Camera *camera, float deltaTime);
         void render(const MeshComponent &mesh, 
                     const TransformComponent &transform);
         void setLights(const std::vector<LightComponent>& lights);
         void onResize(int width, int height);
+        void setSkydome(Skydome* skydome);
     
     private:
         glm::mat4 currentView;
@@ -32,4 +34,5 @@ class Renderer
         glm::vec4 BGcolor = glm::vec4(0.04f, 0.32f, 0.30f, 1.0f);
 
         Frustum frustum;
+        Skydome* skydome = nullptr;
 };

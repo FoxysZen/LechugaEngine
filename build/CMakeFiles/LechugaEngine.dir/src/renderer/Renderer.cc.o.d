@@ -495,4 +495,5 @@ CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o: \
  /home/noru/Documents/Projects/LechugaEngine/src/core/ResourceManager.h \
  /home/noru/Documents/Projects/LechugaEngine/src/core/MTLParser.h \
  /home/noru/Documents/Projects/LechugaEngine/src/core/OBJParser.h \
+ /home/noru/Documents/Projects/LechugaEngine/src/renderer/Skydome.h \
  /home/noru/Documents/Projects/LechugaEngine/src/scene/TransformComponent.h

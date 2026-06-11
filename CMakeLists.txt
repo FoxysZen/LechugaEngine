@@ -27,6 +27,7 @@ add_executable(LechugaEngine
     src/core/MTLParser.cc
     src/core/stb_image_impl.cc
     src/core/Config.cc
+    src/core/SceneLoader.cc
 
     src/application/Application.cc
     src/window/Window.cc
@@ -40,6 +41,7 @@ add_executable(LechugaEngine
     src/renderer/Mesh.cc
     src/renderer/Texture.cc
     src/renderer/Frustum.cc
+    src/renderer/Skydome.cc
 
     vendor/glad/src/glad.c
 )

@@ -21,4 +21,8 @@ void Config::load(const std::string& path)
         json["renderer"]["clearColor"][2],
         json["renderer"]["clearColor"][3]
     );
+
+    skydomeTexture = json["skydome"]["texture"];
+    skydomeVertShader = json["skydome"]["vertexShader"];
+    skydomeFragShader = json["skydome"]["fragmentShader"];
 }

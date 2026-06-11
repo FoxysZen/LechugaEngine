@@ -350,6 +350,30 @@ src/core/ResourceManager.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/core/ResourceManager.cc.s
 .PHONY : src/core/ResourceManager.cc.s
 
+src/core/SceneLoader.o: src/core/SceneLoader.cc.o
+.PHONY : src/core/SceneLoader.o
+
+# target to build an object file
+src/core/SceneLoader.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.o
+.PHONY : src/core/SceneLoader.cc.o
+
+src/core/SceneLoader.i: src/core/SceneLoader.cc.i
+.PHONY : src/core/SceneLoader.i
+
+# target to preprocess a source file
+src/core/SceneLoader.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.i
+.PHONY : src/core/SceneLoader.cc.i
+
+src/core/SceneLoader.s: src/core/SceneLoader.cc.s
+.PHONY : src/core/SceneLoader.s
+
+# target to generate assembly for a file
+src/core/SceneLoader.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/core/SceneLoader.cc.s
+.PHONY : src/core/SceneLoader.cc.s
+
 src/core/Timer.o: src/core/Timer.cc.o
 .PHONY : src/core/Timer.o
 
@@ -542,6 +566,30 @@ src/renderer/ShaderProgram.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/renderer/ShaderProgram.cc.s
 .PHONY : src/renderer/ShaderProgram.cc.s
 
+src/renderer/Skydome.o: src/renderer/Skydome.cc.o
+.PHONY : src/renderer/Skydome.o
+
+# target to build an object file
+src/renderer/Skydome.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.o
+.PHONY : src/renderer/Skydome.cc.o
+
+src/renderer/Skydome.i: src/renderer/Skydome.cc.i
+.PHONY : src/renderer/Skydome.i
+
+# target to preprocess a source file
+src/renderer/Skydome.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.i
+.PHONY : src/renderer/Skydome.cc.i
+
+src/renderer/Skydome.s: src/renderer/Skydome.cc.s
+.PHONY : src/renderer/Skydome.s
+
+# target to generate assembly for a file
+src/renderer/Skydome.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/renderer/Skydome.cc.s
+.PHONY : src/renderer/Skydome.cc.s
+
 src/renderer/Texture.o: src/renderer/Texture.cc.o
 .PHONY : src/renderer/Texture.o
 
@@ -696,6 +744,9 @@ help:
 	@echo "... src/core/ResourceManager.o"
 	@echo "... src/core/ResourceManager.i"
 	@echo "... src/core/ResourceManager.s"
+	@echo "... src/core/SceneLoader.o"
+	@echo "... src/core/SceneLoader.i"
+	@echo "... src/core/SceneLoader.s"
 	@echo "... src/core/Timer.o"
 	@echo "... src/core/Timer.i"
 	@echo "... src/core/Timer.s"
@@ -720,6 +771,9 @@ help:
 	@echo "... src/renderer/ShaderProgram.o"
 	@echo "... src/renderer/ShaderProgram.i"
 	@echo "... src/renderer/ShaderProgram.s"
+	@echo "... src/renderer/Skydome.o"
+	@echo "... src/renderer/Skydome.i"
+	@echo "... src/renderer/Skydome.s"
 	@echo "... src/renderer/Texture.o"
 	@echo "... src/renderer/Texture.i"
 	@echo "... src/renderer/Texture.s"

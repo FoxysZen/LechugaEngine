@@ -27,6 +27,9 @@ class Config
         float cameraSensitivity;
         glm::vec4 clearColor;
 
+        std::string skydomeTexture;
+        std::string skydomeVertShader, skydomeFragShader;
+
     private:
         Config() {}
 };

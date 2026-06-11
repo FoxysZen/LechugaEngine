@@ -3,8 +3,13 @@
 #include <ShaderProgram.h>
 #include <Texture.h>
 
+struct LOD {
+    Mesh* mesh;
+    float maxDistance;
+};
+
 struct MeshComponent {
-    Mesh *mesh;
+    std::vector<LOD> lods;
     ShaderProgram *shader;
     std::vector<Texture*> textures;
 };
