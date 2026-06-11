@@ -1,11 +1,11 @@
 #include <Camera.h>
 
-Camera::Camera(int width, int height)
+Camera::Camera(int width, int height, float _fov, float _zN, float _zF)
 {
     ra = (float)width / (float)height;
-    fov = 45.0f;
-    zN = 0.1f;
-    zF = 1000.0f;
+    fov = _fov;
+    zN = _zN;
+    zF = _zF;
 }
 
 Camera::~Camera()
@@ -39,6 +39,9 @@ void Camera::update(InputManager *input, float deltaTime)
     {
         position += right * speed * deltaTime;
     }
+
+    EventSystem::getInstance().publish(CameraUpdatedEvent{
+            getProjectionMatrix() * getViewMatrix()});
 }
 
 void Camera::updateVectors()
@@ -69,4 +72,6 @@ glm::vec3 Camera::getPosition()
 void Camera::setAspectRatio(int width, int height)
 {
     ra = (float)width / (float)height;
+    EventSystem::getInstance().publish(CameraUpdatedEvent{
+            getProjectionMatrix() * getViewMatrix()});
 }

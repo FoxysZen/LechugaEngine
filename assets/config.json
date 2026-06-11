@@ -1,0 +1,17 @@
+{
+    "window": {
+        "width": 1280,
+        "height": 720,
+        "title": "LechugaEngine"
+    },
+    "camera": {
+        "fov": 45.0,
+        "near": 0.1,
+        "far": 1000.0,
+        "speed": 5.0,
+        "sensitivity": 0.1
+    },
+    "renderer": {
+        "clearColor": [0.04, 0.32, 0.30, 1.0]
+    }
+}

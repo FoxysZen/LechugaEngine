@@ -1,5 +1,6 @@
 #pragma once
 #include <Camera.h>
+#include <Config.h>
 #include <Frustum.h>
 #include <glad/glad.h>
 #include <LightComponent.h>
@@ -27,6 +28,8 @@ class Renderer
         glm::mat4 currentProj;
         glm::vec3 currentViewPos;
         std::vector<LightComponent> currentLights;
+
+        glm::vec4 BGcolor = glm::vec4(0.04f, 0.32f, 0.30f, 1.0f);
 
         Frustum frustum;
 };

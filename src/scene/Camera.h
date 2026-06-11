@@ -1,4 +1,7 @@
 #pragma once
+#include <Config.h>
+#include <Events.h>
+#include <EventSystem.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <InputManager.h>
@@ -7,7 +10,7 @@
 class Camera
 {
     public:
-        Camera(int width, int height);
+        Camera(int width, int height, float fov, float zN, float zF);
         ~Camera();
 
         void update(InputManager *input, float deltaTime);

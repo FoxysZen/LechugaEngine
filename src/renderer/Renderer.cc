@@ -2,7 +2,10 @@
 
 Renderer::Renderer()
 {
-
+    EventSystem::getInstance().subscribe<CameraUpdatedEvent>
+        ([this](const CameraUpdatedEvent& e) {
+            frustum.update(e.projView);
+    });
 }
 
 Renderer::~Renderer()
@@ -16,9 +19,9 @@ void Renderer::beginFrame(Camera *camera)
     currentProj = camera->getProjectionMatrix();
     currentViewPos = camera->getPosition();
     
-    frustum.update(currentProj * currentView);
-    
-    glClearColor(0.04f, 0.32f, 0.30f, 1.0f);
+    BGcolor = Config::getInstance().clearColor;
+
+    glClearColor(BGcolor.r, BGcolor.g, BGcolor.b, BGcolor.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
@@ -29,9 +32,20 @@ void Renderer::beginFrame(Camera *camera)
 
 void Renderer::render(const MeshComponent &mesh, const TransformComponent &transform)
 {
-    glm::vec3 worldCenter = glm::vec3(transform.getModelMatrix() * 
-        glm::vec4(mesh.mesh->getBoundsCenter(), 1.0f));
-    if (!frustum.isSphereInside(worldCenter, mesh.mesh->getBoundsRadius()))
+    glm::mat4 model = transform.getModelMatrix();
+    glm::vec3 worldCenter = glm::vec3(model * glm::vec4(
+            mesh.mesh->getBoundsCenter(), 1.0f));
+
+    glm::vec3 scale = glm::vec3(
+        glm::length(glm::vec3(model[0])),
+        glm::length(glm::vec3(model[1])),
+        glm::length(glm::vec3(model[2]))
+    );
+
+    float worldRadius = mesh.mesh->getBoundsRadius() * glm::max(
+            scale.x, glm::max(scale.y, scale.z));
+
+    if (!frustum.isSphereInside(worldCenter, worldRadius))
     {
         return;
     }

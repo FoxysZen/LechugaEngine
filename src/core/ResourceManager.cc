@@ -21,6 +21,7 @@ Mesh* ResourceManager::loadMesh(std::string path)
         Texture* texture = loadTexture("assets/textures/" + texPath);
         mesh->addSubMesh(vertices, texture);
     }
+    mesh->calculateBounds();
     
     meshes[path] = mesh;
     return mesh;

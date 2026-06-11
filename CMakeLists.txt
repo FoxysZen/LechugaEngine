@@ -26,6 +26,7 @@ add_executable(LechugaEngine
     src/core/OBJParser.cc
     src/core/MTLParser.cc
     src/core/stb_image_impl.cc
+    src/core/Config.cc
 
     src/application/Application.cc
     src/window/Window.cc
@@ -57,6 +58,7 @@ target_include_directories(LechugaEngine SYSTEM PRIVATE
     vendor/glad/include
     vendor/SDL3/include
     vendor/stb
+    vendor/nlohmann
 )
 
 target_link_libraries(LechugaEngine PRIVATE

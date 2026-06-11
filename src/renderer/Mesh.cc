@@ -43,7 +43,6 @@ void Mesh::addSubMesh(std::vector<float> vertices, Texture* texture)
     glEnableVertexAttribArray(2);
     
     subMeshes.push_back(sub);
-    calculateBounds();
 }
 
 void Mesh::calculateBounds()

@@ -4,21 +4,22 @@ InputManager::InputManager() {}
 
 InputManager::~InputManager() {}
 
-bool InputManager::pollEvents()
+void InputManager::pollEvents()
 {   
     SDL_Event event;
-    bool state = true;
     while (SDL_PollEvent(&event))
     {
         switch (event.type)
         {
             case SDL_EVENT_QUIT:
-                state = false;
+                EventSystem::getInstance().publish(QuitEvent{});
                 break;
             case SDL_EVENT_WINDOW_RESIZED:
                 windowResized = true;
                 newWidth = event.window.data1;
                 newHeight = event.window.data2;
+                EventSystem::getInstance().publish(
+                        WindowResizedEvent{newWidth, newHeight});
                 break;
             case SDL_EVENT_MOUSE_MOTION:
                 mouseX = event.motion.xrel;
@@ -26,9 +27,13 @@ bool InputManager::pollEvents()
                 break;
             case SDL_EVENT_KEY_DOWN:
                 keyState[event.key.key] = true;
+                EventSystem::getInstance().publish(
+                        KeyPressedEvent{event.key.key});
                 break;
             case SDL_EVENT_KEY_UP:
                 keyState[event.key.key] = false;
+                EventSystem::getInstance().publish(
+                        KeyReleasedEvent{event.key.key});
                 break;
             default:
             //Logger::info("Window: Unhanheld event.");
@@ -36,8 +41,6 @@ bool InputManager::pollEvents()
         }
     }
     SDL_GetRelativeMouseState(&mouseX, &mouseY);
-    
-    return state;
 }
 
 bool InputManager::isKeyDown(SDL_Keycode key)

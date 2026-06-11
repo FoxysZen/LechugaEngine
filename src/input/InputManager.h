@@ -1,4 +1,6 @@
 #pragma once
+#include <Events.h>
+#include <EventSystem.h>
 #include <glm/glm.hpp>
 #include <Logger.h>
 #include <memory>
@@ -11,7 +13,7 @@ class InputManager
         InputManager();
         ~InputManager();
 
-        bool pollEvents();
+        void pollEvents();
         bool isKeyDown(SDL_Keycode key);
         bool wasWindowResized();
         void resetWindowResized();

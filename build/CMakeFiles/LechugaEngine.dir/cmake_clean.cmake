@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o"
   "CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o.d"
+  "CMakeFiles/LechugaEngine.dir/src/core/Config.cc.o"
+  "CMakeFiles/LechugaEngine.dir/src/core/Config.cc.o.d"
   "CMakeFiles/LechugaEngine.dir/src/core/FileSystem.cc.o"
   "CMakeFiles/LechugaEngine.dir/src/core/FileSystem.cc.o.d"
   "CMakeFiles/LechugaEngine.dir/src/core/Logger.cc.o"
@@ -19,6 +21,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/LechugaEngine.dir/src/input/InputManager.cc.o.d"
   "CMakeFiles/LechugaEngine.dir/src/main.cc.o"
   "CMakeFiles/LechugaEngine.dir/src/main.cc.o.d"
+  "CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o"
+  "CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o.d"
   "CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o"
   "CMakeFiles/LechugaEngine.dir/src/renderer/Mesh.cc.o.d"
   "CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o"

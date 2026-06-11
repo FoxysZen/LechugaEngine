@@ -206,6 +206,30 @@ src/application/Application.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/application/Application.cc.s
 .PHONY : src/application/Application.cc.s
 
+src/core/Config.o: src/core/Config.cc.o
+.PHONY : src/core/Config.o
+
+# target to build an object file
+src/core/Config.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/core/Config.cc.o
+.PHONY : src/core/Config.cc.o
+
+src/core/Config.i: src/core/Config.cc.i
+.PHONY : src/core/Config.i
+
+# target to preprocess a source file
+src/core/Config.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/core/Config.cc.i
+.PHONY : src/core/Config.cc.i
+
+src/core/Config.s: src/core/Config.cc.s
+.PHONY : src/core/Config.s
+
+# target to generate assembly for a file
+src/core/Config.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/core/Config.cc.s
+.PHONY : src/core/Config.cc.s
+
 src/core/FileSystem.o: src/core/FileSystem.cc.o
 .PHONY : src/core/FileSystem.o
 
@@ -422,6 +446,30 @@ src/main.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/main.cc.s
 .PHONY : src/main.cc.s
 
+src/renderer/Frustum.o: src/renderer/Frustum.cc.o
+.PHONY : src/renderer/Frustum.o
+
+# target to build an object file
+src/renderer/Frustum.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.o
+.PHONY : src/renderer/Frustum.cc.o
+
+src/renderer/Frustum.i: src/renderer/Frustum.cc.i
+.PHONY : src/renderer/Frustum.i
+
+# target to preprocess a source file
+src/renderer/Frustum.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.i
+.PHONY : src/renderer/Frustum.cc.i
+
+src/renderer/Frustum.s: src/renderer/Frustum.cc.s
+.PHONY : src/renderer/Frustum.s
+
+# target to generate assembly for a file
+src/renderer/Frustum.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/LechugaEngine.dir/build.make CMakeFiles/LechugaEngine.dir/src/renderer/Frustum.cc.s
+.PHONY : src/renderer/Frustum.cc.s
+
 src/renderer/Mesh.o: src/renderer/Mesh.cc.o
 .PHONY : src/renderer/Mesh.o
 
@@ -630,6 +678,9 @@ help:
 	@echo "... src/application/Application.o"
 	@echo "... src/application/Application.i"
 	@echo "... src/application/Application.s"
+	@echo "... src/core/Config.o"
+	@echo "... src/core/Config.i"
+	@echo "... src/core/Config.s"
 	@echo "... src/core/FileSystem.o"
 	@echo "... src/core/FileSystem.i"
 	@echo "... src/core/FileSystem.s"
@@ -657,6 +708,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/renderer/Frustum.o"
+	@echo "... src/renderer/Frustum.i"
+	@echo "... src/renderer/Frustum.s"
 	@echo "... src/renderer/Mesh.o"
 	@echo "... src/renderer/Mesh.i"
 	@echo "... src/renderer/Mesh.s"
