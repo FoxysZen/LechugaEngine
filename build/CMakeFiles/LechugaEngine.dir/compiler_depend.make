@@ -16,6 +16,7 @@ CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o: /home/noru/Docume
   /home/noru/Documents/Projects/LechugaEngine/src/renderer/Texture.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/Camera.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/EntityID.h \
+  /home/noru/Documents/Projects/LechugaEngine/src/scene/LightComponent.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/MeshComponent.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/Scene.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/TransformComponent.h \
@@ -2814,6 +2815,7 @@ CMakeFiles/LechugaEngine.dir/src/main.cc.o: /home/noru/Documents/Projects/Lechug
   /home/noru/Documents/Projects/LechugaEngine/src/renderer/Texture.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/Camera.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/EntityID.h \
+  /home/noru/Documents/Projects/LechugaEngine/src/scene/LightComponent.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/MeshComponent.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/Scene.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/TransformComponent.h \
@@ -3535,6 +3537,7 @@ CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o: /home/noru/Documents/Pr
   /home/noru/Documents/Projects/LechugaEngine/src/renderer/ShaderProgram.h \
   /home/noru/Documents/Projects/LechugaEngine/src/renderer/Texture.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/Camera.h \
+  /home/noru/Documents/Projects/LechugaEngine/src/scene/LightComponent.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/MeshComponent.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/TransformComponent.h \
   /home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL.h \
@@ -5136,6 +5139,7 @@ CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.o: /home/noru/Documents/Projects
   /home/noru/Documents/Projects/LechugaEngine/src/renderer/Texture.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/Camera.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/EntityID.h \
+  /home/noru/Documents/Projects/LechugaEngine/src/scene/LightComponent.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/MeshComponent.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/Scene.h \
   /home/noru/Documents/Projects/LechugaEngine/src/scene/TransformComponent.h \
@@ -6291,14 +6295,6 @@ CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Proj
 
 /usr/include/c++/13/bits/exception.h:
 
-/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_float2x3.hpp:
-
-/home/noru/Documents/Projects/LechugaEngine/src/core/MTLParser.h:
-
-/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
-
-/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_double2x2.hpp:
-
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_double4x4.hpp:
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/detail/func_trigonometric.inl:
@@ -6465,12 +6461,6 @@ CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Proj
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/detail/type_vec1.hpp:
 
-/usr/include/x86_64-linux-gnu/bits/local_lim.h:
-
-/home/noru/Documents/Projects/LechugaEngine/src/window/Window.h:
-
-/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_version.h:
-
 /home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_gpu.h:
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/mat4x4.hpp:
@@ -6478,6 +6468,8 @@ CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Proj
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_float3x2_precision.hpp:
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_mouse.h:
+
+/home/noru/Documents/Projects/LechugaEngine/src/scene/LightComponent.h:
 
 /usr/include/c++/13/bits/stl_tree.h:
 
@@ -6517,12 +6509,6 @@ CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Proj
 
 /usr/include/c++/13/backward/auto_ptr.h:
 
-/home/noru/Documents/Projects/LechugaEngine/src/core/FileSystem.h:
-
-/usr/include/c++/13/climits:
-
-/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_close_code.h:
-
 /usr/include/c++/13/bits/functional_hash.h:
 
 /home/noru/Documents/Projects/LechugaEngine/src/scene/Scene.h:
@@ -6559,21 +6545,27 @@ CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Proj
 
 /usr/include/c++/13/bits/basic_string.h:
 
+/home/noru/Documents/Projects/LechugaEngine/src/core/FileSystem.h:
+
+/usr/include/c++/13/climits:
+
+/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_close_code.h:
+
 /home/noru/Documents/Projects/LechugaEngine/src/application/Application.h:
 
-/usr/include/c++/13/tr1/poly_hermite.tcc:
+/usr/include/x86_64-linux-gnu/bits/local_lim.h:
 
-/home/noru/Documents/Projects/LechugaEngine/src/renderer/Renderer.h:
+/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_version.h:
 
-/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_double3x2.hpp:
+/home/noru/Documents/Projects/LechugaEngine/src/window/Window.h:
 
-/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_thread.h:
+/home/noru/Documents/Projects/LechugaEngine/src/core/MTLParser.h:
 
-/usr/include/c++/13/iosfwd:
+/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_float2x3.hpp:
 
-/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_filesystem.h:
+/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
 
-/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_double4x2.hpp:
+/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_double2x2.hpp:
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_clip_space.inl:
 
@@ -6667,12 +6659,6 @@ CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Proj
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_gamepad.h:
 
-/usr/include/c++/13/bits/stl_construct.h:
-
-/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_double4x2_precision.hpp:
-
-/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_joystick.h:
-
 /usr/include/c++/13/bits/stringfwd.h:
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/detail/type_mat2x3.hpp:
@@ -6692,6 +6678,26 @@ CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Proj
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/scalar_constants.hpp:
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_projection.hpp:
+
+/usr/include/c++/13/tr1/poly_hermite.tcc:
+
+/home/noru/Documents/Projects/LechugaEngine/src/renderer/Renderer.h:
+
+/usr/include/c++/13/bits/stl_construct.h:
+
+/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_double4x2_precision.hpp:
+
+/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_joystick.h:
+
+/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_double3x2.hpp:
+
+/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_thread.h:
+
+/usr/include/c++/13/iosfwd:
+
+/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_filesystem.h:
+
+/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/matrix_double4x2.hpp:
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/geometric.hpp:
 
@@ -6729,6 +6735,8 @@ CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Proj
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/ext/scalar_constants.inl:
 
+/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_system.h:
+
 /usr/include/c++/13/bits/move.h:
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/detail/type_mat3x4.inl:
@@ -6762,8 +6770,6 @@ CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Proj
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
 
 /usr/include/c++/13/bits/algorithmfwd.h:
-
-/home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_system.h:
 
 /usr/include/x86_64-linux-gnu/c++/13/bits/c++locale.h:
 
@@ -6838,6 +6844,12 @@ CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Proj
 /usr/include/time.h:
 
 /home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/gtc/constants.inl:
+
+/usr/include/c++/13/bits/erase_if.h:
+
+/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/vec4.hpp:
+
+/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/detail/func_matrix.inl:
 
 /usr/include/c++/13/bits/stl_raw_storage_iter.h:
 
@@ -7028,9 +7040,3 @@ CMakeFiles/LechugaEngine.dir/vendor/glad/src/glad.c.o: /home/noru/Documents/Proj
 /usr/include/c++/13/bits/chrono.h:
 
 /usr/include/c++/13/bits/cxxabi_init_exception.h:
-
-/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/vec4.hpp:
-
-/home/noru/Documents/Projects/LechugaEngine/vendor/glm/glm/detail/func_matrix.inl:
-
-/usr/include/c++/13/bits/erase_if.h:

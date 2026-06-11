@@ -3,6 +3,8 @@
 Window::Window(std::string _title, int _width, int _height)
 {
     SDL_Init(SDL_INIT_VIDEO);
+    // V-Syn Off
+    SDL_GL_SetSwapInterval(0);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);

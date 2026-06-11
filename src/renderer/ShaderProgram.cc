@@ -68,6 +68,16 @@ void ShaderProgram::setUniformMat4(const std::string &name,
     glUniformMatrix4fv(uniformLocs[name], 1, GL_FALSE, &matrix[0][0]);
 }
 
+void ShaderProgram::setUniformVec3(const std::string &name, 
+                                   const glm::vec3 &vec)
+{
+    if (uniformLocs.find(name) == uniformLocs.end())
+    {
+        uniformLocs[name] = glGetUniformLocation(program, name.c_str());
+    }
+    glUniform3fv(uniformLocs[name], 1, &vec[0]);
+}
+
 void ShaderProgram::setUniformInt(const std::string &name, int value)
 {
     if (uniformLocs.find(name) == uniformLocs.end())

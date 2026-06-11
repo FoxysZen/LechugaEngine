@@ -15,6 +15,7 @@ class ShaderProgram
         void bind();
         void unbind();
         void setUniformMat4(const std::string &name, const glm::mat4 &matrix);
+        void setUniformVec3(const std::string &name, const glm::vec3 &vec);
         void setUniformInt(const std::string &name, int value);
 
     private:

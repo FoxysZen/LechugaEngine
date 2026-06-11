@@ -61,6 +61,11 @@ glm::mat4 Camera::getProjectionMatrix()
     return proj;
 }
 
+glm::vec3 Camera::getPosition()
+{
+    return position;
+}
+
 void Camera::setAspectRatio(int width, int height)
 {
     ra = (float)width / (float)height;

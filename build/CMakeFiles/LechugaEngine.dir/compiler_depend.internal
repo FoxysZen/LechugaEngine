@@ -17,6 +17,7 @@ CMakeFiles/LechugaEngine.dir/src/application/Application.cc.o
  /home/noru/Documents/Projects/LechugaEngine/src/renderer/Texture.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/Camera.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/EntityID.h
+ /home/noru/Documents/Projects/LechugaEngine/src/scene/LightComponent.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/MeshComponent.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/Scene.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/TransformComponent.h
@@ -2824,6 +2825,7 @@ CMakeFiles/LechugaEngine.dir/src/main.cc.o
  /home/noru/Documents/Projects/LechugaEngine/src/renderer/Texture.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/Camera.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/EntityID.h
+ /home/noru/Documents/Projects/LechugaEngine/src/scene/LightComponent.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/MeshComponent.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/Scene.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/TransformComponent.h
@@ -3547,6 +3549,7 @@ CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o
  /home/noru/Documents/Projects/LechugaEngine/src/renderer/ShaderProgram.h
  /home/noru/Documents/Projects/LechugaEngine/src/renderer/Texture.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/Camera.h
+ /home/noru/Documents/Projects/LechugaEngine/src/scene/LightComponent.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/MeshComponent.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/TransformComponent.h
  /home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL.h
@@ -5152,6 +5155,7 @@ CMakeFiles/LechugaEngine.dir/src/scene/Scene.cc.o
  /home/noru/Documents/Projects/LechugaEngine/src/renderer/Texture.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/Camera.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/EntityID.h
+ /home/noru/Documents/Projects/LechugaEngine/src/scene/LightComponent.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/MeshComponent.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/Scene.h
  /home/noru/Documents/Projects/LechugaEngine/src/scene/TransformComponent.h

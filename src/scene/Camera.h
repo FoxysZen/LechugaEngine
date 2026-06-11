@@ -14,6 +14,7 @@ class Camera
 
         glm::mat4 getViewMatrix();
         glm::mat4 getProjectionMatrix();
+        glm::vec3 getPosition();
         void setAspectRatio(int width, int height);
     
     private:

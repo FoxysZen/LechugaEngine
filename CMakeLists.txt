@@ -38,6 +38,7 @@ add_executable(LechugaEngine
     src/renderer/ShaderProgram.cc
     src/renderer/Mesh.cc
     src/renderer/Texture.cc
+    src/renderer/Frustum.cc
 
     vendor/glad/src/glad.c
 )

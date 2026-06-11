@@ -439,6 +439,7 @@ CMakeFiles/LechugaEngine.dir/src/renderer/Renderer.cc.o: \
  /home/noru/Documents/Projects/LechugaEngine/vendor/SDL3/include/SDL3/SDL_oldnames.h \
  /home/noru/Documents/Projects/LechugaEngine/vendor/glad/include/glad/glad.h \
  /home/noru/Documents/Projects/LechugaEngine/vendor/glad/include/KHR/khrplatform.h \
+ /home/noru/Documents/Projects/LechugaEngine/src/scene/LightComponent.h \
  /home/noru/Documents/Projects/LechugaEngine/src/scene/MeshComponent.h \
  /home/noru/Documents/Projects/LechugaEngine/src/renderer/Mesh.h \
  /home/noru/Documents/Projects/LechugaEngine/src/renderer/Texture.h \

@@ -20,6 +20,10 @@ bool Application::init()
     Logger::info("Creating scene...");
     scene = std::make_unique<Scene>();
 
+    Logger::info("Creating light...");
+    EntityID light = scene->createEntity();
+    scene->addLight(light, {glm::vec3(5.0f, 5.0f, 5.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f});
+
     // Test object
     Logger::info("Creating entity...");
     Logger::info("Loading shader...");
@@ -42,10 +46,21 @@ bool Application::init()
 void Application::run()
 {
     Logger::info("Starting run loop...");
+    int frames = 0;
+    float elapsed = 0.0f;
     while (window->isOpen())
     {
         timer->tick();
         float deltaTime = timer->getDeltaTime();
+
+        frames++;
+        elapsed += deltaTime;
+        if (elapsed >= 1.0f)
+        {
+            window->setTitle("LechugaEngine | FPS: " + std::to_string(frames));
+            frames = 0;
+            elapsed = 0.0f;
+        }
 
         if (!input->pollEvents())
         {
