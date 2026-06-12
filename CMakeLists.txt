@@ -35,6 +35,7 @@ add_executable(LechugaEngine
 
     src/scene/Camera.cc
     src/scene/Scene.cc
+    src/scene/ParticleSystem.cc
 
     src/renderer/Renderer.cc
     src/renderer/ShaderProgram.cc

@@ -19,6 +19,7 @@ class Camera
         glm::mat4 getProjectionMatrix();
         glm::vec3 getPosition();
         void setAspectRatio(int width, int height);
+        void setLeftMouse(bool state);
     
     private:
         void updateVectors();
@@ -32,4 +33,6 @@ class Camera
         float speed = 5.0f;
         float sensitivity = 0.1f;
         glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
+
+        bool leftMouse = false;
 };

@@ -30,6 +30,11 @@ void Scene::addLight(EntityID id, LightComponent light)
     lights[id] = light;
 }
 
+void Scene::addParticle(EntityID id, ParticleComponent particle)
+{
+    particles[id] = particle;
+}
+
 TransformComponent Scene::getTransform(EntityID id)
 {
     return transforms[id];
@@ -45,8 +50,18 @@ LightComponent Scene::getLight(EntityID id)
     return lights[id];
 }
 
+ParticleComponent Scene::getParticle(EntityID id)
+{
+    return particles[id];
+}
+
 void Scene::update(float deltaTime)
 {
+    for (auto &[id, particle] : particles)
+    {
+        particle.system->update(deltaTime);
+    }
+
     // TODO: update fzx
 }
 
@@ -66,4 +81,11 @@ void Scene::render(Renderer *renderer)
             renderer->render(mesh, transforms[id]);
         }
     }
+
+    std::vector<ParticleComponent> particleList;
+    for (auto& [id, particle] : particles)
+    {
+        particleList.push_back(particle);
+    }
+    renderer->drawParticles(particleList);
 }

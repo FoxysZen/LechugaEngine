@@ -17,6 +17,8 @@ class InputManager
         bool isKeyDown(SDL_Keycode key);
         bool wasWindowResized();
         void resetWindowResized();
+        void captureMousePosition();
+        void updateMouseLast();
         
         glm::vec2 getMouseDelta();
         int getNewWidth();
@@ -25,6 +27,7 @@ class InputManager
     private:
         std::unordered_map<SDL_Keycode, bool> keyState;
         float mouseX, mouseY;
+        float lastMouseX, lastMouseY;
 
         bool windowResized = false;
         int newWidth, newHeight;

@@ -4,6 +4,7 @@
 #include <Config.h>
 #include <InputManager.h>
 #include <memory>
+#include <ParticleSystem.h>
 #include <Renderer.h>
 #include <ResourceManager.h>
 #include <Scene.h>

@@ -40,39 +40,29 @@ bool Application::init()
     Logger::info("Creating scene...");
     scene = std::make_unique<Scene>();
 
-    /*Logger::info("Creating light...");
-    EntityID light = scene->createEntity();
-    scene->addLight(light, {glm::vec3(5.0f, 5.0f, 5.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f});
-    scene->addLight(scene->createEntity(), {glm::vec3(-5.0f, 5.0f, 5.0f), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f});
-
-    // Test object
-    Logger::info("Creating entity...");
-    Logger::info("Loading shader...");
-    ShaderProgram* shader = resourceManager->loadShader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
-    Logger::info("Shader loaded");
-    EntityID entity = scene->createEntity();
-    Logger::info("Entity created");
-    scene->addTransform(entity, {glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f)});
-    Logger::info("Transform added");
-    Mesh* meshLod0 = resourceManager->loadMesh("assets/meshes/character_lod0.obj");
-    Mesh* meshLod1 = resourceManager->loadMesh("assets/meshes/character_lod1.obj");
-    Mesh* meshLod2 = resourceManager->loadMesh("assets/meshes/character_lod2.obj");
-    Texture* tex0 = resourceManager->loadTexture("assets/textures/char_body_texture.png");
-    Texture* tex1 = resourceManager->loadTexture("assets/textures/char_face_texture.png");
-    scene->addMesh(entity, {
-        {
-            {meshLod0, 10.0f},
-            {meshLod1, 50.0f},
-            {meshLod2, FLT_MAX}
-        },
-        shader,
-        {tex0, tex1}
-    });
-    Logger::info("Mesh added");*/
-
     Logger::info("CreatingScene");
     sceneLoader = std::make_unique<SceneLoader>(scene.get(), resourceManager.get());
     sceneLoader->loadScene("testScene.json");
+
+    Logger::info("CreatingParticle");
+    ShaderProgram* particleShader = resourceManager->loadShader(
+        "assets/shaders/particleBillboard.vert",
+        "assets/shaders/particleBillboard.frag"
+    );
+
+    ParticleSystem* ps = new ParticleSystem(particleShader, ParticleType::BILLBOARD, 1000);
+    ps->setDirection(glm::vec3(0.0f, 1.0f, 0.0f));
+    ps->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+    ps->setVelocity(2.0f);
+    ps->setLifeTime(3.0f);
+    ps->setSpread(0.5f);
+    ps->setColor(glm::vec3(1.0f, 0.5f, 0.0f));
+    ps->setSize(1.0f);
+    ps->setEmissionRate(50.0f);
+    ps->init(1000);
+
+    EntityID particleEntity = scene->createEntity();
+    scene->addParticle(particleEntity, {ps});
 
     Logger::info("Adding subscriptions");
     // Cerrar la ventana cuando se publique QuitEvent
@@ -84,6 +74,15 @@ bool Application::init()
     EventSystem::getInstance().subscribe<WindowResizedEvent>([this](const WindowResizedEvent& e) {
         renderer->onResize(e.width, e.height);
         camera->setAspectRatio(e.width, e.height);
+    });
+
+    EventSystem::getInstance().subscribe<LeftMousePressedEvent>([this](const LeftMousePressedEvent& e) {
+        camera->setLeftMouse(true);
+        input->captureMousePosition();
+    });
+
+    EventSystem::getInstance().subscribe<LeftMouseReleasedEvent>([this](const LeftMouseReleasedEvent& e) {
+        camera->setLeftMouse(false);
     });
     
     Logger::info("Init complete");
@@ -114,9 +113,12 @@ void Application::run()
         camera->update(input.get(), deltaTime);
         renderer->beginFrame(camera.get(), deltaTime);
 
+        scene->update(deltaTime);
+
         scene->render(renderer.get());
 
         window->swapBuffers();
+        input->updateMouseLast();
     }
 }
 

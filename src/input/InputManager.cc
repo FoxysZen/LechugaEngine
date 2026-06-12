@@ -22,8 +22,8 @@ void InputManager::pollEvents()
                         WindowResizedEvent{newWidth, newHeight});
                 break;
             case SDL_EVENT_MOUSE_MOTION:
-                mouseX = event.motion.xrel;
-                mouseY = event.motion.yrel;
+                mouseX = event.motion.x;
+                mouseY = event.motion.y;
                 break;
             case SDL_EVENT_KEY_DOWN:
                 keyState[event.key.key] = true;
@@ -35,12 +35,25 @@ void InputManager::pollEvents()
                 EventSystem::getInstance().publish(
                         KeyReleasedEvent{event.key.key});
                 break;
+            case SDL_EVENT_MOUSE_BUTTON_DOWN:
+                if (event.button.button == SDL_BUTTON_LEFT)
+                {
+                    EventSystem::getInstance().publish(
+                        LeftMousePressedEvent{});
+                }
+                break;
+            case SDL_EVENT_MOUSE_BUTTON_UP:
+                if (event.button.button == SDL_BUTTON_LEFT)
+                {
+                    EventSystem::getInstance().publish(
+                        LeftMouseReleasedEvent{});
+                }
+                break;
             default:
             //Logger::info("Window: Unhanheld event.");
             break;
         }
     }
-    SDL_GetRelativeMouseState(&mouseX, &mouseY);
 }
 
 bool InputManager::isKeyDown(SDL_Keycode key)
@@ -60,7 +73,15 @@ void InputManager::resetWindowResized()
 
 glm::vec2 InputManager::getMouseDelta()
 {
-    return glm::vec2(mouseX, mouseY);
+    return glm::vec2(mouseX - lastMouseX, mouseY - lastMouseY);
+}
+
+void InputManager::captureMousePosition()
+{
+    float x, y;
+    SDL_GetMouseState(&x, &y);
+    lastMouseX = x;
+    lastMouseY = y;
 }
 
 int InputManager::getNewWidth()
@@ -71,4 +92,10 @@ int InputManager::getNewWidth()
 int InputManager::getNewHeight()
 {
     return newHeight;
+}
+
+void InputManager::updateMouseLast()
+{
+    lastMouseX = mouseX;
+    lastMouseY = mouseY;
 }

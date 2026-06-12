@@ -15,7 +15,7 @@ $(BUILD_DIR)/Makefile:
 	$(MAKE) configure
 
 run: build
-	./$(BUILD_DIR)/LechugaEngine
+	vblank_mode=0 ./$(BUILD_DIR)/LechugaEngine
 
 clean:
 	rm -rf $(BUILD_DIR)

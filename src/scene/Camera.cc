@@ -15,11 +15,14 @@ Camera::~Camera()
 
 void Camera::update(InputManager *input, float deltaTime)
 {
-    glm::vec2 delta = input->getMouseDelta();
-    yaw += delta.x * sensitivity;
-    pitch -= delta.y * sensitivity;
-    pitch = glm::clamp(pitch, -89.0f, 89.0f);
-    updateVectors();
+    if (leftMouse)
+    {
+        glm::vec2 delta = input->getMouseDelta();
+        yaw += delta.x * sensitivity;
+        pitch -= delta.y * sensitivity;
+        pitch = glm::clamp(pitch, -89.0f, 89.0f);
+        updateVectors();
+    }
 
     glm::vec3 right = glm::normalize(glm::cross(forward, upVec));
 
@@ -74,4 +77,9 @@ void Camera::setAspectRatio(int width, int height)
     ra = (float)width / (float)height;
     EventSystem::getInstance().publish(CameraUpdatedEvent{
             getProjectionMatrix() * getViewMatrix()});
+}
+
+void Camera::setLeftMouse(bool state)
+{
+    leftMouse = state;
 }
