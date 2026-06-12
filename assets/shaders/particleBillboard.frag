@@ -1,6 +1,7 @@
 #version 410 core
 uniform vec3 color;
-out vec4 fragColor;
+
+layout (location = 0) out vec4 fragColor;
 
 void main()
 {

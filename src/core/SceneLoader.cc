@@ -85,4 +85,55 @@ void SceneLoader::loadScene(std::string sceneName)
 
         scene->addLight(id, {position, color, json["lights"][i]["intensity"]});
     }
+
+    size = json["particles"].size();
+    for (int i = 0; i < size; ++i)
+    {
+        glm::vec3 position = {
+            json["particles"][i]["position"][0],
+            json["particles"][i]["position"][1],
+            json["particles"][i]["position"][2]
+        };
+
+        glm::vec3 direction = {
+            json["particles"][i]["direction"][0],
+            json["particles"][i]["direction"][1],
+            json["particles"][i]["direction"][2]
+        };
+
+        glm::vec3 color = {
+            json["particles"][i]["startColor"][0],
+            json["particles"][i]["startColor"][1],
+            json["particles"][i]["startColor"][2]
+        };
+
+        float vel = json["particles"][i]["velocity"];
+        float life = json["particles"][i]["lifeTime"];
+        float size = json["particles"][i]["startSize"];
+        float spread = json["particles"][i]["spread"];
+        float rate = json["particles"][i]["emissionRate"];
+        int max = json["particles"][i]["maxParticles"];
+        std::string type = json["particles"][i]["type"];
+
+        ShaderProgram* particleShader = resourceManager->loadShader(
+            "assets/shaders/particleBillboard.vert",
+            "assets/shaders/particleBillboard.frag"
+        );
+
+        ParticleType pType = (type == "BILLBOARD") ? 
+            ParticleType::BILLBOARD : ParticleType::MESH;
+        ParticleSystem* ps = new ParticleSystem(particleShader, pType, max);
+        ps->setPosition(position);
+        ps->setDirection(direction);
+        ps->setColor(color);
+        ps->setVelocity(vel);
+        ps->setLifeTime(life);
+        ps->setSize(size);
+        ps->setSpread(spread);
+        ps->setEmissionRate(rate);
+        ps->init();
+
+        EntityID id = scene->createEntity();
+        scene->addParticle(id, {ps});
+    }
 }

@@ -10,7 +10,7 @@ ParticleSystem::ParticleSystem(ShaderProgram *_shader, ParticleType _type,
 
 ParticleSystem::~ParticleSystem() {}
 
-void ParticleSystem::init(int maxParticles)
+void ParticleSystem::init()
 {
     emissionAccumulator = 0.0f;
 
@@ -30,19 +30,23 @@ void ParticleSystem::init(int maxParticles)
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
+    glGenBuffers(1, &instanceVBO);
+    
     glBindVertexArray(VAO);
+    // Quad
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quad), quad, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    glGenBuffers(1, &instanceVBO);
+    // Instancing
     glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
     glBufferData(GL_ARRAY_BUFFER, maxParticles * sizeof(glm::vec4), nullptr, 
         GL_DYNAMIC_DRAW);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), 0);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribDivisor(1, 1);
+
+    glBindVertexArray(0);
 }
 
 void ParticleSystem::emit(Particle *particle)
@@ -109,7 +113,6 @@ void ParticleSystem::draw(const glm::mat4& view, const glm::mat4& proj)
 
     glBindVertexArray(VAO);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, instanceData.size());
-
 }
 
 void ParticleSystem::setDirection(const glm::vec3 &_direction)

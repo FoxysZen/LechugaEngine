@@ -4,10 +4,9 @@
 #include <glm/glm.hpp>
 #include <Logger.h>
 #include <Particle.h>
+#include <ParticleType.h>
 #include <ShaderProgram.h>
 #include <vector>
-
-enum class ParticleType { BILLBOARD, MESH };
 
 class ParticleSystem
 {
@@ -16,7 +15,7 @@ class ParticleSystem
             int _maxParticles);
         ~ParticleSystem();
 
-        void init(int maxParticles);
+        void init();
         void emit(Particle *particle);
         void update(float deltaTime);
         void draw(const glm::mat4& view, const glm::mat4& proj);

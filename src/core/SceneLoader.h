@@ -2,6 +2,7 @@
 #include <EntityID.h>
 #include <FileSystem.h>
 #include <glm/glm.hpp>
+#include <ParticleType.h>
 #include <ResourceManager.h>
 #include <Scene.h>
 #include <ShaderProgram.h>

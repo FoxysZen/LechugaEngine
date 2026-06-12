@@ -98,16 +98,6 @@ void Renderer::render(const MeshComponent &mesh,
         mesh.textures[i]->unbind(i);
     }
     mesh.shader->unbind();
-
-    for (auto& particle : currentParticles)
-    {
-        glm::vec3 center = particle.system->getBoundsCenter();
-        float radius = particle.system->getBoundsRadius();
-        //if (frustum.isSphereInside(center, radius))
-        //{
-            particle.system->draw(currentView, currentProj);
-        //}
-    }
 }
 
 void Renderer::setLights(const std::vector<LightComponent> &lights)
@@ -127,5 +117,13 @@ void Renderer::onResize(int width, int height)
 
 void Renderer::drawParticles(const std::vector<ParticleComponent> &particles)
 {
-    currentParticles = particles;
+    for (auto& particle : particles)
+    {
+        glm::vec3 center = particle.system->getBoundsCenter();
+        float radius = particle.system->getBoundsRadius();
+        if (frustum.isSphereInside(center, radius))
+        {
+            particle.system->draw(currentView, currentProj);
+        }
+    }
 }

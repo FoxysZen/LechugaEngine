@@ -35,4 +35,7 @@ class Application
         std::unique_ptr<InputManager> input = nullptr;
         std::unique_ptr<Timer> timer = nullptr;
         std::unique_ptr<ResourceManager> resourceManager = nullptr;
+
+        // test
+        ParticleSystem *m_ps;
 };

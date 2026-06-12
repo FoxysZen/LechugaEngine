@@ -82,10 +82,12 @@ void Scene::render(Renderer *renderer)
         }
     }
 
+    glDepthMask(GL_FALSE);
     std::vector<ParticleComponent> particleList;
     for (auto& [id, particle] : particles)
     {
         particleList.push_back(particle);
     }
     renderer->drawParticles(particleList);
+    glDepthMask(GL_TRUE);
 }

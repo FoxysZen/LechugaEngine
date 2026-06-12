@@ -40,29 +40,9 @@ bool Application::init()
     Logger::info("Creating scene...");
     scene = std::make_unique<Scene>();
 
-    Logger::info("CreatingScene");
+    Logger::info("Loading Scene");
     sceneLoader = std::make_unique<SceneLoader>(scene.get(), resourceManager.get());
     sceneLoader->loadScene("testScene.json");
-
-    Logger::info("CreatingParticle");
-    ShaderProgram* particleShader = resourceManager->loadShader(
-        "assets/shaders/particleBillboard.vert",
-        "assets/shaders/particleBillboard.frag"
-    );
-
-    ParticleSystem* ps = new ParticleSystem(particleShader, ParticleType::BILLBOARD, 1000);
-    ps->setDirection(glm::vec3(0.0f, 1.0f, 0.0f));
-    ps->setPosition(glm::vec3(0.0f, 0.0f, -5.0f));
-    ps->setVelocity(2.0f);
-    ps->setLifeTime(3.0f);
-    ps->setSpread(0.5f);
-    ps->setColor(glm::vec3(1.0f, 0.5f, 0.0f));
-    ps->setSize(1.0f);
-    ps->setEmissionRate(50.0f);
-    ps->init(1000);
-
-    EntityID particleEntity = scene->createEntity();
-    scene->addParticle(particleEntity, {ps});
 
     Logger::info("Adding subscriptions");
     // Cerrar la ventana cuando se publique QuitEvent
