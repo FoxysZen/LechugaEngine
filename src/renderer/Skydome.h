@@ -22,7 +22,7 @@ class Skydome
         GLuint VAO, VBO;
         ShaderProgram* shader;
         Texture* texture;
-        float time;
-        float scrollSpeed;
+        float time = 0;
+        float scrollSpeed = 0.01f;
         int vertexCount;
 };

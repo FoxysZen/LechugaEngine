@@ -15,7 +15,7 @@ void Skydome::init(ShaderProgram* shader, Texture* texture)
     this->shader = shader;
     this->texture = texture;
     
-    std::vector<float> vertices = generateSphere(500.0f, 32, 64);
+    std::vector<float> vertices = generateSphere(500.0f, 16, 32);
     vertexCount = vertices.size() / 5;
     
     glGenVertexArrays(1, &VAO);
@@ -34,8 +34,10 @@ void Skydome::init(ShaderProgram* shader, Texture* texture)
 void Skydome::draw(const glm::mat4& view, const glm::mat4& proj, float deltaTime)
 {
     time += deltaTime * scrollSpeed;
+    if (time > 1.0f) time -= 1.0f;
     
     glDepthMask(GL_FALSE);
+    glDisable(GL_CULL_FACE);
     
     shader->bind();
     shader->setUniformMat4("view", view);
@@ -51,13 +53,14 @@ void Skydome::draw(const glm::mat4& view, const glm::mat4& proj, float deltaTime
     shader->unbind();
     
     glDepthMask(GL_TRUE);
+    glEnable(GL_CULL_FACE);
 }
 
 std::vector<float> Skydome::generateSphere(float radius, int rings, int sectors)
 {
     const float PI = glm::pi<float>();
     std::vector<float> vertices;
-    vertices.reserve(rings * sectors * 6 * 5);
+    vertices.reserve(rings * (sectors + 1) * 6 * 5);
 
     auto addVertex = [&](int i, int j) {
         float u = (float)j / (float)sectors;

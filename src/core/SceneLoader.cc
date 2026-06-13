@@ -57,10 +57,10 @@ void SceneLoader::loadScene(std::string sceneName)
         
         int nTextures = json["entities"][i]["mesh"]["textures"].size();
         std::vector<Texture*> textures(nTextures);
-        for (int i = 0; i < nTextures; ++i)
+        for (int j = 0; j < nTextures; ++j)
         {
-            textures[i] = resourceManager->loadTexture(
-                json["entities"][i]["mesh"]["textures"][i]);
+            textures[j] = resourceManager->loadTexture(
+                json["entities"][j]["mesh"]["textures"][j]);
         }
 
         scene->addMesh(id, {lods, shad, textures});
@@ -101,19 +101,33 @@ void SceneLoader::loadScene(std::string sceneName)
             json["particles"][i]["direction"][2]
         };
 
-        glm::vec3 color = {
+        glm::vec3 startColor = {
             json["particles"][i]["startColor"][0],
             json["particles"][i]["startColor"][1],
             json["particles"][i]["startColor"][2]
         };
 
+        glm::vec3 endColor = {
+            json["particles"][i]["endColor"][0],
+            json["particles"][i]["endColor"][1],
+            json["particles"][i]["endColor"][2]
+        };
+
         float vel = json["particles"][i]["velocity"];
         float life = json["particles"][i]["lifeTime"];
-        float size = json["particles"][i]["startSize"];
+        float startSize = json["particles"][i]["startSize"];
+        float endSize = json["particles"][i]["endSize"];
+        float sizeCurve = json["particles"][i]["sizeCurve"];
+        float colorCurve = json["particles"][i]["colorCurve"];
         float spread = json["particles"][i]["spread"];
         float rate = json["particles"][i]["emissionRate"];
+        float spiral = json["particles"][i]["spiralSpeed"];
+        float gravity = json["particles"][i]["gravity"];
         int max = json["particles"][i]["maxParticles"];
         std::string type = json["particles"][i]["type"];
+        std::string shape = json["particles"][i]["shape"];
+        std::string mode = json["particles"][i]["renderMode"];
+        std::string texture = json["particles"][i]["texture"];
 
         ShaderProgram* particleShader = resourceManager->loadShader(
             "assets/shaders/particleBillboard.vert",
@@ -122,15 +136,36 @@ void SceneLoader::loadScene(std::string sceneName)
 
         ParticleType pType = (type == "BILLBOARD") ? 
             ParticleType::BILLBOARD : ParticleType::MESH;
-        ParticleSystem* ps = new ParticleSystem(particleShader, pType, max);
+
+        ParticleRenderMode pMode = (mode == "TEXTURE") ? 
+            ParticleRenderMode::TEXTURE : ParticleRenderMode::COLOR;
+
+        EmitterShape pShape;
+        if (shape == "FOUNTAIN")
+            pShape = EmitterShape::FOUNTAIN;
+        else if (shape == "CIRCLE")
+            pShape = EmitterShape::CIRCLE;
+        else if (shape == "SPIRAL")
+            pShape = EmitterShape::SPIRAL;
+        else
+            pShape = EmitterShape::POINT;
+
+        ParticleSystem* ps = new ParticleSystem(particleShader, pType, pMode, 
+            pShape, max);
         ps->setPosition(position);
         ps->setDirection(direction);
-        ps->setColor(color);
+        ps->setColor(startColor, endColor, colorCurve);
         ps->setVelocity(vel);
         ps->setLifeTime(life);
-        ps->setSize(size);
+        ps->setSize(startSize, endSize, sizeCurve);
         ps->setSpread(spread);
         ps->setEmissionRate(rate);
+        ps->setSpiralSpeed(spiral);
+        ps->setGravity(gravity);
+        if (pMode == ParticleRenderMode::TEXTURE)
+        {
+            ps->setTexture(resourceManager->loadTexture(texture));
+        }
         ps->init();
 
         EntityID id = scene->createEntity();

@@ -1,9 +1,22 @@
 #version 410 core
 uniform vec3 color;
 
-layout (location = 0) out vec4 fragColor;
+in vec4 fragColor_v;
+in vec2 uv;
+
+uniform bool useTexture;
+uniform sampler2D particleTexture;
+
+out vec4 fragColor;
 
 void main()
 {
-    fragColor = vec4(color, 1.0);
+    if (useTexture)
+    {
+        fragColor = texture(particleTexture, uv);
+    }
+    else
+    {
+        fragColor = fragColor_v;
+    }
 }
