@@ -11,6 +11,7 @@ UIButton::UIButton(int _x, int _y, int _width, int _height,
     normalTexture = _normal;
     hoverTexture = _hover;
     onClick = _onClick;
+    layer = 1;
 }
 
 UIButton::~UIButton() {}

@@ -194,7 +194,6 @@ void SceneLoader::loadScene(std::string sceneName)
                 UILabel* label = new UILabel(x, y, text, font);
                 label->setVisible(vis);
                 uiManager->addElement(label);
-                Logger::info("added element.");
             }
             else if (type == "panel")
             {

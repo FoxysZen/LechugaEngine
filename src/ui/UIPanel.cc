@@ -7,6 +7,7 @@ UIPanel::UIPanel(int _x, int _y, int _width, int _height, glm::vec3 _color)
     width = _width;
     height = _height;
     color = _color;
+    layer = 0;
 }
 
 UIPanel::~UIPanel() {}

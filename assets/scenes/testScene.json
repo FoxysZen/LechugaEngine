@@ -135,10 +135,11 @@
     {
         "type": "label",
         "x": 10,
-        "y": 10,
-        "text": "Prueba XD Ññ",
+        "y": 60,
+        "text": "XXXXXXXXXXXXX",
         "font": "assets/fonts/SansSerif.fnt",
-        "fontTexture": "assets/fonts/SansSerif.png"
+        "fontTexture": "assets/fonts/SansSerif.png",
+        "visible": true
     },
     {
         "type": "panel",

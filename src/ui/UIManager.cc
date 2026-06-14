@@ -22,7 +22,11 @@ void UIManager::addElement(UIElement *element)
 
 void UIManager::draw()
 {
-    for (UIElement *elem : elements)
+    std::vector<UIElement*> sorted = elements;
+    std::sort(sorted.begin(), sorted.end(), [](UIElement* a, UIElement* b) {
+        return a->getLayer() < b->getLayer();
+    });
+    for (UIElement* elem : sorted)
     {
         elem->draw(renderer);
     }

@@ -40,10 +40,6 @@ bool Application::init()
     Logger::info("Creating scene...");
     scene = std::make_unique<Scene>();
 
-    Logger::info("Loading Scene");
-    auto sceneLoader = std::make_unique<SceneLoader>(scene.get(), resourceManager.get(), uiManager.get());
-    sceneLoader->loadScene("testScene.json");
-
     Logger::info("Loading UI");
     uiRenderer = std::make_unique<UIRenderer>();
     uiRenderer->init(
@@ -53,6 +49,10 @@ bool Application::init()
     );
     uiManager = std::make_unique<UIManager>();
     uiManager->init(uiRenderer.get());
+
+    Logger::info("Loading Scene");
+    auto sceneLoader = std::make_unique<SceneLoader>(scene.get(), resourceManager.get(), uiManager.get());
+    sceneLoader->loadScene("testScene.json");
 
     uiManager->registerCallback("btnPlay", []() {
         Logger::info("Play pulsado");
@@ -80,10 +80,6 @@ bool Application::init()
 
     EventSystem::getInstance().subscribe<LeftMouseReleasedEvent>([this](const LeftMouseReleasedEvent& e) {
         camera->setLeftMouse(false);
-    });
-
-    EventSystem::getInstance().subscribe<LeftMousePressedEvent>([this](const LeftMousePressedEvent& e) {
-        uiManager->handleClick(input->getMouseX(), input->getMouseY());
     });
     
     Logger::info("Init complete");

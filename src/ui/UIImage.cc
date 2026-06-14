@@ -7,6 +7,7 @@ UIImage::UIImage(int _x, int _y, int _width, int _height, Texture *_texture)
     width = _width;
     height = _height;
     texture = _texture;
+    layer = 0;
 }
 
 UIImage::~UIImage() {}
