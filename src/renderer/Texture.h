@@ -14,6 +14,10 @@ class Texture
         void bind(int slot);
         void unbind(int slot);
 
+        int getWidth();
+        int getHeight();
+
     private:
         GLuint textureID;
+        int width, height;
 };

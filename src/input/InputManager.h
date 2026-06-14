@@ -21,6 +21,8 @@ class InputManager
         void updateMouseLast();
         
         glm::vec2 getMouseDelta();
+        int getMouseX();
+        int getMouseY();
         int getNewWidth();
         int getNewHeight();
 

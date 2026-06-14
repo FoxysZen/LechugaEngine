@@ -48,3 +48,14 @@ ShaderProgram* ResourceManager::loadShader(std::string vertPath,
     shaders[vertPath] = shader;
     return shader;
 }
+
+Font* ResourceManager::loadFont(std::string fntPath, std::string texturePath)
+{
+    if (fonts.count(fntPath) > 0)
+        return fonts[fntPath];
+    
+    Font* font = new Font();
+    font->load(fntPath, loadTexture(texturePath));
+    fonts[fntPath] = font;
+    return font;
+}

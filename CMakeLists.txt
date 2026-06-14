@@ -44,6 +44,15 @@ add_executable(LechugaEngine
     src/renderer/Frustum.cc
     src/renderer/Skydome.cc
 
+    src/ui/Font.cc
+    src/ui/FontParser.cc
+    src/ui/UIButton.cc
+    src/ui/UIImage.cc
+    src/ui/UILabel.cc
+    src/ui/UIManager.cc
+    src/ui/UIPanel.cc
+    src/ui/UIRenderer.cc
+
     vendor/glad/src/glad.c
 )
 
@@ -54,14 +63,15 @@ target_include_directories(LechugaEngine PRIVATE
     src/input/
     src/renderer/
     src/scene/
+    src/ui/
     src/window/
 )
 
 target_include_directories(LechugaEngine SYSTEM PRIVATE
     vendor/glad/include
+    vendor/nlohmann
     vendor/SDL3/include
     vendor/stb
-    vendor/nlohmann
 )
 
 target_link_libraries(LechugaEngine PRIVATE

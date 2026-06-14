@@ -84,6 +84,17 @@ void InputManager::captureMousePosition()
     lastMouseY = y;
 }
 
+int InputManager::getMouseX()
+{
+    return (int)mouseX;
+}
+
+int InputManager::getMouseY()
+{
+    return (int)mouseY;
+}
+
+
 int InputManager::getNewWidth()
 {
     return newWidth;

@@ -12,11 +12,11 @@ Texture::~Texture()
 
 void Texture::load(std::string path)
 {
-    int width, height, channels;
+    int _width, _height, channels;
     unsigned char* data = stbi_load(
         path.c_str(), 
-        &width, 
-        &height, 
+        &_width, 
+        &_height, 
         &channels, 
         0
     );
@@ -25,6 +25,9 @@ void Texture::load(std::string path)
         Logger::error("Texture: could not load " + path + '.');
         return;
     }
+
+    width = _width;
+    height = _height;
 
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_2D, textureID);
@@ -59,3 +62,14 @@ void Texture::unbind(int slot)
 {
     glBindTexture(GL_TEXTURE_2D, slot);
 }
+
+int Texture::getWidth()
+{
+    return width;
+}
+
+int Texture::getHeight()
+{
+    return height;
+}
+

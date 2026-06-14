@@ -9,11 +9,16 @@
 #include <Scene.h>
 #include <ShaderProgram.h>
 #include <Texture.h>
+#include <UIImage.h>
+#include <UILabel.h>
+#include <UIManager.h>
+#include <UIPanel.h>
 
 class SceneLoader
 {
     public:
-        SceneLoader(Scene *scene, ResourceManager *resourceManager);
+        SceneLoader(Scene *_scene, ResourceManager *_resourceManager, 
+            UIManager *_uiManager);
         ~SceneLoader();
 
         void loadScene(std::string sceneName);
@@ -21,4 +26,5 @@ class SceneLoader
     private:
         Scene *scene;
         ResourceManager *resourceManager;
+        UIManager *uiManager;
 };

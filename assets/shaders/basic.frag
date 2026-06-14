@@ -31,6 +31,25 @@ vec3 calcSpecular(vec3 color, vec3 norm, vec3 lightDir)
     return 0.5 * spec * color;
 }
 
+vec3 calcDiffuseCellShading(vec3 color, vec3 norm, vec3 lightDir)
+{
+    float diff = max(dot(norm, lightDir), 0.0);
+    if (diff > 0.6)      diff = 1.0;
+    else if (diff > 0.3) diff = 0.5;
+    else                 diff = 0.1;
+    return diff * color;
+}
+
+vec3 calcSpecularCellShading(vec3 color, vec3 norm, vec3 lightDir)
+{
+    vec3 viewDir = normalize(-fragPos);
+    vec3 reflectDir = reflect(-lightDir, norm);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    if (spec > 0.5) spec = 1.0;
+    else            spec = 0.0;
+    return 0.5 * spec * color;
+}
+
 void main()
 {
     vec3 norm = normalize(fragNormal);
@@ -40,8 +59,8 @@ void main()
     {
         vec3 lightDir = normalize(lightPos[i] - fragPos);
         result += calcAmbient(lightColor[i]);
-        result += calcDiffuse(lightColor[i], norm, lightDir);
-        result += calcSpecular(lightColor[i], norm, lightDir);
+        result += calcDiffuseCellShading(lightColor[i], norm, lightDir);
+        result += calcSpecularCellShading(lightColor[i], norm, lightDir);
     }
 
     vec4 texColor = texture(textures[0], uv);

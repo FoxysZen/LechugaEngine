@@ -41,8 +41,22 @@ bool Application::init()
     scene = std::make_unique<Scene>();
 
     Logger::info("Loading Scene");
-    sceneLoader = std::make_unique<SceneLoader>(scene.get(), resourceManager.get());
+    auto sceneLoader = std::make_unique<SceneLoader>(scene.get(), resourceManager.get(), uiManager.get());
     sceneLoader->loadScene("testScene.json");
+
+    Logger::info("Loading UI");
+    uiRenderer = std::make_unique<UIRenderer>();
+    uiRenderer->init(
+        resourceManager->loadShader("assets/shaders/ui.vert", "assets/shaders/ui.frag"),
+        Config::getInstance().windowWidth,
+        Config::getInstance().windowHeight
+    );
+    uiManager = std::make_unique<UIManager>();
+    uiManager->init(uiRenderer.get());
+
+    uiManager->registerCallback("btnPlay", []() {
+        Logger::info("Play pulsado");
+    });
 
     Logger::info("Adding subscriptions");
     // Cerrar la ventana cuando se publique QuitEvent
@@ -57,12 +71,19 @@ bool Application::init()
     });
 
     EventSystem::getInstance().subscribe<LeftMousePressedEvent>([this](const LeftMousePressedEvent& e) {
-        camera->setLeftMouse(true);
-        input->captureMousePosition();
+        if (!uiManager->handleClick(input->getMouseX(), input->getMouseY()))
+        {
+            camera->setLeftMouse(true);
+            input->captureMousePosition();
+        }
     });
 
     EventSystem::getInstance().subscribe<LeftMouseReleasedEvent>([this](const LeftMouseReleasedEvent& e) {
         camera->setLeftMouse(false);
+    });
+
+    EventSystem::getInstance().subscribe<LeftMousePressedEvent>([this](const LeftMousePressedEvent& e) {
+        uiManager->handleClick(input->getMouseX(), input->getMouseY());
     });
     
     Logger::info("Init complete");
@@ -96,6 +117,9 @@ void Application::run()
         scene->update(deltaTime);
 
         scene->render(renderer.get());
+
+        uiManager->handleHover(input->getMouseX(), input->getMouseY());
+        uiManager->draw();
 
         window->swapBuffers();
         input->updateMouseLast();

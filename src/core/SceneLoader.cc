@@ -1,9 +1,11 @@
 #include <SceneLoader.h>
 
-SceneLoader::SceneLoader(Scene *_scene, ResourceManager *_resourceManager)
+SceneLoader::SceneLoader(Scene *_scene, ResourceManager *_resourceManager,
+    UIManager *_uiManager)
 {
     scene = _scene;
     resourceManager = _resourceManager;
+    uiManager = _uiManager;
 }
 
 SceneLoader::~SceneLoader()
@@ -170,5 +172,71 @@ void SceneLoader::loadScene(std::string sceneName)
 
         EntityID id = scene->createEntity();
         scene->addParticle(id, {ps});
+    }
+
+    if (json.contains("ui"))
+    {
+        int size = json["ui"].size();
+        for (int i = 0; i < size; ++i)
+        {
+            std::string type = json["ui"][i]["type"];
+            int x = json["ui"][i]["x"];
+            int y = json["ui"][i]["y"];
+            bool vis = json["ui"][i].contains("visible") ? 
+                (bool)json["ui"][i]["visible"] : true;
+        
+            if (type == "label")
+            {
+                std::string text = json["ui"][i]["text"];
+                std::string fntPath = json["ui"][i]["font"];
+                std::string texPath = json["ui"][i]["fontTexture"];
+                Font* font = resourceManager->loadFont(fntPath, texPath);
+                UILabel* label = new UILabel(x, y, text, font);
+                label->setVisible(vis);
+                uiManager->addElement(label);
+                Logger::info("added element.");
+            }
+            else if (type == "panel")
+            {
+                int width = json["ui"][i]["width"];
+                int height = json["ui"][i]["height"];
+                glm::vec3 color = {
+                    json["ui"][i]["color"][0],
+                    json["ui"][i]["color"][1],
+                    json["ui"][i]["color"][2]
+                };
+                UIPanel* panel = new UIPanel(x, y, width, height, color);
+                panel->setVisible(vis);
+                uiManager->addElement(panel);
+            }
+            else if (type == "image")
+            {
+                int width = json["ui"][i]["width"];
+                int height = json["ui"][i]["height"];
+                std::string texPath = json["ui"][i]["texture"];
+                Texture* tex = resourceManager->loadTexture(texPath);
+                UIImage* image = new UIImage(x, y, width, height, tex);
+                image->setVisible(vis);
+                uiManager->addElement(image);
+            }
+            else if (type == "button")
+            {
+                int width = json["ui"][i]["width"];
+                int height = json["ui"][i]["height"];
+                std::string normalTex = json["ui"][i]["normalTexture"];
+                std::string hoverTex = json["ui"][i]["hoverTexture"];
+                std::string btnId = json["ui"][i]["id"];
+                UIButton* button = new UIButton(x, y, width, height,
+                    resourceManager->loadTexture(normalTex),
+                    resourceManager->loadTexture(hoverTex),
+                    [uiManager = this->uiManager, btnId]() {
+                        if (uiManager->callbacks.count(btnId) > 0)
+                            uiManager->callbacks[btnId]();
+                    }
+                );
+                button->setVisible(vis);
+                uiManager->addElement(button);
+            }
+        }
     }
 }

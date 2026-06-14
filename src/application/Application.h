@@ -13,6 +13,12 @@
 #include <Skydome.h>
 #include <Texture.h>
 #include <Timer.h>
+#include <UIButton.h>
+#include <UIImage.h>
+#include <UIManager.h>
+#include <UILabel.h>
+#include <UIPanel.h>
+#include <UIRenderer.h>
 #include <Window.h> 
 
 class Application
@@ -35,6 +41,9 @@ class Application
         std::unique_ptr<InputManager> input = nullptr;
         std::unique_ptr<Timer> timer = nullptr;
         std::unique_ptr<ResourceManager> resourceManager = nullptr;
+
+        std::unique_ptr<UIRenderer> uiRenderer;
+        std::unique_ptr<UIManager> uiManager;
 
         // test
         ParticleSystem *m_ps;
