@@ -12,5 +12,5 @@ class Font
         
         std::unordered_map<int, CharInfo> chars;
         Texture* texture;
-        int lineHeight;
+        int lineHeight = 45;
 };

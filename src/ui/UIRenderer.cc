@@ -149,32 +149,42 @@ void UIRenderer::drawTexturedQuad(int x, int y, int width, int height,
     glDisable(GL_BLEND);
 }
 
-void UIRenderer::drawText(int x, int y, std::string text, Font* font)
+void UIRenderer::drawText(int x, int y, std::string text, Font* font, 
+    float scale)
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
     int cursorX = x;
-    for (char c : text)
+    int cursorY = y;
+
+    for (unsigned char c : text)
     {
+        if (c == '\n')
+        {
+            cursorX = x;
+            cursorY += (int)(font->lineHeight * scale);
+            continue;
+        }
         int id = (int)c;
         if (font->chars.find(id) == font->chars.end()) continue;
-        
         CharInfo& info = font->chars[id];
         if (info.width > 0 && info.height > 0)
         {
             drawTexturedQuad(
-                cursorX + info.xoffset,
-                y + info.yoffset,
-                info.width,
-                info.height,
+                cursorX + (int)(info.xoffset * scale),
+                cursorY + (int)(info.yoffset * scale),
+                (int)(info.width * scale),
+                (int)(info.height * scale),
                 font->texture,
                 info.x, info.y,
                 info.width, info.height
             );
+            cursorX += (int)(info.width * scale);
         }
-        cursorX += info.xadvance;
+        else
+        {
+            cursorX += (int)(info.xadvance * scale);
+        }
     }
-
     glDisable(GL_BLEND);
 }

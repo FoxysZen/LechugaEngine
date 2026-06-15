@@ -54,17 +54,23 @@ bool Application::init()
     auto sceneLoader = std::make_unique<SceneLoader>(scene.get(), resourceManager.get(), uiManager.get());
     sceneLoader->loadScene("testScene.json");
 
+    Font *font = new Font();
+    font = resourceManager->loadFont("assets/fonts/SansSerif.fnt", "assets/fonts/SansSerif.png");
+    debugLabel = new UILabel(10, 10, "", font);
+    debugLabel->setVisible(false);
+    debugLabel->setLayer(10);
+    debugLabel->setScale(0.5f);
+    uiManager->addElement(debugLabel);
+
     uiManager->registerCallback("btnPlay", []() {
         Logger::info("Play pulsado");
     });
 
     Logger::info("Adding subscriptions");
-    // Cerrar la ventana cuando se publique QuitEvent
     EventSystem::getInstance().subscribe<QuitEvent>([this](const QuitEvent& e) {
         window->closeWindow();
     });
 
-    // Actualizar renderer y camera cuando se redimensione
     EventSystem::getInstance().subscribe<WindowResizedEvent>([this](const WindowResizedEvent& e) {
         renderer->onResize(e.width, e.height);
         camera->setAspectRatio(e.width, e.height);
@@ -75,6 +81,13 @@ bool Application::init()
         {
             camera->setLeftMouse(true);
             input->captureMousePosition();
+        }
+    });
+
+    EventSystem::getInstance().subscribe<KeyPressedEvent>([this](const KeyPressedEvent& e) {
+        if (e.key == SDLK_F3)
+        {
+            debugLabel->setVisible(!debugLabel->isVisible());
         }
     });
 
@@ -100,9 +113,19 @@ void Application::run()
         elapsed += deltaTime;
         if (elapsed >= 1.0f)
         {
-            window->setTitle("LechugaEngine | FPS: " + std::to_string(frames));
+            debugStats = "FPS: " + std::to_string(frames) + "\nDraw calls: " + 
+                        std::to_string(renderer->getDrawCalls() / frames);
+            renderer->resetDrawCalls();
             frames = 0;
             elapsed = 0.0f;
+        }
+        if (debugLabel->isVisible())
+        {
+            glm::vec3 camPos = camera->getPosition();
+            std::string coords = "\nCam Coords: X: " + std::to_string(camPos.x)
+                               + " Y: " + std::to_string(camPos.y) +
+                                 " Z: " + std::to_string(camPos.z);
+            debugLabel->setText(debugStats + coords);
         }
 
         input->pollEvents();
@@ -124,5 +147,5 @@ void Application::run()
 
 void Application::shutdown()
 {
-    
+    delete debugLabel;
 }

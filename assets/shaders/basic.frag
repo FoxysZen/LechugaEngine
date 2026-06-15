@@ -60,7 +60,7 @@ void main()
         vec3 lightDir = normalize(lightPos[i] - fragPos);
         result += calcAmbient(lightColor[i]);
         result += calcDiffuseCellShading(lightColor[i], norm, lightDir);
-        result += calcSpecularCellShading(lightColor[i], norm, lightDir);
+        //result += calcSpecularCellShading(lightColor[i], norm, lightDir);
     }
 
     vec4 texColor = texture(textures[0], uv);

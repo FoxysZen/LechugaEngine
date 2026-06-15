@@ -28,6 +28,7 @@ void Renderer::beginFrame(Camera *camera, float deltaTime)
     if (skydome)
     {
         skydome->draw(currentView, currentProj, deltaTime);
+        ++drawCalls;
     }
 
     glEnable(GL_CULL_FACE);
@@ -92,6 +93,7 @@ void Renderer::render(const MeshComponent &mesh,
     }
 
     activeMesh->draw();
+    ++drawCalls;
 
     for (int i = 0; i < size; ++i)
     {
@@ -124,6 +126,17 @@ void Renderer::drawParticles(const std::vector<ParticleComponent> &particles)
         if (frustum.isSphereInside(center, radius))
         {
             particle.system->draw(currentView, currentProj);
+            ++drawCalls;
         }
     }
+}
+
+int Renderer::getDrawCalls()
+{
+    return drawCalls;
+}
+
+void Renderer::resetDrawCalls()
+{
+    drawCalls = 0;
 }

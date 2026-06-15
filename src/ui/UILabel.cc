@@ -13,5 +13,20 @@ UILabel::UILabel(int _x, int _y, std::string _text, Font* _font)
 void UILabel::draw(UIRenderer* renderer)
 {
     if (!visible) return;
-    renderer->drawText(x, y, text, font);
+    renderer->drawText(x, y, text, font, fontScale);
+}
+
+void UILabel::setText(std::string _text)
+{
+    text = _text;
+}
+
+float UILabel::getScale()
+{
+    return fontScale;
+}
+
+void UILabel::setScale(float _scale)
+{
+    fontScale = _scale;
 }

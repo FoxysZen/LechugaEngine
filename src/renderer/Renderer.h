@@ -26,6 +26,9 @@ class Renderer
         void onResize(int width, int height);
         void setSkydome(Skydome *skydome);
         void drawParticles(const std::vector<ParticleComponent> &particles);
+
+        int getDrawCalls();
+        void resetDrawCalls();
     
     private:
         glm::mat4 currentView;
@@ -38,4 +41,6 @@ class Renderer
 
         Frustum frustum;
         Skydome* skydome = nullptr;
+
+        int drawCalls = 0;
 };

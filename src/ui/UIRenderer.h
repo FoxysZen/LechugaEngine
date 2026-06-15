@@ -21,7 +21,7 @@ class UIRenderer
             Texture *texture);
         void drawTexturedQuad(int x, int y, int width, int height, 
             Texture* texture, int srcX, int srcY, int srcWidth, int srcHeight);
-        void drawText(int x, int y, std::string text, Font* font);
+        void drawText(int x, int y, std::string text, Font* font, float scale);
 
     private:
         GLuint VAO, VBO;

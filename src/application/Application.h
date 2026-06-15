@@ -42,9 +42,9 @@ class Application
         std::unique_ptr<Timer> timer = nullptr;
         std::unique_ptr<ResourceManager> resourceManager = nullptr;
 
-        std::unique_ptr<UIRenderer> uiRenderer;
-        std::unique_ptr<UIManager> uiManager;
+        std::unique_ptr<UIRenderer> uiRenderer = nullptr;
+        std::unique_ptr<UIManager> uiManager = nullptr;
+        UILabel *debugLabel = nullptr;
 
-        // test
-        ParticleSystem *m_ps;
+        std::string debugStats = "";
 };
