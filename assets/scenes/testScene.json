@@ -31,6 +31,22 @@
                 "shader": ["assets/shaders/basic.vert", "assets/shaders/basic.frag"],
                 "textures": ["assets/textures/char_body_texture.png", "assets/textures/char_face_texture.png"]
             }
+        },
+        {
+            "transform": {
+                "position": [0, -10, 0],
+                "rotation": [0, 0, 0],
+                "scale": [3.63, 3.63, 3.63]
+            },
+            "mesh": {
+                "lods": [
+                    {"path": "assets/meshes/terrain/test_terrain.obj", "maxDistance": 10.0},
+                    {"path": "assets/meshes/terrain/test_terrain.obj", "maxDistance": 50.0},
+                    {"path": "assets/meshes/terrain/test_terrain.obj", "maxDistance": 100.0}
+                ],
+                "shader": ["assets/shaders/basic.vert", "assets/shaders/basic.frag"],
+                "textures": ["assets/textures/placeholder.png"]
+            }
         }
     ],
     "lights": [

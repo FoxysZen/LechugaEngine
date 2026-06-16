@@ -20,10 +20,10 @@ class Scene
         void addParticle(EntityID id, ParticleComponent particle);
         void drawParticles(const std::unordered_map<EntityID, 
             ParticleComponent>& particles);
-        TransformComponent getTransform(EntityID id);
-        MeshComponent getMesh(EntityID id);
-        LightComponent getLight(EntityID id);
-        ParticleComponent getParticle(EntityID id);
+        TransformComponent *getTransform(EntityID id);
+        MeshComponent *getMesh(EntityID id);
+        LightComponent *getLight(EntityID id);
+        ParticleComponent *getParticle(EntityID id);
         void update(float deltaTime);
         void render(Renderer *renderer);
 

@@ -35,24 +35,24 @@ void Scene::addParticle(EntityID id, ParticleComponent particle)
     particles[id] = particle;
 }
 
-TransformComponent Scene::getTransform(EntityID id)
+TransformComponent *Scene::getTransform(EntityID id)
 {
-    return transforms[id];
+    return &transforms[id];
 }
 
-MeshComponent Scene::getMesh(EntityID id)
+MeshComponent *Scene::getMesh(EntityID id)
 {
-    return meshes[id];
+    return &meshes[id];
 }
 
-LightComponent Scene::getLight(EntityID id)
+LightComponent *Scene::getLight(EntityID id)
 {
-    return lights[id];
+    return &lights[id];
 }
 
-ParticleComponent Scene::getParticle(EntityID id)
+ParticleComponent *Scene::getParticle(EntityID id)
 {
-    return particles[id];
+    return &particles[id];
 }
 
 void Scene::update(float deltaTime)
