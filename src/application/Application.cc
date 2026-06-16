@@ -20,6 +20,9 @@ bool Application::init()
     Logger::info("Creating renderer...");
     renderer = std::make_unique<Renderer>();
 
+    Logger::info("Creating physics engine...");
+    physicsEngine = std::make_unique<PhysicsEngine>();
+
     Logger::info("Creating skydome...");
     skydome = std::make_unique<Skydome>();
     skydome->init(
@@ -51,7 +54,8 @@ bool Application::init()
     uiManager->init(uiRenderer.get());
 
     Logger::info("Loading Scene");
-    auto sceneLoader = std::make_unique<SceneLoader>(scene.get(), resourceManager.get(), uiManager.get());
+    auto sceneLoader = std::make_unique<SceneLoader>(scene.get(), 
+        resourceManager.get(), uiManager.get(), physicsEngine.get());
     sceneLoader->loadScene("testScene.json");
 
     Font *font = new Font();
@@ -129,6 +133,8 @@ void Application::run()
         }
 
         input->pollEvents();
+
+        physicsEngine->step(deltaTime, scene.get());
 
         camera->update(input.get(), deltaTime);
         renderer->beginFrame(camera.get(), deltaTime);

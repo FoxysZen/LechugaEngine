@@ -5,6 +5,7 @@
 #include <InputManager.h>
 #include <memory>
 #include <ParticleSystem.h>
+#include <PhysicsEngine.h>
 #include <Renderer.h>
 #include <ResourceManager.h>
 #include <Scene.h>
@@ -45,6 +46,8 @@ class Application
         std::unique_ptr<UIRenderer> uiRenderer = nullptr;
         std::unique_ptr<UIManager> uiManager = nullptr;
         UILabel *debugLabel = nullptr;
+
+        std::unique_ptr<PhysicsEngine> physicsEngine = nullptr;
 
         std::string debugStats = "";
 };

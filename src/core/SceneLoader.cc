@@ -1,11 +1,12 @@
 #include <SceneLoader.h>
 
 SceneLoader::SceneLoader(Scene *_scene, ResourceManager *_resourceManager,
-    UIManager *_uiManager)
+    UIManager *_uiManager, PhysicsEngine *_physicsEngine)
 {
     scene = _scene;
     resourceManager = _resourceManager;
     uiManager = _uiManager;
+    physicsEngine = _physicsEngine;
 }
 
 SceneLoader::~SceneLoader()
@@ -21,13 +22,16 @@ void SceneLoader::loadScene(std::string sceneName)
     int size = json["entities"].size();
     for (int i = 0; i < size; ++i)
     {
+        Logger::info("Loading entity " + std::to_string(i));
         EntityID id = scene->createEntity();
-
+Logger::info("Loading transform...");
         glm::vec3 position = glm::vec3(
             json["entities"][i]["transform"]["position"][0],
             json["entities"][i]["transform"]["position"][1],
             json["entities"][i]["transform"]["position"][2]
         );
+        Logger::info("position: " + std::to_string(position.x) + " " + 
+             std::to_string(position.y) + " " + std::to_string(position.z));
 
         glm::vec3 rotation = glm::vec3(
             json["entities"][i]["transform"]["rotation"][0],
@@ -42,7 +46,7 @@ void SceneLoader::loadScene(std::string sceneName)
         );
 
         scene->addTransform(id, {position, rotation, scale});
-
+Logger::info("Loading mesh...");
         int nLods = json["entities"][i]["mesh"]["lods"].size();
         std::vector<LOD> lods(nLods);
         for (int j = 0; j < nLods; ++j)
@@ -56,16 +60,98 @@ void SceneLoader::loadScene(std::string sceneName)
         ShaderProgram *shad = resourceManager->loadShader(
             json["entities"][i]["mesh"]["shader"][0], 
             json["entities"][i]["mesh"]["shader"][1]);
-        
+Logger::info("Loading textures...");
         int nTextures = json["entities"][i]["mesh"]["textures"].size();
         std::vector<Texture*> textures(nTextures);
         for (int j = 0; j < nTextures; ++j)
         {
+std::string str = json["entities"][j]["mesh"]["textures"][j];
+Logger::info("Texture: " + str);
             textures[j] = resourceManager->loadTexture(
                 json["entities"][j]["mesh"]["textures"][j]);
         }
 
         scene->addMesh(id, {lods, shad, textures});
+Logger::info("Loading collider...");
+        if (json["entities"][i].contains("collider"))
+        {
+            std::string colType = json["entities"][i]["collider"]["type"];
+            Collider* collider = nullptr;
+
+            glm::vec3 offset = glm::vec3(0.0f);
+            if (json["entities"][i]["collider"].contains("offset"))
+            {
+                offset = glm::vec3(
+                    json["entities"][i]["collider"]["offset"][0],
+                    json["entities"][i]["collider"]["offset"][1],
+                    json["entities"][i]["collider"]["offset"][2]
+                );
+            }
+        
+            if (colType == "SPHERE")
+            {
+                float radius = json["entities"][i]["collider"]["radius"];
+                collider = new SphereCollider(radius, offset);
+            }
+            else if (colType == "CAPSULE")
+            {
+                float radius = json["entities"][i]["collider"]["radius"];
+                float height = json["entities"][i]["collider"]["height"];
+                collider = new CapsuleCollider(radius, height);
+                collider->offset = offset;
+            }
+            else if (colType == "BOX")
+            {
+                glm::vec3 halfExtents = glm::vec3(
+                    json["entities"][i]["collider"]["halfExtents"][0],
+                    json["entities"][i]["collider"]["halfExtents"][1],
+                    json["entities"][i]["collider"]["halfExtents"][2]
+                );
+                collider = new BoxCollider(halfExtents);
+                collider->offset = offset;
+            }
+            else if (colType == "MESH")
+            {
+                std::string path = json["entities"][i]["collider"]["path"];
+                auto groups = OBJParser::getVertices(path);
+                std::vector<glm::vec3> triangles;
+
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), position);
+                model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1,0,0));
+                model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0,1,0));
+                model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0,0,1));
+                model = glm::scale(model, scale);
+
+                for (auto& [mat, verts] : groups)
+                {
+                    for (size_t v = 0; v < verts.size(); v += 8)
+                    {
+                        glm::vec4 worldPos = model * glm::vec4(verts[v], verts[v+1], verts[v+2], 1.0f);
+                        triangles.push_back(glm::vec3(worldPos));
+                    }
+                }
+                collider = new MeshCollider(triangles);
+            }
+        
+            if (collider)
+            {
+                scene->addCollider(id, {collider});
+                physicsEngine->addCollider(id, collider);
+            }
+        }
+Logger::info("Loading rigidbody...");
+        if (json["entities"][i].contains("rigidBody"))
+        {
+            float mass = json["entities"][i]["rigidBody"]["mass"];
+            bool useGravity = json["entities"][i]["rigidBody"]["useGravity"];
+            bool isKinematic = json["entities"][i]["rigidBody"]["isKinematic"];
+
+            RigidBody* body = new RigidBody();
+            body->init(glm::vec3(0.0f), glm::vec3(0.0f), mass, useGravity, 
+                isKinematic);
+            scene->addRigidBody(id, body);
+            physicsEngine->addBody(id, body);
+        }
     }
 
     size = json["lights"].size();

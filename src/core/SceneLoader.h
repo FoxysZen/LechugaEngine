@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <ParticleRenderMode.h>
 #include <ParticleType.h>
+#include <PhysicsEngine.h>
 #include <ResourceManager.h>
 #include <Scene.h>
 #include <ShaderProgram.h>
@@ -18,7 +19,7 @@ class SceneLoader
 {
     public:
         SceneLoader(Scene *_scene, ResourceManager *_resourceManager, 
-            UIManager *_uiManager);
+            UIManager *_uiManager, PhysicsEngine *_physicsEngine);
         ~SceneLoader();
 
         void loadScene(std::string sceneName);
@@ -27,4 +28,5 @@ class SceneLoader
         Scene *scene;
         ResourceManager *resourceManager;
         UIManager *uiManager;
+        PhysicsEngine *physicsEngine;
 };

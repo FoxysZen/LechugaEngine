@@ -19,6 +19,8 @@ find_package(OpenGL REQUIRED)
 add_executable(LechugaEngine
     src/main.cc
 
+    src/application/Application.cc
+
     src/core/Logger.cc
     src/core/Timer.cc
     src/core/FileSystem.cc
@@ -29,13 +31,14 @@ add_executable(LechugaEngine
     src/core/Config.cc
     src/core/SceneLoader.cc
 
-    src/application/Application.cc
-    src/window/Window.cc
     src/input/InputManager.cc
-
-    src/scene/Camera.cc
-    src/scene/Scene.cc
-    src/scene/ParticleSystem.cc
+    
+    src/physics/BoxCollider.cc
+    src/physics/CapsuleCollider.cc
+    src/physics/MeshCollider.cc
+    src/physics/PhysicsEngine.cc
+    src/physics/RigidBody.cc
+    src/physics/SphereCollider.cc
 
     src/renderer/Renderer.cc
     src/renderer/ShaderProgram.cc
@@ -43,7 +46,11 @@ add_executable(LechugaEngine
     src/renderer/Texture.cc
     src/renderer/Frustum.cc
     src/renderer/Skydome.cc
-
+    
+    src/scene/Camera.cc
+    src/scene/Scene.cc
+    src/scene/ParticleSystem.cc
+    
     src/ui/Font.cc
     src/ui/FontParser.cc
     src/ui/UIButton.cc
@@ -53,6 +60,8 @@ add_executable(LechugaEngine
     src/ui/UIPanel.cc
     src/ui/UIRenderer.cc
 
+    src/window/Window.cc
+
     vendor/glad/src/glad.c
 )
 
@@ -61,6 +70,7 @@ target_include_directories(LechugaEngine PRIVATE
     src/application/
     src/core/
     src/input/
+    src/physics/
     src/renderer/
     src/scene/
     src/ui/

@@ -35,6 +35,16 @@ void Scene::addParticle(EntityID id, ParticleComponent particle)
     particles[id] = particle;
 }
 
+void Scene::addCollider(EntityID id, ColliderComponent collider)
+{
+    colliders[id] = collider;
+}
+
+void Scene::addRigidBody(EntityID id, RigidBody *rigidbody)
+{
+    rigidBodies[id] = rigidbody;
+}
+
 TransformComponent *Scene::getTransform(EntityID id)
 {
     return &transforms[id];
@@ -55,14 +65,22 @@ ParticleComponent *Scene::getParticle(EntityID id)
     return &particles[id];
 }
 
+ColliderComponent *Scene::getCollider(EntityID id)
+{
+    return &colliders[id];
+}
+
+RigidBody *Scene::getRigidBody(EntityID id)
+{
+    return rigidBodies[id];
+}
+
 void Scene::update(float deltaTime)
 {
     for (auto &[id, particle] : particles)
     {
         particle.system->update(deltaTime);
     }
-
-    // TODO: update fzx
 }
 
 void Scene::render(Renderer *renderer)

@@ -32,7 +32,13 @@ class PhysicsEngine
         void resolveCollision(Scene* scene, CollisionInfo info);
 
     private:
+        glm::vec3 closestPointOnTriangle(glm::vec3 P, glm::vec3 A, glm::vec3 B,
+            glm::vec3 C);
+        glm::vec3 closestPointOnSegment(glm::vec3 A, glm::vec3 B, glm::vec3 P);
+        void closestPointsBetweenSegments(glm::vec3 p1, glm::vec3 q1, 
+            glm::vec3 p2, glm::vec3 q2, glm::vec3 &c1, glm::vec3 &c2);
+
         std::unordered_map<EntityID, RigidBody*> bodies;
         std::unordered_map<EntityID, Collider*> colliders;
-        float gravity;
+        float gravity = 2.0f;
 };
