@@ -49,6 +49,11 @@ bool RigidBody::getIsKinematic() const
     return isKinematic;
 }
 
+bool RigidBody::getIsGrounded() const
+{
+    return isGrounded;
+}
+
 void RigidBody::setVelocity(glm::vec3 v)
 {
     velocity = v;
@@ -57,4 +62,9 @@ void RigidBody::setVelocity(glm::vec3 v)
 void RigidBody::setAcceleration(glm::vec3 a)
 {
     acceleration = a;
+}
+
+void RigidBody::setIsGrounded(bool g)
+{
+    isGrounded = g;
 }

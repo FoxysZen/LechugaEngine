@@ -18,8 +18,10 @@ class RigidBody
         float getMass() const;
         bool getUseGravity() const;
         bool getIsKinematic() const;
+        bool getIsGrounded() const;
         void setVelocity(glm::vec3 v);
         void setAcceleration(glm::vec3 a);
+        void setIsGrounded(bool g);
 
     private:
         glm::vec3 velocity;
@@ -29,4 +31,5 @@ class RigidBody
 
         bool useGravity;
         bool isKinematic;
+        bool isGrounded = false;
 };
