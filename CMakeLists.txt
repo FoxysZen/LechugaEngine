@@ -35,6 +35,7 @@ add_executable(LechugaEngine
     
     src/physics/BoxCollider.cc
     src/physics/CapsuleCollider.cc
+    src/physics/CharacterController.cc
     src/physics/MeshCollider.cc
     src/physics/PhysicsEngine.cc
     src/physics/RigidBody.cc

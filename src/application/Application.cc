@@ -58,6 +58,10 @@ bool Application::init()
         resourceManager.get(), uiManager.get(), physicsEngine.get());
     sceneLoader->loadScene("testScene.json");
 
+    Logger::info("Creating CHaracterController");
+    characterController = std::make_unique<CharacterController>(0, 
+                                            physicsEngine.get(), scene.get());
+
     Font *font = new Font();
     font = resourceManager->loadFont("assets/fonts/SansSerif.fnt", "assets/fonts/SansSerif.png");
     debugLabel = new UILabel(10, 10, "", font);
@@ -133,6 +137,16 @@ void Application::run()
         }
 
         input->pollEvents();
+
+        glm::vec3 direction = glm::vec3(0.0f);
+        if (input->isKeyDown(SDLK_UP)) direction.z -= 1.0f;
+        if (input->isKeyDown(SDLK_DOWN)) direction.z += 1.0f;
+        if (input->isKeyDown(SDLK_LEFT)) direction.x -= 1.0f;
+        if (input->isKeyDown(SDLK_RIGHT)) direction.x += 1.0f;
+        if (glm::length(direction) > 0.0f)
+            direction = glm::normalize(direction);
+
+        characterController->move(direction, 5.0f, deltaTime);
 
         physicsEngine->step(deltaTime, scene.get());
 

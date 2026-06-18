@@ -1,7 +1,9 @@
 #pragma once
 #include <Camera.h>
+#include <CharacterController.h>
 #include <climits>
 #include <Config.h>
+#include <EntityID.h>
 #include <InputManager.h>
 #include <memory>
 #include <ParticleSystem.h>
@@ -48,6 +50,8 @@ class Application
         UILabel *debugLabel = nullptr;
 
         std::unique_ptr<PhysicsEngine> physicsEngine = nullptr;
+        std::unique_ptr<CharacterController> characterController;
+        EntityID playerID;
 
         std::string debugStats = "";
 };
