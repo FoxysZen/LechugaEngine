@@ -22,7 +22,7 @@ class CharacterController
         PhysicsEngine *physics;
         Scene *scene;
 
-        glm::vec3 velocity;
+        glm::vec3 velocity = glm::vec3(0.0f);
 
         float gravity = 2.0f;
         bool grounded = false;

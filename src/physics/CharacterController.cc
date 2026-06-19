@@ -10,7 +10,8 @@ CharacterController::CharacterController(EntityID _id, PhysicsEngine *_physics,
 
 CharacterController::~CharacterController() {}
 
-void CharacterController::move(glm::vec3 direction, float speed, float deltaTime)
+void CharacterController::move(glm::vec3 direction, float speed, 
+                               float deltaTime)
 {
     if (!grounded)
         velocity.y -= gravity * deltaTime;
@@ -25,32 +26,31 @@ void CharacterController::move(glm::vec3 direction, float speed, float deltaTime
 
     grounded = false;
 
-    std::vector<CollisionInfo> collisions = physics->getCollisionsFor(id, scene);
-    for (auto& col : collisions)
+    const int MAX_ITERATIONS = 3;
+    for (int iter = 0; iter < MAX_ITERATIONS; iter++)
     {
-        float percent = 0.8f;
-        float slop = 0.01f;
-        float correction = std::max(col.depth - slop, 0.0f) * percent;
+        std::vector<CollisionInfo> collisions = 
+            physics->getCollisionsFor(id, scene);
+        if (collisions.empty()) break;
 
-        if (col.entity1 == id)
-            transform->position -= col.normal * correction;
-        else
-            transform->position += col.normal * correction;
-
-        float velAlongNormal = glm::dot(velocity, col.normal);
-        if (velAlongNormal < 0.0f)
+        for (auto& col : collisions)
         {
-            if (col.entity1 == id)
-                velocity -= col.normal * velAlongNormal;
-            else
-                velocity += col.normal * velAlongNormal;
-        }
+            glm::vec3 effectiveNormal = 
+                (col.entity1 == id) ? col.normal : -col.normal;
+            
+            float slop = 0.001f;
+            float correction = std::max(col.depth - slop, 0.0f);
+            transform->position += effectiveNormal * correction;
 
-        glm::vec3 effectiveNormal = (col.entity1 == id) ? col.normal : -col.normal;
-        if (effectiveNormal.y > 0.7f)
-        {
-            grounded = true;
-            velocity.y = 0.0f;
+            float velAlongNormal = glm::dot(velocity, effectiveNormal);
+            if (velAlongNormal < 0.0f)
+                velocity -= effectiveNormal * velAlongNormal;
+
+            if (effectiveNormal.y > 0.5f)
+            {
+                grounded = true;
+                velocity.y = 0.0f;
+            }
         }
     }
 }

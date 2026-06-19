@@ -30,7 +30,7 @@ class Camera
 
         float yaw = -90.0f;
         float pitch = 0.0f;
-        float speed = 5.0f;
+        float speed = 10.0f;
         float sensitivity = 0.1f;
         glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
 

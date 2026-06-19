@@ -1,4 +1,7 @@
+#include "Logger.h"
+#include "TransformComponent.h"
 #include <Application.h>
+#include <string>
 
 Application::Application() {}
 
@@ -75,7 +78,7 @@ bool Application::init()
     });
 
     Logger::info("Adding subscriptions");
-    EventSystem::getInstance().subscribe<QuitEvent>([this](const QuitEvent& e) {
+    EventSystem::getInstance().subscribe<QuitEvent>([this](const QuitEvent&) {
         window->closeWindow();
     });
 
@@ -84,7 +87,7 @@ bool Application::init()
         camera->setAspectRatio(e.width, e.height);
     });
 
-    EventSystem::getInstance().subscribe<LeftMousePressedEvent>([this](const LeftMousePressedEvent& e) {
+    EventSystem::getInstance().subscribe<LeftMousePressedEvent>([this](const LeftMousePressedEvent&) {
         if (!uiManager->handleClick(input->getMouseX(), input->getMouseY()))
         {
             camera->setLeftMouse(true);
@@ -99,7 +102,7 @@ bool Application::init()
         }
     });
 
-    EventSystem::getInstance().subscribe<LeftMouseReleasedEvent>([this](const LeftMouseReleasedEvent& e) {
+    EventSystem::getInstance().subscribe<LeftMouseReleasedEvent>([this](const LeftMouseReleasedEvent&) {
         camera->setLeftMouse(false);
     });
     
@@ -147,6 +150,10 @@ void Application::run()
             direction = glm::normalize(direction);
 
         characterController->move(direction, 5.0f, deltaTime);
+
+        // Player pos
+        //TransformComponent *p = scene->getTransform(0);
+        //Logger::info("Player x: " + std::to_string(p->position.x) + " y: " + std::to_string(p->position.y) + " z: " + std::to_string(p->position.z));
 
         physicsEngine->step(deltaTime, scene.get());
 
