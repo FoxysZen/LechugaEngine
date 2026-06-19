@@ -1,8 +1,8 @@
 #pragma once
 #include <Camera.h>
 #include <CharacterController.h>
-#include <climits>
 #include <Config.h>
+#include <DebugRenderer.h>
 #include <EntityID.h>
 #include <InputManager.h>
 #include <memory>
@@ -41,6 +41,7 @@ class Application
         std::unique_ptr<SceneLoader> sceneLoader = nullptr;
         std::unique_ptr<Camera> camera = nullptr;
         std::unique_ptr<Renderer> renderer = nullptr;
+        std::unique_ptr<DebugRenderer> debugRenderer = nullptr;
         std::unique_ptr<InputManager> input = nullptr;
         std::unique_ptr<Timer> timer = nullptr;
         std::unique_ptr<ResourceManager> resourceManager = nullptr;

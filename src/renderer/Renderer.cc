@@ -70,19 +70,21 @@ void Renderer::render(const MeshComponent &mesh,
     mesh.shader->setUniformMat4("view", currentView);
     mesh.shader->setUniformMat4("proj", currentProj);
     mesh.shader->setUniformMat4("model", transform.getModelMatrix());
-    for (int i = 0; i < mesh.textures.size(); i++)
+    int size = mesh.textures.size();
+    for (int i = 0; i < size; i++)
     {
         mesh.shader->setUniformInt("textures[" + std::to_string(i) + "]", i);
     }
 
-    int size = mesh.textures.size();
+    size = mesh.textures.size();
     for (int i = 0; i < size; ++i)
     {
         mesh.textures[i]->bind(i);
     }
 
-    mesh.shader->setUniformInt("numLights", currentLights.size());
-    for (int i = 0; i < currentLights.size(); i++)
+    size = currentLights.size();
+    mesh.shader->setUniformInt("numLights", size);
+    for (int i = 0; i < size; i++)
     {
         glm::vec3 lightPosCameraSpace = glm::vec3(currentView * glm::vec4(
             currentLights[i].position, 1.0f));
@@ -134,6 +136,11 @@ void Renderer::drawParticles(const std::vector<ParticleComponent> &particles)
 int Renderer::getDrawCalls()
 {
     return drawCalls;
+}
+
+void Renderer::addDrawCalls(int n)
+{
+    drawCalls += n;
 }
 
 void Renderer::resetDrawCalls()

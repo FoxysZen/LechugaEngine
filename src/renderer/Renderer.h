@@ -4,7 +4,6 @@
 #include <Frustum.h>
 #include <glad/glad.h>
 #include <LightComponent.h>
-#include <memory>
 #include <MeshComponent.h>
 #include <ParticleComponent.h>
 #include <ResourceManager.h>
@@ -28,6 +27,7 @@ class Renderer
         void drawParticles(const std::vector<ParticleComponent> &particles);
 
         int getDrawCalls();
+        void addDrawCalls(int n);
         void resetDrawCalls();
     
     private:

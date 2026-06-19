@@ -43,12 +43,13 @@ add_executable(LechugaEngine
     src/physics/RigidBody.cc
     src/physics/SphereCollider.cc
 
+    src/renderer/DebugRenderer.cc
+    src/renderer/Frustum.cc
+    src/renderer/Mesh.cc
     src/renderer/Renderer.cc
     src/renderer/ShaderProgram.cc
-    src/renderer/Mesh.cc
-    src/renderer/Texture.cc
-    src/renderer/Frustum.cc
     src/renderer/Skydome.cc
+    src/renderer/Texture.cc
     
     src/scene/Camera.cc
     src/scene/Scene.cc

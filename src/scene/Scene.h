@@ -23,12 +23,13 @@ class Scene
         void addCollider(EntityID id, ColliderComponent collider);
         void addRigidBody(EntityID id, RigidBody *rigidbody);
         void drawParticles(const std::unordered_map<EntityID, 
-            ParticleComponent>& particles);
+                            ParticleComponent>& particles);
         TransformComponent *getTransform(EntityID id);
         MeshComponent *getMesh(EntityID id);
         LightComponent *getLight(EntityID id);
         ParticleComponent *getParticle(EntityID id);
         ColliderComponent *getCollider(EntityID id);
+        std::unordered_map<EntityID, ColliderComponent> *getColliderMap();
         RigidBody *getRigidBody(EntityID id);
         void update(float deltaTime);
         void render(Renderer *renderer);

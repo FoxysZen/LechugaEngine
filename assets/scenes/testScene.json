@@ -19,41 +19,14 @@
                 "type": "CAPSULE",
                 "radius": 0.5,
                 "height": 1,
-                "offset": [0, 0, 0]
+                "offset": [0, 1, 0]
             }
         },
         {
             "transform": {
-                "position": [5, 10, 0],
-                "rotation": [0, 90, 0],
-                "scale": [2, 2, 2]
-            },
-            "mesh": {
-                "lods": [
-                    {"path": "assets/meshes/character_lod0.obj", "maxDistance": 10.0},
-                    {"path": "assets/meshes/character_lod1.obj", "maxDistance": 50.0},
-                    {"path": "assets/meshes/character_lod2.obj", "maxDistance": 100.0}
-                ],
-                "shader": ["assets/shaders/basic.vert", "assets/shaders/basic.frag"],
-                "textures": ["assets/textures/char_body_texture.png", "assets/textures/char_face_texture.png"]
-            },
-            "collider": {
-                "type": "CAPSULE",
-                "radius": 1,
-                "height": 2,
-                "offset": [0, 0, 0]
-            },
-            "rigidBody": {
-                "mass": 1.0,
-                "useGravity": true,
-                "isKinematic": false
-            }
-        },
-        {
-            "transform": {
-                "position": [0, -10, 0],
+                "position": [0, -5, 0],
                 "rotation": [0, 0, 0],
-                "scale": [3.63, 3.63, 3.63]
+                "scale": [1, 1, 1]
             },
             "mesh": {
                 "lods": [
@@ -66,7 +39,7 @@
             },
             "collider": {
                 "type": "MESH",
-                "path": "assets/meshes/terrain/terrain.obj"
+                "path": "assets/meshes/terrain/terrain_col.obj"
             }
         }
     ],

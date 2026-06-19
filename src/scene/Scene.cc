@@ -70,6 +70,11 @@ ColliderComponent *Scene::getCollider(EntityID id)
     return &colliders[id];
 }
 
+std::unordered_map<EntityID, ColliderComponent> *Scene::getColliderMap()
+{
+    return &colliders;
+}
+
 RigidBody *Scene::getRigidBody(EntityID id)
 {
     return rigidBodies[id];

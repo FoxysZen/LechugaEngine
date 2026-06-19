@@ -1,6 +1,8 @@
+#include "DebugRenderer.h"
 #include "Logger.h"
 #include "TransformComponent.h"
 #include <Application.h>
+#include <memory>
 #include <string>
 
 Application::Application() {}
@@ -73,6 +75,9 @@ bool Application::init()
     debugLabel->setScale(0.5f);
     uiManager->addElement(debugLabel);
 
+    debugRenderer = std::make_unique<DebugRenderer>();
+    debugRenderer->init();
+
     uiManager->registerCallback("btnPlay", []() {
         Logger::info("Play pulsado");
     });
@@ -99,6 +104,7 @@ bool Application::init()
         if (e.key == SDLK_F3)
         {
             debugLabel->setVisible(!debugLabel->isVisible());
+            debugRenderer->setVisible(!debugRenderer->isVisible());
         }
     });
 
@@ -166,6 +172,19 @@ void Application::run()
 
         uiManager->handleHover(input->getMouseX(), input->getMouseY());
         uiManager->draw();
+
+        // Debug Hitboxes
+        if (debugRenderer->isVisible())
+        {
+            glm::mat4 viewProj = camera->getProjectionMatrix() * camera->getViewMatrix();
+            for (auto& [id, collider] : *scene->getColliderMap())
+            {
+                TransformComponent* t = scene->getTransform(id);
+                glm::vec3 color = glm::vec3(0, 1, 0);
+                debugRenderer->draw(collider.collider, t, viewProj, color);
+                renderer->addDrawCalls(1);
+            }
+        }
 
         window->swapBuffers();
         input->updateMouseLast();
