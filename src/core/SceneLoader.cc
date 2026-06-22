@@ -65,10 +65,10 @@ Logger::info("Loading textures...");
         std::vector<Texture*> textures(nTextures);
         for (int j = 0; j < nTextures; ++j)
         {
-std::string str = json["entities"][j]["mesh"]["textures"][j];
+std::string str = json["entities"][i]["mesh"]["textures"][j];
 Logger::info("Texture: " + str);
             textures[j] = resourceManager->loadTexture(
-                json["entities"][j]["mesh"]["textures"][j]);
+                json["entities"][i]["mesh"]["textures"][j]);
         }
 
         scene->addMesh(id, {lods, shad, textures});

@@ -24,6 +24,32 @@
         },
         {
             "transform": {
+                "position": [0, 5, 7],
+                "rotation": [0, 0, 0],
+                "scale": [1, 1, 1]
+            },
+            "mesh": {
+                "lods": [
+                    {"path": "assets/meshes/character_lod0.obj", "maxDistance": 10.0},
+                    {"path": "assets/meshes/character_lod1.obj", "maxDistance": 50.0},
+                    {"path": "assets/meshes/character_lod2.obj", "maxDistance": 100.0}
+                ],
+                "shader": ["assets/shaders/basic.vert", "assets/shaders/basic.frag"],
+                "textures": ["assets/textures/char_body_texture.png", "assets/textures/char_face_texture.png"]
+            },
+            "collider": {
+                "type": "SPHERE",
+                "radius": 0.5,
+                "offset": [0, 1, 0]
+            },
+            "rigidBody": {
+                "mass": 1,
+                "useGravity": true,
+                "isKinematic": false
+            }
+        },
+        {
+            "transform": {
                 "position": [0, -5, 0],
                 "rotation": [0, 0, 0],
                 "scale": [1, 1, 1]
@@ -41,6 +67,27 @@
                 "type": "MESH",
                 "path": "assets/meshes/terrain/terrain_col.obj"
             }
+        },
+        {
+            "transform": {
+                "position": [5, -3, 0],
+                "rotation": [0, 0, 0],
+                "scale": [1, 1, 1]
+            },
+            "mesh": {
+                "lods": [
+                    {"path": "assets/meshes/terrain/flora/palm_tree.obj", "maxDistance": 10.0},
+                    {"path": "assets/meshes/terrain/flora/palm_tree.obj", "maxDistance": 50.0},
+                    {"path": "assets/meshes/terrain/flora/palm_tree.obj", "maxDistance": 100.0}
+                ],
+                "shader": ["assets/shaders/basic.vert", "assets/shaders/basic.frag"],
+                "textures": ["assets/textures/terrainTextures/grass_00.png", "assets/textures/terrainTextures/ground_00.png"]
+            },
+            "collider": {
+                "type": "BOX",
+                "halfExtents": [0.25, 1.5, 0.25],
+                "offset": [0, 1.5, 0]
+            }
         }
     ],
     "lights": [
@@ -51,7 +98,7 @@
         },
         {
             "position": [-5, 0, 0],
-            "color": [1, 0, 1],
+            "color": [1, 1, 1],
             "intensity": 0.5
         }
     ],

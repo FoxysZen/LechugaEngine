@@ -10,8 +10,7 @@ CharacterController::CharacterController(EntityID _id, PhysicsEngine *_physics,
 
 CharacterController::~CharacterController() {}
 
-void CharacterController::move(glm::vec3 direction, float speed, 
-                               float deltaTime)
+void CharacterController::move(glm::vec3 direction, float speed, float deltaTime)
 {
     if (!grounded)
         velocity.y -= gravity * deltaTime;
@@ -29,17 +28,16 @@ void CharacterController::move(glm::vec3 direction, float speed,
     const int MAX_ITERATIONS = 3;
     for (int iter = 0; iter < MAX_ITERATIONS; iter++)
     {
-        std::vector<CollisionInfo> collisions = 
-            physics->getCollisionsFor(id, scene);
+        std::vector<CollisionInfo> collisions = physics->getCollisionsFor(id, scene);
         if (collisions.empty()) break;
 
         for (auto& col : collisions)
         {
-            glm::vec3 effectiveNormal = 
-                (col.entity1 == id) ? col.normal : -col.normal;
-            
+            glm::vec3 effectiveNormal = (col.entity1 == id) ? col.normal : -col.normal;
+            float percent = 0.6f;   // <- esto faltaba
             float slop = 0.001f;
-            float correction = std::max(col.depth - slop, 0.0f);
+            float correction = std::max(col.depth - slop, 0.0f) * percent;
+
             transform->position += effectiveNormal * correction;
 
             float velAlongNormal = glm::dot(velocity, effectiveNormal);

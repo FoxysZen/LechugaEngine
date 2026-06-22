@@ -24,7 +24,7 @@ void Camera::update(InputManager *input, float deltaTime)
         updateVectors();
     }
 
-    glm::vec3 right = glm::normalize(glm::cross(forward, upVec));
+    right = glm::normalize(glm::cross(forward, upVec));
 
     if (input->isKeyDown(SDLK_W))
     {
@@ -83,3 +83,14 @@ void Camera::setLeftMouse(bool state)
 {
     leftMouse = state;
 }
+
+glm::vec3 Camera::getForward() const
+{
+    return forward;
+}
+
+glm::vec3 Camera::getRight() const
+{
+    return right;
+}
+

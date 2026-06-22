@@ -51,7 +51,8 @@ bool Application::init()
     Logger::info("Loading UI");
     uiRenderer = std::make_unique<UIRenderer>();
     uiRenderer->init(
-        resourceManager->loadShader("assets/shaders/ui.vert", "assets/shaders/ui.frag"),
+        resourceManager->loadShader("assets/shaders/ui.vert",
+                                    "assets/shaders/ui.frag"),
         Config::getInstance().windowWidth,
         Config::getInstance().windowHeight
     );
@@ -68,7 +69,8 @@ bool Application::init()
                                             physicsEngine.get(), scene.get());
 
     Font *font = new Font();
-    font = resourceManager->loadFont("assets/fonts/SansSerif.fnt", "assets/fonts/SansSerif.png");
+    font = resourceManager->loadFont("assets/fonts/SansSerif.fnt",
+                                     "assets/fonts/SansSerif.png");
     debugLabel = new UILabel(10, 10, "", font);
     debugLabel->setVisible(false);
     debugLabel->setLayer(10);
@@ -147,19 +149,19 @@ void Application::run()
 
         input->pollEvents();
 
+        glm::vec3 forward = glm::normalize(glm::vec3(camera->getForward().x,
+                                           0.0f, camera->getForward().z));
+        glm::vec3 right = glm::normalize(glm::vec3(camera->getRight().x,
+                                         0.0f, camera->getRight().z));
+
         glm::vec3 direction = glm::vec3(0.0f);
-        if (input->isKeyDown(SDLK_UP)) direction.z -= 1.0f;
-        if (input->isKeyDown(SDLK_DOWN)) direction.z += 1.0f;
-        if (input->isKeyDown(SDLK_LEFT)) direction.x -= 1.0f;
-        if (input->isKeyDown(SDLK_RIGHT)) direction.x += 1.0f;
-        if (glm::length(direction) > 0.0f)
-            direction = glm::normalize(direction);
+        if (input->isKeyDown(SDLK_UP)) direction += forward;
+        if (input->isKeyDown(SDLK_DOWN)) direction -= forward;
+        if (input->isKeyDown(SDLK_LEFT)) direction -= right;
+        if (input->isKeyDown(SDLK_RIGHT)) direction += right;
+        if (glm::length(direction) > 0.0f) direction = glm::normalize(direction);
 
         characterController->move(direction, 5.0f, deltaTime);
-
-        // Player pos
-        //TransformComponent *p = scene->getTransform(0);
-        //Logger::info("Player x: " + std::to_string(p->position.x) + " y: " + std::to_string(p->position.y) + " z: " + std::to_string(p->position.z));
 
         physicsEngine->step(deltaTime, scene.get());
 

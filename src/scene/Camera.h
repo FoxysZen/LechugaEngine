@@ -1,4 +1,5 @@
 #pragma once
+#include "glm/ext/vector_float3.hpp"
 #include <Config.h>
 #include <Events.h>
 #include <EventSystem.h>
@@ -20,6 +21,8 @@ class Camera
         glm::vec3 getPosition();
         void setAspectRatio(int width, int height);
         void setLeftMouse(bool state);
+        glm::vec3 getForward() const;
+        glm::vec3 getRight() const;
     
     private:
         void updateVectors();
@@ -33,6 +36,7 @@ class Camera
         float speed = 10.0f;
         float sensitivity = 0.1f;
         glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
+        glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
 
         bool leftMouse = false;
 };
