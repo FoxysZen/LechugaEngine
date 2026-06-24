@@ -1,6 +1,5 @@
-#include "DebugRenderer.h"
+#include "AudioManager.h"
 #include "Logger.h"
-#include "TransformComponent.h"
 #include <Application.h>
 #include <memory>
 #include <string>
@@ -22,6 +21,13 @@ bool Application::init()
 
     Logger::info("Creating resourceManager...");
     resourceManager = std::make_unique<ResourceManager>();
+    
+    audioManager = std::make_unique<AudioManager>();
+    audioManager->init();
+    audioManager->setVolume(AudioChannel::MUSIC, 0.7f);
+    audioManager->setVolume(AudioChannel::SFX,   0.5f);
+    audioManager->setVolume(AudioChannel::UI,    0.6f);
+
     Logger::info("Creating renderer...");
     renderer = std::make_unique<Renderer>();
 
@@ -80,8 +86,9 @@ bool Application::init()
     debugRenderer = std::make_unique<DebugRenderer>();
     debugRenderer->init();
 
-    uiManager->registerCallback("btnPlay", []() {
+    uiManager->registerCallback("btnPlay", [this]() {
         Logger::info("Play pulsado");
+        audioManager->playSFX("assets/audio/sfx/button.mp3");
     });
 
     Logger::info("Adding subscriptions");
@@ -121,6 +128,7 @@ bool Application::init()
 void Application::run()
 {
     Logger::info("Starting run loop...");
+    audioManager->playMusic("assets/audio/music/town.mp3");
     int frames = 0;
     float elapsed = 0.0f;
     while (window->isOpen())

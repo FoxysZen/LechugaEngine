@@ -22,6 +22,8 @@ add_executable(LechugaEngine
     src/main.cc
 
     src/application/Application.cc
+    
+    src/audio/AudioManager.cc
 
     src/core/Logger.cc
     src/core/Timer.cc
@@ -72,6 +74,7 @@ add_executable(LechugaEngine
 target_include_directories(LechugaEngine PRIVATE
     src/
     src/application/
+    src/audio/
     src/core/
     src/input/
     src/physics/
@@ -83,6 +86,7 @@ target_include_directories(LechugaEngine PRIVATE
 
 target_include_directories(LechugaEngine SYSTEM PRIVATE
     vendor/glad/include
+    vendor/miniaudio
     vendor/nlohmann
     vendor/SDL3/include
     vendor/stb

@@ -189,24 +189,16 @@
         }
     ],
     "ui": [
-    {
-        "type": "panel",
-        "x": 10,
-        "y": 10,
-        "width": 200,
-        "height": 100,
-        "color": [0.2, 0.2, 0.8]
-    },
-    {
-        "type": "button",
-        "id": "btnPlay",
-        "x": 100,
-        "y": 200,
-        "width": 150,
-        "height": 50,
-        "normalTexture": "assets/textures/btn_normal.png",
-        "hoverTexture": "assets/textures/btn_hover.png",
-        "visible": true
-    }
-]
+        {
+            "type": "button",
+            "id": "btnPlay",
+            "x": 100,
+            "y": 200,
+            "width": 150,
+            "height": 50,
+            "normalTexture": "assets/textures/btn_normal.png",
+            "hoverTexture": "assets/textures/btn_hover.png",
+            "visible": true
+        }
+    ]
 }

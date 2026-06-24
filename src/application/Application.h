@@ -1,4 +1,5 @@
 #pragma once
+#include <AudioManager.h>
 #include <Camera.h>
 #include <CharacterController.h>
 #include <Config.h>
@@ -51,8 +52,10 @@ class Application
         UILabel *debugLabel = nullptr;
 
         std::unique_ptr<PhysicsEngine> physicsEngine = nullptr;
-        std::unique_ptr<CharacterController> characterController;
+        std::unique_ptr<CharacterController> characterController = nullptr;
         EntityID playerID;
+
+        std::unique_ptr<AudioManager> audioManager = nullptr;
 
         std::string debugStats = "";
 };
