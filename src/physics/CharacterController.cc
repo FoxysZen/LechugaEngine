@@ -12,6 +12,22 @@ CharacterController::~CharacterController() {}
 
 void CharacterController::move(glm::vec3 direction, float speed, float deltaTime)
 {
+    TransformComponent* transform = scene->getTransform(id);
+
+    // Rotate to direction
+    if (glm::length(direction) > 0.001f)
+    {
+        float targetAngle = glm::degrees(std::atan2(direction.x, direction.z));
+
+        float rotationSpeed = 10.0f;
+
+        float diff = targetAngle - transform->rotation.y;
+        while (diff < -180.0f) diff += 360.0f;
+        while (diff >  180.0f) diff -= 360.0f;
+
+        transform->rotation.y += diff * rotationSpeed * deltaTime;
+    }
+
     if (!grounded)
         velocity.y -= gravity * deltaTime;
     else
@@ -20,7 +36,6 @@ void CharacterController::move(glm::vec3 direction, float speed, float deltaTime
     velocity.x = direction.x * speed;
     velocity.z = direction.z * speed;
 
-    TransformComponent* transform = scene->getTransform(id);
     transform->position += velocity * deltaTime;
 
     grounded = false;

@@ -66,3 +66,9 @@ void main()
     vec4 texColor = texture(textures[0], uv);
     fragColor = vec4(result, 1.0) * texColor;
 }
+
+// Normal shader
+/*void main()
+{
+    fragColor = vec4(normalize(fragNormal) * 0.5 + 0.5, 1.0);
+}*/

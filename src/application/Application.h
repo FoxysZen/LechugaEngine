@@ -1,4 +1,5 @@
 #pragma once
+#include <AnimationSystem.h>
 #include <AudioManager.h>
 #include <Camera.h>
 #include <CharacterController.h>
@@ -57,5 +58,10 @@ class Application
 
         std::unique_ptr<AudioManager> audioManager = nullptr;
 
+        std::unique_ptr<AnimationSystem> animSystem = nullptr;
+
         std::string debugStats = "";
+
+        SkinnedMesh *playerMesh = nullptr;
+        ShaderProgram* skinnedShader = nullptr;
 };
