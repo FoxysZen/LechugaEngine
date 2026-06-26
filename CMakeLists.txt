@@ -21,19 +21,23 @@ find_package(OpenGL REQUIRED)
 add_executable(LechugaEngine
     src/main.cc
 
+    src/animation/AnimationSystem.cc
+    src/animation/SkinnedMesh.cc
+
     src/application/Application.cc
     
     src/audio/AudioManager.cc
 
-    src/core/Logger.cc
-    src/core/Timer.cc
-    src/core/FileSystem.cc
-    src/core/ResourceManager.cc
-    src/core/OBJParser.cc
-    src/core/MTLParser.cc
-    src/core/stb_image_impl.cc
     src/core/Config.cc
+    src/core/FileSystem.cc
+    src/core/GTFLoader.cc
+    src/core/Logger.cc
+    src/core/MTLParser.cc
+    src/core/OBJParser.cc
+    src/core/ResourceManager.cc
     src/core/SceneLoader.cc
+    src/core/stb_image_impl.cc
+    src/core/Timer.cc
 
     src/input/InputManager.cc
     
@@ -73,6 +77,7 @@ add_executable(LechugaEngine
 
 target_include_directories(LechugaEngine PRIVATE
     src/
+    src/animation
     src/application/
     src/audio/
     src/core/
@@ -86,6 +91,7 @@ target_include_directories(LechugaEngine PRIVATE
 
 target_include_directories(LechugaEngine SYSTEM PRIVATE
     vendor/glad/include
+    vendor/gltf
     vendor/miniaudio
     vendor/nlohmann
     vendor/SDL3/include

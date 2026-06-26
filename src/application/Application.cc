@@ -43,6 +43,13 @@ bool Application::init()
     );
     renderer->setSkydome(skydome.get());
 
+    Logger::info("Creating AnimationSystem...");
+    playerMesh = resourceManager->loadSkinnedMesh("assets/meshes/fauna/pygmy.glb");
+    animSystem = std::make_unique<AnimationSystem>();
+    animSystem->setMesh(playerMesh);
+    skinnedShader = resourceManager->loadShader("assets/shaders/skinning.vert", 
+                                                "assets/shaders/basic.frag");
+
     Logger::info("Creating camera...");
     float fov = Config::getInstance().cameraFov;
     float zN = Config::getInstance().cameraNear;
@@ -89,6 +96,7 @@ bool Application::init()
     uiManager->registerCallback("btnPlay", [this]() {
         Logger::info("Play pulsado");
         audioManager->playSFX("assets/audio/sfx/button.mp3");
+        animSystem->play("picoteo", false);
     });
 
     Logger::info("Adding subscriptions");
@@ -156,7 +164,7 @@ void Application::run()
         }
 
         input->pollEvents();
-
+    ///////// character movement controler
         glm::vec3 forward = glm::normalize(glm::vec3(camera->getForward().x,
                                            0.0f, camera->getForward().z));
         glm::vec3 right = glm::normalize(glm::vec3(camera->getRight().x,
@@ -170,12 +178,34 @@ void Application::run()
         if (glm::length(direction) > 0.0f) direction = glm::normalize(direction);
 
         characterController->move(direction, 5.0f, deltaTime);
+    /////////
 
         physicsEngine->step(deltaTime, scene.get());
 
         camera->update(input.get(), deltaTime);
         renderer->beginFrame(camera.get(), deltaTime);
 
+        animSystem->update(deltaTime);
+    //////// pygmy animation
+        skinnedShader->bind();
+
+        glm::mat4 model = glm::mat4(1.0f);
+        skinnedShader->setUniformMat4("model", model);
+        skinnedShader->setUniformMat4("view",  camera->getViewMatrix());
+        skinnedShader->setUniformMat4("proj",  camera->getProjectionMatrix());
+
+        skinnedShader->setUniformInt("textures[0]", 0);
+
+        skinnedShader->setUniformInt("numLights", 1);
+        skinnedShader->setUniformVec3("lightPos[0]", camera->getPosition());
+        skinnedShader->setUniformVec3("lightColor[0]", glm::vec3(1.0f, 1.0f, 1.0f));
+
+        const auto& matrices = animSystem->getBoneMatrices();
+        for (int i = 0; i < (int)matrices.size(); ++i)
+            skinnedShader->setUniformMat4("boneMatrices[" + std::to_string(i) + "]", matrices[i]);
+
+        playerMesh->draw();
+    ////////
         scene->update(deltaTime);
 
         scene->render(renderer.get());
