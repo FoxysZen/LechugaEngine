@@ -342,7 +342,8 @@ bool PhysicsEngine::testCollision(
                     {-1,0,0}, {1,0,0}, {0,-1,0}, {0,1,0}, {0,0,-1}, {0,0,1}
                 };
                 int best = 0;
-                for (int k = 1; k < 6; ++k) if (d[k] < d[best]) best = k;
+                for (int k = 1; k < 6; ++k) if (d[k] < d[best]) 
+                    best = k;
                 
                 normal = -normals[best]; 
                 depth = radius + d[best];
@@ -354,7 +355,7 @@ bool PhysicsEngine::testCollision(
     }
     else if (type1 == ColliderType::SPHERE && type2 == ColliderType::CAPSULE)
     {
-        CapsuleCollider* capsule2 = dynamic_cast<CapsuleCollider*>(col2);
+        CapsuleCollider *capsule2 = dynamic_cast<CapsuleCollider*>(col2);
         
         glm::vec3 capPos = trans2->position + capsule2->offset;
         float halfH = capsule2->getHeight() / 2.0f;

@@ -49,7 +49,7 @@ void CharacterController::move(glm::vec3 direction, float speed, float deltaTime
         for (auto& col : collisions)
         {
             glm::vec3 effectiveNormal = (col.entity1 == id) ? col.normal : -col.normal;
-            float percent = 0.6f;   // <- esto faltaba
+            float percent = 0.6f;
             float slop = 0.001f;
             float correction = std::max(col.depth - slop, 0.0f) * percent;
 
