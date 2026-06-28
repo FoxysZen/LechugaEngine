@@ -14,7 +14,7 @@ void PhysicsEngine::addCollider(EntityID id, Collider *collider)
     colliders[id] = collider;
 }
 
-void PhysicsEngine::step(float deltaTime, Scene* scene)
+void PhysicsEngine::step(float deltaTime, Scene *scene)
 {
     for (auto &[id, body] : bodies)
     {
@@ -37,7 +37,7 @@ void PhysicsEngine::step(float deltaTime, Scene* scene)
 
             body->setVelocity(body->getVelocity() + body->getAcceleration() * deltaTime);
             
-            TransformComponent* transform = scene->getTransform(id);
+            TransformComponent *transform = scene->getTransform(id);
             if (transform) 
             {
                 transform->position += body->getVelocity() * deltaTime;
@@ -45,10 +45,7 @@ void PhysicsEngine::step(float deltaTime, Scene* scene)
 
             body->setAcceleration(glm::vec3(0.0f));
         }
-    }
 
-    for (auto &[id, body] : bodies)
-    {
         body->setIsGrounded(false);
     }
 
@@ -59,7 +56,7 @@ void PhysicsEngine::step(float deltaTime, Scene* scene)
     }
 }
 
-std::vector<CollisionInfo> PhysicsEngine::detectCollisions(Scene* scene)
+std::vector<CollisionInfo> PhysicsEngine::detectCollisions(Scene *scene)
 {
     std::vector<CollisionInfo> info;
     for (auto it1 = colliders.begin(); it1 != colliders.end(); ++it1)

@@ -1,5 +1,7 @@
 #include "AudioManager.h"
 #include "Logger.h"
+#include "glm/ext/matrix_transform.hpp"
+#include "glm/trigonometric.hpp"
 #include <Application.h>
 #include <memory>
 #include <string>
@@ -44,7 +46,7 @@ bool Application::init()
     renderer->setSkydome(skydome.get());
 
     Logger::info("Creating AnimationSystem...");
-    playerMesh = resourceManager->loadSkinnedMesh("assets/meshes/fauna/pygmy.glb");
+    playerMesh = resourceManager->loadSkinnedMesh("assets/meshes/train.glb");
     animSystem = std::make_unique<AnimationSystem>();
     animSystem->setMesh(playerMesh);
     skinnedShader = resourceManager->loadShader("assets/shaders/skinning.vert", 
@@ -96,7 +98,7 @@ bool Application::init()
     uiManager->registerCallback("btnPlay", [this]() {
         Logger::info("Play pulsado");
         audioManager->playSFX("assets/audio/sfx/button.mp3");
-        animSystem->play("picoteo", false);
+        //animSystem->play("picoteo", false);
     });
 
     Logger::info("Adding subscriptions");
@@ -190,6 +192,8 @@ void Application::run()
         skinnedShader->bind();
 
         glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(10.0f, -2.0f, -10.0f));
+        model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         skinnedShader->setUniformMat4("model", model);
         skinnedShader->setUniformMat4("view",  camera->getViewMatrix());
         skinnedShader->setUniformMat4("proj",  camera->getProjectionMatrix());

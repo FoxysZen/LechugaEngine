@@ -194,9 +194,9 @@
             "id": "btnPlay",
             "x": 100,
             "y": 200,
-            "width": 150,
+            "width": 50,
             "height": 50,
-            "normalTexture": "assets/textures/btn_normal.png",
+            "normalTexture": "assets/textures/ui/key_3.png",
             "hoverTexture": "assets/textures/btn_hover.png",
             "visible": true
         }
