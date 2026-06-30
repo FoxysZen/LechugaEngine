@@ -58,10 +58,6 @@ class Application
 
         std::unique_ptr<AudioManager> audioManager = nullptr;
 
-        std::unique_ptr<AnimationSystem> animSystem = nullptr;
-
         std::string debugStats = "";
 
-        SkinnedMesh *playerMesh = nullptr;
-        ShaderProgram* skinnedShader = nullptr;
 };

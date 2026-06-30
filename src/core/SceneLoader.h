@@ -1,4 +1,6 @@
 #pragma once
+#include <AnimationSystem.h>
+#include <cgltf.h>
 #include <EmitterShape.h>
 #include <EntityID.h>
 #include <FileSystem.h>
@@ -9,6 +11,7 @@
 #include <ResourceManager.h>
 #include <Scene.h>
 #include <ShaderProgram.h>
+#include <SkinnedMesh.h>
 #include <Texture.h>
 #include <UIImage.h>
 #include <UILabel.h>
@@ -29,4 +32,5 @@ class SceneLoader
         ResourceManager *resourceManager;
         UIManager *uiManager;
         PhysicsEngine *physicsEngine;
+        std::vector<AnimationSystem*> animSystems;
 };

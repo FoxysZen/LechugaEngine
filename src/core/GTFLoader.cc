@@ -64,7 +64,7 @@ SkinnedMeshData GLTFLoader::load(const std::string &path,
     // Skelleton
     if (data->skins_count > 0)
     {
-        const cgltf_skin& skin = data->skins[0];
+        const cgltf_skin &skin = data->skins[0];
         result.skeleton.bones.resize(skin.joints_count);
 
         std::vector<glm::mat4> invBinds(skin.joints_count, glm::mat4(1.0f));
@@ -96,6 +96,15 @@ SkinnedMeshData GLTFLoader::load(const std::string &path,
                 }
             }
         }
+    }
+    else
+    {
+        result.skeleton.bones.resize(1);
+        Bone &rootBone = result.skeleton.bones[0];
+        rootBone.name = "Static_Root";
+        rootBone.inverseBindMatrix = glm::mat4(1.0f);
+        rootBone.localTransform = glm::mat4(1.0f);
+        rootBone.parentIndex = -1;
     }
 
     // Geometry

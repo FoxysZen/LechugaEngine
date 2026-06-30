@@ -9,7 +9,7 @@ class UIElement
 
         void setVisible(bool visible) { this->visible = visible; }
         bool isVisible() { return visible; }
-        virtual void draw(UIRenderer* renderer) = 0;
+        virtual void draw(UIRenderer *renderer) = 0;
         int getLayer() { return layer; }
         void setLayer(int n) { layer = n; }
 

@@ -3,14 +3,14 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <cmath>
 
-static const char* VERT_SRC = R"(
+static const char *VERT_SRC = R"(
 #version 330 core
 layout(location = 0) in vec3 aPos;
 uniform mat4 uMVP;
 void main() { gl_Position = uMVP * vec4(aPos, 1.0); }
 )";
 
-static const char* FRAG_SRC = R"(
+static const char *FRAG_SRC = R"(
 #version 330 core
 uniform vec3 uColor;
 out vec4 FragColor;
@@ -46,7 +46,7 @@ void DebugRenderer::setVisible(bool v)
     visible = v;
 }
 
-void DebugRenderer::draw(Collider* collider, TransformComponent* transform,
+void DebugRenderer::draw(Collider *collider, TransformComponent *transform,
                          glm::mat4 viewProj, glm::vec3 color)
 {
     switch (collider->getType())
@@ -84,8 +84,8 @@ std::vector<glm::vec3> DebugRenderer::buildSphereWire(float radius, int slices)
 std::vector<glm::vec3> DebugRenderer::buildBoxWire(glm::vec3 h)
 {
     return {
-        {-h.x,-h.y,-h.z}, { h.x,-h.y,-h.z}, { h.x, h.y,-h.z}, {-h.x, h.y,-h.z}, // cara back
-        {-h.x,-h.y, h.z}, { h.x,-h.y, h.z}, { h.x, h.y, h.z}, {-h.x, h.y, h.z}  // cara front
+        {-h.x,-h.y,-h.z}, { h.x,-h.y,-h.z}, { h.x, h.y,-h.z}, {-h.x, h.y,-h.z}, // back
+        {-h.x,-h.y, h.z}, { h.x,-h.y, h.z}, { h.x, h.y, h.z}, {-h.x, h.y, h.z}  // front
     };
 }
 
@@ -132,7 +132,7 @@ std::vector<glm::vec3> DebugRenderer::buildCapsuleWire(float radius, float heigh
     return verts;
 }
 
-void DebugRenderer::drawSphere(SphereCollider* col, TransformComponent* t,
+void DebugRenderer::drawSphere(SphereCollider *col, TransformComponent *t,
                                 glm::mat4 viewProj, glm::vec3 color)
 {
     int slices = 24;
@@ -153,7 +153,7 @@ void DebugRenderer::drawSphere(SphereCollider* col, TransformComponent* t,
     uploadAndDraw(verts, indices, viewProj * model, color);
 }
 
-void DebugRenderer::drawBox(BoxCollider* col, TransformComponent* t,
+void DebugRenderer::drawBox(BoxCollider *col, TransformComponent *t,
                              glm::mat4 viewProj, glm::vec3 color)
 {
     auto verts = buildBoxWire(col->getHalfExtents());
@@ -168,7 +168,7 @@ void DebugRenderer::drawBox(BoxCollider* col, TransformComponent* t,
     uploadAndDraw(verts, indices, viewProj * model, color);
 }
 
-void DebugRenderer::drawCapsule(CapsuleCollider* col, TransformComponent* t,
+void DebugRenderer::drawCapsule(CapsuleCollider *col, TransformComponent *t,
                                  glm::mat4 viewProj, glm::vec3 color)
 {
     int slices = 16;
@@ -214,21 +214,26 @@ void DebugRenderer::drawCapsule(CapsuleCollider* col, TransformComponent* t,
     uploadAndDraw(verts, indices, viewProj * model, color);
 }
 
-void DebugRenderer::uploadAndDraw(const std::vector<glm::vec3>& verts,
-                                   const std::vector<unsigned int>& indices,
+void DebugRenderer::uploadAndDraw(const std::vector<glm::vec3> &verts,
+                                   const std::vector<unsigned int> &indices,
                                    glm::mat4 mvp, glm::vec3 color)
 {
     glUseProgram(shaderProgram);
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "uMVP"),   1, GL_FALSE, glm::value_ptr(mvp));
-    glUniform3fv      (glGetUniformLocation(shaderProgram, "uColor"), 1, glm::value_ptr(color));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "uMVP"), 1, 
+                                            GL_FALSE, glm::value_ptr(mvp));
+    glUniform3fv(glGetUniformLocation(shaderProgram, "uColor"), 1, 
+                                      glm::value_ptr(color));
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(glm::vec3), verts.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(glm::vec3), 
+                 verts.data(), GL_DYNAMIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
+                 indices.size() * sizeof(unsigned int), indices.data(), 
+                 GL_DYNAMIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
@@ -243,9 +248,9 @@ void DebugRenderer::uploadAndDraw(const std::vector<glm::vec3>& verts,
     glBindVertexArray(0);
 }
 
-GLuint DebugRenderer::compileShader(const char* vert, const char* frag)
+GLuint DebugRenderer::compileShader(const char *vert, const char *frag)
 {
-    auto compile = [](GLenum type, const char* src) -> GLuint
+    auto compile = [](GLenum type, const char *src) -> GLuint
     {
         GLuint s = glCreateShader(type);
         glShaderSource(s, 1, &src, nullptr);

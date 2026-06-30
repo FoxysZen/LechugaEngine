@@ -8,9 +8,9 @@
 class Font
 {
     public:
-        void load(std::string fntPath, Texture* texture);
+        void load(std::string fntPath, Texture *texture);
         
         std::unordered_map<int, CharInfo> chars;
-        Texture* texture;
+        Texture *texture;
         int lineHeight = 45;
 };

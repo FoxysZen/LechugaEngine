@@ -3,5 +3,5 @@
 
 struct ParticleComponent
 {
-    ParticleSystem* system;
+    ParticleSystem *system;
 };

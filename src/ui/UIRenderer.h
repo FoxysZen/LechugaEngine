@@ -20,12 +20,12 @@ class UIRenderer
         void drawTexturedQuad(int x, int y, int _width, int _height, 
             Texture *texture);
         void drawTexturedQuad(int x, int y, int width, int height, 
-            Texture* texture, int srcX, int srcY, int srcWidth, int srcHeight);
-        void drawText(int x, int y, std::string text, Font* font, float scale);
+            Texture *texture, int srcX, int srcY, int srcWidth, int srcHeight);
+        void drawText(int x, int y, std::string text, Font *font, float scale);
 
     private:
         GLuint VAO, VBO;
-        ShaderProgram* shader;
+        ShaderProgram *shader;
         glm::mat4 projection;
         int width, height;
 };

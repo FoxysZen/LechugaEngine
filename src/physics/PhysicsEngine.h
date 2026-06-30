@@ -27,14 +27,14 @@ class PhysicsEngine
 
         void addBody(EntityID id, RigidBody *body);
         void addCollider(EntityID id, Collider *collider);
-        void step(float deltaTime, Scene* scene);
-        std::vector<CollisionInfo> detectCollisions(Scene* scene);
-        void resolveCollision(Scene* scene, CollisionInfo info);
-        std::vector<CollisionInfo> getCollisionsFor(EntityID id, Scene* scene);
+        void step(float deltaTime, Scene *scene);
+        std::vector<CollisionInfo> detectCollisions(Scene *scene);
+        void resolveCollision(Scene *scene, CollisionInfo info);
+        std::vector<CollisionInfo> getCollisionsFor(EntityID id, Scene *scene);
         bool testCollision(
-                    Collider* col1, TransformComponent* trans1, EntityID id1,
-                    Collider* col2, TransformComponent* trans2, EntityID id2,
-                    CollisionInfo& result);
+                    Collider *col1, TransformComponent *trans1, EntityID id1,
+                    Collider *col2, TransformComponent *trans2, EntityID id2,
+                    CollisionInfo &result);
 
     private:
         glm::vec3 closestPointOnTriangle(glm::vec3 P, glm::vec3 A, glm::vec3 B,

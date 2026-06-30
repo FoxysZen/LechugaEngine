@@ -25,9 +25,17 @@ class SkinnedMesh
         void setSkeleton(const Skeleton &skeleton);
         Skeleton &getSkeleton();
 
+        void calculateBounds();
+        float getBoundsRadius();
+        glm::vec3 getBoundsCenter();
+
         void draw();
 
     private:
         std::vector<SkinnedSubMeshGPU> subMeshes;
         Skeleton skeleton;
+
+        std::vector<glm::vec3> allPositions;
+        glm::vec3 boundsCenter = glm::vec3(0.0f);
+        float boundsRadius = 0.0f;
 };

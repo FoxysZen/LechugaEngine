@@ -12,7 +12,7 @@ class Texture
         ~Texture();
 
         void load(std::string path);
-        void loadFromMemory(unsigned char* pixels, int width, int height);
+        void loadFromMemory(unsigned char *pixels, int width, int height);
         void bind(int slot);
         void unbind(int slot);
 

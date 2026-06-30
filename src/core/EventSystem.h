@@ -7,7 +7,7 @@
 class EventSystem
 {
     public:
-        static EventSystem& getInstance()
+        static EventSystem &getInstance()
         {
             static EventSystem instance;
             return instance;
@@ -20,18 +20,18 @@ class EventSystem
         void subscribe(std::function<void(const T&)> callback)
         {
             subscribers[std::type_index(typeid(T))].push_back(
-                [callback](const void* event) {
+                [callback](const void *event) {
                     callback(*static_cast<const T*>(event));
                 }
             );
         }
     
         template<typename T>
-        void publish(const T& event)
+        void publish(const T &event)
         {
             auto it = subscribers.find(std::type_index(typeid(T)));
             if (it != subscribers.end())
-                for (auto& cb : it->second)
+                for (auto &cb : it->second)
                     cb(&event);
         }
     

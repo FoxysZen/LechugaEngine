@@ -23,10 +23,10 @@ void UIManager::addElement(UIElement *element)
 void UIManager::draw()
 {
     std::vector<UIElement*> sorted = elements;
-    std::sort(sorted.begin(), sorted.end(), [](UIElement* a, UIElement* b) {
+    std::sort(sorted.begin(), sorted.end(), [](UIElement *a, UIElement *b) {
         return a->getLayer() < b->getLayer();
     });
-    for (UIElement* elem : sorted)
+    for (UIElement *elem : sorted)
     {
         elem->draw(renderer);
     }
@@ -34,9 +34,9 @@ void UIManager::draw()
 
 bool UIManager::handleClick(int mouseX, int mouseY)
 {
-    for (UIElement* elem : elements)
+    for (UIElement *elem : elements)
     {
-        UIButton* button = dynamic_cast<UIButton*>(elem);
+        UIButton *button = dynamic_cast<UIButton*>(elem);
         if (button && button->handleClick(mouseX, mouseY))
             return true;
     }
@@ -45,9 +45,9 @@ bool UIManager::handleClick(int mouseX, int mouseY)
 
 void UIManager::handleHover(int mouseX, int mouseY)
 {
-    for (UIElement* elem : elements)
+    for (UIElement *elem : elements)
     {
-        UIButton* button = dynamic_cast<UIButton*>(elem);
+        UIButton *button = dynamic_cast<UIButton*>(elem);
         if (button)
         {
             button->handleHover(mouseX, mouseY);

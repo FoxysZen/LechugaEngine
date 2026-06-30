@@ -9,7 +9,7 @@ class UIPanel : public UIElement
         UIPanel(int _x, int _y, int _width, int _height, glm::vec3 _color);
         ~UIPanel();
         
-        void draw(UIRenderer* renderer) override;
+        void draw(UIRenderer *renderer) override;
 
     private:
         glm::vec3 color;

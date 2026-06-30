@@ -14,7 +14,7 @@ void PhysicsEngine::addCollider(EntityID id, Collider *collider)
     colliders[id] = collider;
 }
 
-void PhysicsEngine::step(float deltaTime, Scene* scene)
+void PhysicsEngine::step(float deltaTime, Scene *scene)
 {
     for (auto &[id, body] : bodies)
     {
@@ -37,7 +37,7 @@ void PhysicsEngine::step(float deltaTime, Scene* scene)
 
             body->setVelocity(body->getVelocity() + body->getAcceleration() * deltaTime);
             
-            TransformComponent* transform = scene->getTransform(id);
+            TransformComponent *transform = scene->getTransform(id);
             if (transform) 
             {
                 transform->position += body->getVelocity() * deltaTime;
@@ -45,10 +45,7 @@ void PhysicsEngine::step(float deltaTime, Scene* scene)
 
             body->setAcceleration(glm::vec3(0.0f));
         }
-    }
 
-    for (auto &[id, body] : bodies)
-    {
         body->setIsGrounded(false);
     }
 
@@ -59,7 +56,7 @@ void PhysicsEngine::step(float deltaTime, Scene* scene)
     }
 }
 
-std::vector<CollisionInfo> PhysicsEngine::detectCollisions(Scene* scene)
+std::vector<CollisionInfo> PhysicsEngine::detectCollisions(Scene *scene)
 {
     std::vector<CollisionInfo> info;
     for (auto it1 = colliders.begin(); it1 != colliders.end(); ++it1)
@@ -162,9 +159,9 @@ std::vector<CollisionInfo> PhysicsEngine::getCollisionsFor(EntityID id,
 }
 
 bool PhysicsEngine::testCollision(
-    Collider* col1, TransformComponent* trans1, EntityID id1,
-    Collider* col2, TransformComponent* trans2, EntityID id2,
-    CollisionInfo& result)
+    Collider *col1, TransformComponent *trans1, EntityID id1,
+    Collider *col2, TransformComponent *trans2, EntityID id2,
+    CollisionInfo &result)
 {
     ColliderType type1 = col1->getType();
     ColliderType type2 = col2->getType();
@@ -186,7 +183,7 @@ bool PhysicsEngine::testCollision(
 
     if (type1 == ColliderType::SPHERE && type2 == ColliderType::SPHERE)
     {
-        SphereCollider* sphere2 = dynamic_cast<SphereCollider*>(col2);
+        SphereCollider *sphere2 = dynamic_cast<SphereCollider*>(col2);
         glm::vec3 pos1 = trans1->position + sphere1->offset;
         glm::vec3 pos2 = trans2->position + sphere2->offset;
         float dist = glm::distance(pos1, pos2);
@@ -202,10 +199,10 @@ bool PhysicsEngine::testCollision(
     }
     else if (type1 == ColliderType::SPHERE && type2 == ColliderType::MESH)
     {
-        MeshCollider* mesh2 = dynamic_cast<MeshCollider*>(col2);
+        MeshCollider *mesh2 = dynamic_cast<MeshCollider*>(col2);
         glm::vec3 spherePos = trans1->position + sphere1->offset;
         float radius = sphere1->getRadius();
-        auto& triangles = mesh2->getTriangles();
+        auto &triangles = mesh2->getTriangles();
         CollisionInfo bestCollision;
         float maxDepth = 0.0f;
         bool found = false;

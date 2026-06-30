@@ -14,7 +14,7 @@ Texture::~Texture()
 void Texture::load(std::string path)
 {
     int _width, _height, channels;
-    unsigned char* data = stbi_load(
+    unsigned char *data = stbi_load(
         path.c_str(), 
         &_width, 
         &_height, 
@@ -53,7 +53,7 @@ void Texture::load(std::string path)
     stbi_image_free(data);
 }
 
-void Texture::loadFromMemory(unsigned char* pixels, int width, int height)
+void Texture::loadFromMemory(unsigned char *pixels, int width, int height)
 {
     int rowSize = width * 4;
     std::vector<unsigned char> flipped(rowSize * height);

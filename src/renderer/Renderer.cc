@@ -3,7 +3,7 @@
 Renderer::Renderer()
 {
     EventSystem::getInstance().subscribe<CameraUpdatedEvent>
-        ([this](const CameraUpdatedEvent& e) {
+        ([this](const CameraUpdatedEvent &e) {
             frustum.update(e.projView);
     });
 }
@@ -36,16 +36,16 @@ void Renderer::beginFrame(Camera *camera, float deltaTime)
     glFrontFace(GL_CCW);
 }
 
-void Renderer::render(const MeshComponent &mesh, 
+void Renderer::render(const SkinnedMeshComponent &sm, 
     const TransformComponent &transform)
 {
     glm::mat4 model = transform.getModelMatrix();
     glm::vec3 worldCenter = glm::vec3(model * glm::vec4(
-        mesh.lods[0].mesh->getBoundsCenter(), 1.0f));
+        sm.lods[0].mesh->getBoundsCenter(), 1.0f));
     float dist = glm::length(currentViewPos - worldCenter);
     
-    Mesh* activeMesh = mesh.lods.back().mesh;
-    for (auto& lod : mesh.lods)
+    SkinnedMesh *activeMesh = sm.lods.back().mesh;
+    for (auto &lod : sm.lods)
     {
         if (dist < lod.maxDistance)
         {
@@ -60,48 +60,45 @@ void Renderer::render(const MeshComponent &mesh,
         glm::length(glm::vec3(model[2]))
     );
     float worldRadius = activeMesh->getBoundsRadius() * glm::max(scale.x, 
-        glm::max(scale.y, scale.z));
+                                                glm::max(scale.y, scale.z));
     if (!frustum.isSphereInside(worldCenter, worldRadius))
     {
         return;
     }
 
-    mesh.shader->bind();
-    mesh.shader->setUniformMat4("view", currentView);
-    mesh.shader->setUniformMat4("proj", currentProj);
-    mesh.shader->setUniformMat4("model", transform.getModelMatrix());
-    int size = mesh.textures.size();
-    for (int i = 0; i < size; i++)
-    {
-        mesh.shader->setUniformInt("textures[" + std::to_string(i) + "]", i);
-    }
+    sm.shader->bind();
+    sm.shader->setUniformMat4("view", currentView);
+    sm.shader->setUniformMat4("proj", currentProj);
+    sm.shader->setUniformMat4("model", model);
+    sm.shader->setUniformInt("textures[0]", 0);
 
-    size = mesh.textures.size();
+    int size = currentLights.size();
+    sm.shader->setUniformInt("numLights", size);
     for (int i = 0; i < size; ++i)
-    {
-        mesh.textures[i]->bind(i);
-    }
-
-    size = currentLights.size();
-    mesh.shader->setUniformInt("numLights", size);
-    for (int i = 0; i < size; i++)
     {
         glm::vec3 lightPosCameraSpace = glm::vec3(currentView * glm::vec4(
             currentLights[i].position, 1.0f));
-        mesh.shader->setUniformVec3("lightPos[" + std::to_string(i) + "]", 
+        sm.shader->setUniformVec3("lightPos[" + std::to_string(i) + "]", 
             lightPosCameraSpace);
-        mesh.shader->setUniformVec3("lightColor[" + std::to_string(i) + "]", 
+        sm.shader->setUniformVec3("lightColor[" + std::to_string(i) + "]", 
             currentLights[i].color);
+    }
+
+    if (sm.animSys)
+    {
+        const auto &matrices = sm.animSys->getBoneMatrices();
+        int numBones = (int)matrices.size();
+        for (int i = 0; i < numBones; ++i)
+        {
+            sm.shader->setUniformMat4("boneMatrices[" + std::to_string(i) + "]", 
+                matrices[i]);
+        }
     }
 
     activeMesh->draw();
     ++drawCalls;
 
-    for (int i = 0; i < size; ++i)
-    {
-        mesh.textures[i]->unbind(i);
-    }
-    mesh.shader->unbind();
+    sm.shader->unbind();
 }
 
 void Renderer::setLights(const std::vector<LightComponent> &lights)
@@ -121,7 +118,7 @@ void Renderer::onResize(int width, int height)
 
 void Renderer::drawParticles(const std::vector<ParticleComponent> &particles)
 {
-    for (auto& particle : particles)
+    for (auto &particle : particles)
     {
         glm::vec3 center = particle.system->getBoundsCenter();
         float radius = particle.system->getBoundsRadius();
@@ -131,6 +128,11 @@ void Renderer::drawParticles(const std::vector<ParticleComponent> &particles)
             ++drawCalls;
         }
     }
+}
+
+const std::vector<LightComponent> &Renderer::getLights()
+{
+    return currentLights;
 }
 
 int Renderer::getDrawCalls()

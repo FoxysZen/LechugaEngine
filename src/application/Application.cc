@@ -1,5 +1,5 @@
-#include "AudioManager.h"
-#include "Logger.h"
+#include <AudioManager.h>
+#include <Logger.h>
 #include <Application.h>
 #include <memory>
 #include <string>
@@ -42,13 +42,6 @@ bool Application::init()
         resourceManager->loadTexture(Config::getInstance().skydomeTexture)
     );
     renderer->setSkydome(skydome.get());
-
-    Logger::info("Creating AnimationSystem...");
-    playerMesh = resourceManager->loadSkinnedMesh("assets/meshes/fauna/pygmy.glb");
-    animSystem = std::make_unique<AnimationSystem>();
-    animSystem->setMesh(playerMesh);
-    skinnedShader = resourceManager->loadShader("assets/shaders/skinning.vert", 
-                                                "assets/shaders/basic.frag");
 
     Logger::info("Creating camera...");
     float fov = Config::getInstance().cameraFov;
@@ -96,7 +89,7 @@ bool Application::init()
     uiManager->registerCallback("btnPlay", [this]() {
         Logger::info("Play pulsado");
         audioManager->playSFX("assets/audio/sfx/button.mp3");
-        animSystem->play("picoteo", false);
+        //animSystem->play("picoteo", false);
     });
 
     Logger::info("Adding subscriptions");
@@ -185,27 +178,6 @@ void Application::run()
         camera->update(input.get(), deltaTime);
         renderer->beginFrame(camera.get(), deltaTime);
 
-        animSystem->update(deltaTime);
-    //////// pygmy animation
-        skinnedShader->bind();
-
-        glm::mat4 model = glm::mat4(1.0f);
-        skinnedShader->setUniformMat4("model", model);
-        skinnedShader->setUniformMat4("view",  camera->getViewMatrix());
-        skinnedShader->setUniformMat4("proj",  camera->getProjectionMatrix());
-
-        skinnedShader->setUniformInt("textures[0]", 0);
-
-        skinnedShader->setUniformInt("numLights", 1);
-        skinnedShader->setUniformVec3("lightPos[0]", camera->getPosition());
-        skinnedShader->setUniformVec3("lightColor[0]", glm::vec3(1.0f, 1.0f, 1.0f));
-
-        const auto& matrices = animSystem->getBoneMatrices();
-        for (int i = 0; i < (int)matrices.size(); ++i)
-            skinnedShader->setUniformMat4("boneMatrices[" + std::to_string(i) + "]", matrices[i]);
-
-        playerMesh->draw();
-    ////////
         scene->update(deltaTime);
 
         scene->render(renderer.get());
@@ -216,7 +188,8 @@ void Application::run()
         // Debug Hitboxes
         if (debugRenderer->isVisible())
         {
-            glm::mat4 viewProj = camera->getProjectionMatrix() * camera->getViewMatrix();
+            glm::mat4 viewProj = 
+                camera->getProjectionMatrix() * camera->getViewMatrix();
             for (auto& [id, collider] : *scene->getColliderMap())
             {
                 TransformComponent* t = scene->getTransform(id);

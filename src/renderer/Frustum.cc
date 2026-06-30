@@ -29,7 +29,7 @@ void Frustum::update(glm::mat4 projView)
 
 bool Frustum::isSphereInside(glm::vec3 center, float radius)
 {
-    for (auto& plane : planes)
+    for (auto &plane : planes)
     {
         float dist = glm::dot(glm::vec3(plane), center) + plane.w;
         if (dist < -radius)

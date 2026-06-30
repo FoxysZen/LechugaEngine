@@ -32,8 +32,6 @@ add_executable(LechugaEngine
     src/core/FileSystem.cc
     src/core/GTFLoader.cc
     src/core/Logger.cc
-    src/core/MTLParser.cc
-    src/core/OBJParser.cc
     src/core/ResourceManager.cc
     src/core/SceneLoader.cc
     src/core/stb_image_impl.cc
@@ -51,7 +49,6 @@ add_executable(LechugaEngine
 
     src/renderer/DebugRenderer.cc
     src/renderer/Frustum.cc
-    src/renderer/Mesh.cc
     src/renderer/Renderer.cc
     src/renderer/ShaderProgram.cc
     src/renderer/Skydome.cc

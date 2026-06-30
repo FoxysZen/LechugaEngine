@@ -7,9 +7,9 @@
 class UILabel : public UIElement
 {
     public:
-        UILabel(int x, int y, std::string text, Font* font);
+        UILabel(int x, int y, std::string text, Font *font);
 
-        void draw(UIRenderer* renderer) override;
+        void draw(UIRenderer *renderer) override;
         void setText(std::string _text);
         float getScale();
         void setScale(float _scale);
@@ -17,5 +17,5 @@ class UILabel : public UIElement
     private:
         float fontScale = 1.0f;
         std::string text;
-        Font* font;
+        Font *font;
 };

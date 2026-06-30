@@ -8,29 +8,6 @@ ResourceManager::~ResourceManager()
         delete mesh;
 }
 
-Mesh *ResourceManager::loadMesh(std::string path)
-{
-    if (meshes.count(path) > 0)
-        return meshes[path];
-
-    std::string mtlPath = path.substr(0, path.find_last_of('.')) + ".mtl";
-    
-    auto groups = OBJParser::getVertices(path);
-    auto materials = MTLParser::getTexture(mtlPath);
-    
-    Mesh *mesh = new Mesh();
-    for (auto &[materialName, vertices] : groups)
-    {
-        std::string texPath = materials[materialName];
-        Texture *texture = loadTexture("assets/textures/" + texPath);
-        mesh->addSubMesh(vertices, texture);
-    }
-    mesh->calculateBounds();
-    
-    meshes[path] = mesh;
-    return mesh;
-}
-
 SkinnedMesh *ResourceManager::loadSkinnedMesh(const std::string &path)
 {
     if (skinnedMeshes.count(path) > 0)
@@ -41,8 +18,8 @@ SkinnedMesh *ResourceManager::loadSkinnedMesh(const std::string &path)
     SkinnedMesh *mesh = new SkinnedMesh();
     for (int i = 0; i < (int)data.subMeshes.size(); ++i)
     {
-        auto& sub = data.subMeshes[i];
-        Texture* tex = nullptr;
+        auto &sub = data.subMeshes[i];
+        Texture *tex = nullptr;
 
         if (!sub.texturePath.empty())
         {
@@ -59,7 +36,7 @@ SkinnedMesh *ResourceManager::loadSkinnedMesh(const std::string &path)
             else
             {
                 int w, h, channels;
-                unsigned char* pixels = stbi_load_from_memory(
+                unsigned char *pixels = stbi_load_from_memory(
                     sub.embeddedTexture.data(),
                     (int)sub.embeddedTexture.size(),
                     &w, &h, &channels, 4);
@@ -80,6 +57,8 @@ SkinnedMesh *ResourceManager::loadSkinnedMesh(const std::string &path)
 
         mesh->addSubMesh(sub.vertices, sub.indices, tex);
     }
+
+    mesh->calculateBounds();
     mesh->setSkeleton(data.skeleton);
 
     skinnedMeshes[path] = mesh;

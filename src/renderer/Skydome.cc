@@ -10,7 +10,7 @@ Skydome::~Skydome()
 
 }
 
-void Skydome::init(ShaderProgram* shader, Texture* texture)
+void Skydome::init(ShaderProgram *shader, Texture *texture)
 {
     this->shader = shader;
     this->texture = texture;
@@ -31,7 +31,7 @@ void Skydome::init(ShaderProgram* shader, Texture* texture)
     glEnableVertexAttribArray(1);
 }
 
-void Skydome::draw(const glm::mat4& view, const glm::mat4& proj, float deltaTime)
+void Skydome::draw(const glm::mat4 &view, const glm::mat4 &proj, float deltaTime)
 {
     time += deltaTime * scrollSpeed;
     if (time > 1.0f) time -= 1.0f;

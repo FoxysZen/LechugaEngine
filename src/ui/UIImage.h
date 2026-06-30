@@ -10,7 +10,7 @@ class UIImage : public UIElement
         UIImage(int _x, int _y, int _width, int _height, Texture *_texture);
         ~UIImage();
         
-        void draw(UIRenderer* renderer) override;
+        void draw(UIRenderer *renderer) override;
 
     private:
         Texture *texture;

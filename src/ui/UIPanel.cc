@@ -12,7 +12,7 @@ UIPanel::UIPanel(int _x, int _y, int _width, int _height, glm::vec3 _color)
 
 UIPanel::~UIPanel() {}
 
-void UIPanel::draw(UIRenderer* renderer)
+void UIPanel::draw(UIRenderer *renderer)
 {
     if (!visible) return;
     renderer->drawQuad(x, y, width, height, color);
