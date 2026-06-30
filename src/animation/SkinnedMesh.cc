@@ -16,6 +16,11 @@ void SkinnedMesh::addSubMesh(const std::vector<SkinnedVertex> &vertices,
                              const std::vector<unsigned int> & indices,
                              Texture *texture)
 {
+    for (const auto &v : vertices)
+    {
+        allPositions.push_back(glm::vec3(v.x, v.y, v.z));
+    }
+
     SkinnedSubMeshGPU sub;
     sub.texture    = texture;
     sub.indexCount = (int)indices.size();
@@ -80,4 +85,40 @@ void SkinnedMesh::draw()
         glBindVertexArray(0);
         if (sub.texture) sub.texture->unbind(0);
     }
+}
+
+void SkinnedMesh::calculateBounds()
+{
+    if (allPositions.empty()) return;
+
+    glm::vec3 sum(0.0f);
+    for (const auto &pos : allPositions)
+    {
+        sum += pos;
+    }
+    boundsCenter = sum / (float)allPositions.size();
+    
+    boundsRadius = 0.0f;
+    for (const auto &pos : allPositions)
+    {
+        float dist = glm::length(pos - boundsCenter);
+        if (dist > boundsRadius)
+        {
+            boundsRadius = dist;
+        }
+    }
+    
+    // Adds a 35% bound to prevent disappearing in some animations
+    boundsRadius *= 1.35f;
+    allPositions.clear();
+}
+
+float SkinnedMesh::getBoundsRadius()
+{
+    return boundsRadius;
+}
+
+glm::vec3 SkinnedMesh::getBoundsCenter()
+{
+    return boundsCenter;
 }

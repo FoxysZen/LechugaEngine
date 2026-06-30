@@ -22,7 +22,7 @@ class ParticleSystem
         void init();
         void emit(Particle *particle);
         void update(float deltaTime);
-        void draw(const glm::mat4& view, const glm::mat4& proj);
+        void draw(const glm::mat4 &view, const glm::mat4 &proj);
 
         void setDirection(const glm::vec3 &_direction);
         void setPosition(const glm::vec3 &_position);
@@ -35,7 +35,7 @@ class ParticleSystem
         void setEmissionRate(float _rate);
         void setSpiralSpeed(float _spiralSpeed);
         void setGravity(float _gravity);
-        void setTexture(Texture* _texture);
+        void setTexture(Texture *_texture);
         
         float getBoundsRadius();
         glm::vec3 getBoundsCenter();
@@ -45,7 +45,7 @@ class ParticleSystem
 
         GLuint VAO, VBO;
         GLuint instanceVBO;
-        ShaderProgram* shader;
+        ShaderProgram *shader;
 
         const float PI = glm::pi<float>();
         float spiralAngle = 0;
@@ -72,5 +72,5 @@ class ParticleSystem
         ParticleRenderMode renderMode = ParticleRenderMode::COLOR;
         EmitterShape shape;
 
-        Texture* texture = nullptr;
+        Texture *texture = nullptr;
 };

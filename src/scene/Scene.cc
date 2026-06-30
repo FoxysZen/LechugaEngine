@@ -20,9 +20,9 @@ void Scene::addTransform(EntityID id, TransformComponent transform)
     transforms[id] = transform;
 }
 
-void Scene::addMesh(EntityID id, MeshComponent mesh)
+void Scene::addSkinnedMesh(EntityID id, SkinnedMeshComponent component)
 {
-    meshes[id] = mesh;
+    skinnedMeshes[id] = component;
 }
 
 void Scene::addLight(EntityID id, LightComponent light)
@@ -50,9 +50,9 @@ TransformComponent *Scene::getTransform(EntityID id)
     return &transforms[id];
 }
 
-MeshComponent *Scene::getMesh(EntityID id)
+SkinnedMeshComponent *Scene::getSkinnedMesh(EntityID id)
 {
-    return &meshes[id];
+    return &skinnedMeshes[id];
 }
 
 LightComponent *Scene::getLight(EntityID id)
@@ -75,6 +75,11 @@ std::unordered_map<EntityID, ColliderComponent> *Scene::getColliderMap()
     return &colliders;
 }
 
+std::unordered_map<EntityID, SkinnedMeshComponent> *Scene::getSkinnedMeshMap()
+{
+    return &skinnedMeshes;
+}
+
 RigidBody *Scene::getRigidBody(EntityID id)
 {
     return rigidBodies[id];
@@ -83,9 +88,10 @@ RigidBody *Scene::getRigidBody(EntityID id)
 void Scene::update(float deltaTime)
 {
     for (auto &[id, particle] : particles)
-    {
         particle.system->update(deltaTime);
-    }
+
+    for (auto &[id, sm] : skinnedMeshes)
+        if (sm.animSys) sm.animSys->update(deltaTime);
 }
 
 void Scene::render(Renderer *renderer)
@@ -97,17 +103,17 @@ void Scene::render(Renderer *renderer)
     }
     renderer->setLights(lightList);
 
-    for (auto& [id, mesh] : meshes)
+    for (auto &[id, sm] : skinnedMeshes)
     {
         if (transforms.count(id) > 0)
         {
-            renderer->render(mesh, transforms[id]);
+            renderer->render(sm, transforms[id]);
         }
     }
 
     glDepthMask(GL_FALSE);
     std::vector<ParticleComponent> particleList;
-    for (auto& [id, particle] : particles)
+    for (auto &[id, particle] : particles)
     {
         particleList.push_back(particle);
     }

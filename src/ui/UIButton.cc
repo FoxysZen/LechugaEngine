@@ -1,7 +1,7 @@
 #include <UIButton.h>
 
 UIButton::UIButton(int _x, int _y, int _width, int _height, 
-                   Texture* _normal, Texture* _hover, 
+                   Texture *_normal, Texture *_hover, 
                    std::function<void()> _onClick)
 {
     x = _x;
@@ -16,7 +16,7 @@ UIButton::UIButton(int _x, int _y, int _width, int _height,
 
 UIButton::~UIButton() {}
 
-void UIButton::draw(UIRenderer* renderer)
+void UIButton::draw(UIRenderer *renderer)
 {
     if (!visible) return;
     renderer->drawTexturedQuad(x, y, width, height, 

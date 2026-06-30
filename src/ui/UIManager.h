@@ -13,8 +13,8 @@ class UIManager
         UIManager();
         ~UIManager();
 
-        void init(UIRenderer* _renderer);
-        void addElement(UIElement* element);
+        void init(UIRenderer *_renderer);
+        void addElement(UIElement *element);
         void draw();
         bool handleClick(int mouseX, int mouseY);
         void handleHover(int mouseX, int mouseY);
@@ -24,5 +24,5 @@ class UIManager
 
     private:
         std::vector<UIElement*> elements;
-        UIRenderer* renderer;
+        UIRenderer *renderer;
 };

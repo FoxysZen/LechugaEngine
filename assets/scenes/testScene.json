@@ -6,46 +6,20 @@
                 "rotation": [0, 0, 0],
                 "scale": [1, 1, 1]
             },
-            "mesh": {
+            "skinnedMesh": {
                 "lods": [
-                    {"path": "assets/meshes/character_lod0.obj", "maxDistance": 10.0},
-                    {"path": "assets/meshes/character_lod1.obj", "maxDistance": 50.0},
-                    {"path": "assets/meshes/character_lod2.obj", "maxDistance": 100.0}
+                    {"path": "assets/meshes/handkerchief_lod0.glb", "maxDistance": 10.0},
+                    {"path": "assets/meshes/handkerchief_lod1.glb", "maxDistance": 50.0}
                 ],
-                "shader": ["assets/shaders/basic.vert", "assets/shaders/basic.frag"],
-                "textures": ["assets/textures/char_body_texture.png", "assets/textures/char_face_texture.png"]
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "textures": ["assets/textures/char_body_texture.png", "assets/textures/char_face_texture.png"],
+                "loop": true
             },
             "collider": {
                 "type": "CAPSULE",
-                "radius": 0.5,
-                "height": 1,
+                "radius": 0.25,
+                "height": 1.5,
                 "offset": [0, 1, 0]
-            }
-        },
-        {
-            "transform": {
-                "position": [0, 5, 7],
-                "rotation": [0, 0, 0],
-                "scale": [1, 1, 1]
-            },
-            "mesh": {
-                "lods": [
-                    {"path": "assets/meshes/character_lod0.obj", "maxDistance": 10.0},
-                    {"path": "assets/meshes/character_lod1.obj", "maxDistance": 50.0},
-                    {"path": "assets/meshes/character_lod2.obj", "maxDistance": 100.0}
-                ],
-                "shader": ["assets/shaders/basic.vert", "assets/shaders/basic.frag"],
-                "textures": ["assets/textures/char_body_texture.png", "assets/textures/char_face_texture.png"]
-            },
-            "collider": {
-                "type": "SPHERE",
-                "radius": 0.5,
-                "offset": [0, 1, 0]
-            },
-            "rigidBody": {
-                "mass": 1,
-                "useGravity": true,
-                "isKinematic": false
             }
         },
         {
@@ -54,39 +28,48 @@
                 "rotation": [0, 0, 0],
                 "scale": [1, 1, 1]
             },
-            "mesh": {
-                "lods": [
-                    {"path": "assets/meshes/terrain/terrain.obj", "maxDistance": 10.0},
-                    {"path": "assets/meshes/terrain/terrain.obj", "maxDistance": 50.0},
-                    {"path": "assets/meshes/terrain/terrain.obj", "maxDistance": 100.0}
-                ],
-                "shader": ["assets/shaders/basic.vert", "assets/shaders/basic.frag"],
-                "textures": ["assets/textures/terrainTextures/grass_00.png", "assets/textures/terrainTextures/ground_00.png"]
+            "skinnedMesh": {
+                "path": "assets/meshes/terrain/terrain.glb",
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "loop": true
             },
             "collider": {
                 "type": "MESH",
-                "path": "assets/meshes/terrain/terrain_col.obj"
+                "path": "assets/meshes/terrain/terrain_col.glb"
             }
         },
         {
             "transform": {
-                "position": [5, -3, 0],
+                "position": [-7, -3, 7],
                 "rotation": [0, 0, 0],
                 "scale": [1, 1, 1]
             },
-            "mesh": {
-                "lods": [
-                    {"path": "assets/meshes/terrain/flora/palm_tree.obj", "maxDistance": 10.0},
-                    {"path": "assets/meshes/terrain/flora/palm_tree.obj", "maxDistance": 50.0},
-                    {"path": "assets/meshes/terrain/flora/palm_tree.obj", "maxDistance": 100.0}
-                ],
-                "shader": ["assets/shaders/basic.vert", "assets/shaders/basic.frag"],
-                "textures": ["assets/textures/terrainTextures/grass_00.png", "assets/textures/terrainTextures/ground_00.png"]
+            "skinnedMesh": {
+                "path": "assets/meshes/terrain/flora/palm_tree.glb",
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "loop": true
             },
             "collider": {
                 "type": "BOX",
                 "halfExtents": [0.25, 1.5, 0.25],
                 "offset": [0, 1.5, 0]
+            }
+        },
+        {
+            "transform": {
+                "position": [10, -2, -10],
+                "rotation": [0, 0, 0],
+                "scale": [1, 1, 1]
+            },
+            "skinnedMesh": {
+                "path": "assets/meshes/train.glb",
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "loop": true
+            },
+            "collider": {
+                "type": "BOX",
+                "halfExtents": [1.5, 2, 10],
+                "offset": [0, 2, 0]
             }
         }
     ],

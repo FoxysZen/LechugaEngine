@@ -12,7 +12,7 @@ CharacterController::~CharacterController() {}
 
 void CharacterController::move(glm::vec3 direction, float speed, float deltaTime)
 {
-    TransformComponent* transform = scene->getTransform(id);
+    TransformComponent *transform = scene->getTransform(id);
 
     // Rotate to direction
     if (glm::length(direction) > 0.001f)
@@ -46,7 +46,7 @@ void CharacterController::move(glm::vec3 direction, float speed, float deltaTime
         std::vector<CollisionInfo> collisions = physics->getCollisionsFor(id, scene);
         if (collisions.empty()) break;
 
-        for (auto& col : collisions)
+        for (auto &col : collisions)
         {
             glm::vec3 effectiveNormal = (col.entity1 == id) ? col.normal : -col.normal;
             float percent = 0.6f;

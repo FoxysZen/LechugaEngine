@@ -38,21 +38,26 @@ void ParticleSystem::init()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quad), quad, GL_STATIC_DRAW);
     // Position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 
+                          (void*)0);
     glEnableVertexAttribArray(0);
     // UV
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 
+                          (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(3);
 
     // Instancing
     glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-    glBufferData(GL_ARRAY_BUFFER, maxParticles * sizeof(glm::vec4) * 2, nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxParticles * sizeof(glm::vec4) * 2, 
+                 nullptr, GL_DYNAMIC_DRAW);
     // Position + size
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4) * 2, (void*)0);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4) * 2, 
+                          (void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribDivisor(1, 1);
     // Color
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4) * 2, (void*)sizeof(glm::vec4));
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4) * 2, 
+                          (void*)sizeof(glm::vec4));
     glEnableVertexAttribArray(2);
     glVertexAttribDivisor(2, 1);
 
@@ -110,7 +115,7 @@ void ParticleSystem::update(float deltaTime)
     float emissionInterval = 1.0f / emissionRate;
     while (emissionAccumulator >= emissionInterval)
     {
-        for (auto& p : particles)
+        for (auto &p : particles)
         {
             if (!p.active)
             {
@@ -121,7 +126,7 @@ void ParticleSystem::update(float deltaTime)
         emissionAccumulator -= emissionInterval;
     }
 
-    for (Particle& part : particles)
+    for (Particle &part : particles)
     {
         if (part.active)
         {
@@ -149,13 +154,13 @@ void ParticleSystem::update(float deltaTime)
     }
 }
 
-void ParticleSystem::draw(const glm::mat4& view, const glm::mat4& proj)
+void ParticleSystem::draw(const glm::mat4 &view, const glm::mat4 &proj)
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     std::vector<glm::vec4> instanceData;
-    for (auto& p : particles)
+    for (auto &p : particles)
     {
         if (p.active)
         {
@@ -253,7 +258,7 @@ void ParticleSystem::setGravity(float _gravity)
     gravity = _gravity;
 }
 
-void ParticleSystem::setTexture(Texture* _texture)
+void ParticleSystem::setTexture(Texture *_texture)
 {
     texture = _texture;
     renderMode = ParticleRenderMode::TEXTURE;

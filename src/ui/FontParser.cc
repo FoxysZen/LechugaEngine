@@ -22,13 +22,13 @@ std::unordered_map<int, CharInfo> FontParser::parse(std::string path)
             return std::stoi(line.substr(pos));
         };
 
-        id            = getValue("id");
-        info.x        = getValue("x");
-        info.y        = getValue("y");
-        info.width    = getValue("width");
-        info.height   = getValue("height");
-        info.xoffset  = getValue("xoffset");
-        info.yoffset  = getValue("yoffset");
+        id = getValue("id");
+        info.x = getValue("x");
+        info.y = getValue("y");
+        info.width = getValue("width");
+        info.height = getValue("height");
+        info.xoffset = getValue("xoffset");
+        info.yoffset = getValue("yoffset");
         info.xadvance = getValue("xadvance");
 
         chars[id] = info;

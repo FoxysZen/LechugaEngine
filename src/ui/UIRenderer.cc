@@ -69,7 +69,7 @@ void UIRenderer::drawQuad(int x, int y, int width, int height, glm::vec3 color)
 }
 
 void UIRenderer::drawTexturedQuad(int x, int y, int width, int height, 
-    Texture* texture)
+    Texture *texture)
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -106,7 +106,7 @@ void UIRenderer::drawTexturedQuad(int x, int y, int width, int height,
 }
 
 void UIRenderer::drawTexturedQuad(int x, int y, int width, int height, 
-                                   Texture* texture, int srcX, int srcY, 
+                                   Texture *texture, int srcX, int srcY, 
                                    int srcW, int srcH)
 {
     glEnable(GL_BLEND);
@@ -149,8 +149,8 @@ void UIRenderer::drawTexturedQuad(int x, int y, int width, int height,
     glDisable(GL_BLEND);
 }
 
-void UIRenderer::drawText(int x, int y, std::string text, Font* font, 
-    float scale)
+void UIRenderer::drawText(int x, int y, std::string text, Font *font, 
+                          float scale)
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -167,7 +167,7 @@ void UIRenderer::drawText(int x, int y, std::string text, Font* font,
         }
         int id = (int)c;
         if (font->chars.find(id) == font->chars.end()) continue;
-        CharInfo& info = font->chars[id];
+        CharInfo &info = font->chars[id];
         if (info.width > 0 && info.height > 0)
         {
             drawTexturedQuad(

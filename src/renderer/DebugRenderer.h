@@ -16,7 +16,7 @@ public:
     ~DebugRenderer();
 
     void init();
-    void draw(Collider* collider, TransformComponent* transform, 
+    void draw(Collider *collider, TransformComponent *transform, 
               glm::mat4 viewProj, glm::vec3 color = {0.0f, 1.0f, 0.0f});
     void cleanup();
     bool isVisible();
@@ -30,11 +30,11 @@ private:
     void drawBox(BoxCollider *col, TransformComponent *t, glm::mat4 viewProj, glm::vec3 color);
     void drawCapsule(CapsuleCollider *col, TransformComponent *t, glm::mat4 viewProj, glm::vec3 color);
 
-    void uploadAndDraw(const std::vector<glm::vec3>& verts,
-                       const std::vector<unsigned int>& indices,
+    void uploadAndDraw(const std::vector<glm::vec3> &verts,
+                       const std::vector<unsigned int> &indices,
                        glm::mat4 mvp, glm::vec3 color);
 
-    GLuint compileShader(const char* vert, const char* frag);
+    GLuint compileShader(const char *vert, const char *frag);
 
     std::vector<glm::vec3> buildSphereWire(float radius, int slices = 12);
     std::vector<glm::vec3> buildBoxWire(glm::vec3 halfExtents);

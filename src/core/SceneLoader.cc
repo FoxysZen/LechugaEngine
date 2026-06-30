@@ -47,36 +47,54 @@ Logger::info("Loading transform...");
 
         scene->addTransform(id, {position, rotation, scale});
 Logger::info("Loading mesh...");
-        int nLods = json["entities"][i]["mesh"]["lods"].size();
-        std::vector<LOD> lods(nLods);
-        for (int j = 0; j < nLods; ++j)
+        if (json["entities"][i].contains("skinnedMesh"))
         {
-            lods[j].mesh = resourceManager->loadMesh(
-                json["entities"][i]["mesh"]["lods"][j]["path"]);
-            lods[j].maxDistance = 
-                json["entities"][i]["mesh"]["lods"][j]["maxDistance"];
+            std::vector<SkinnedLOD> lods;
+            if (json["entities"][i]["skinnedMesh"].contains("lods"))
+            {
+                int nLods = json["entities"][i]["skinnedMesh"]["lods"].size();
+                lods.resize(nLods);
+                for (int j = 0; j < nLods; ++j)
+                {
+                    lods[j].mesh = resourceManager->loadSkinnedMesh(
+                        json["entities"][i]["skinnedMesh"]["lods"][j]["path"]);
+                    lods[j].maxDistance = 
+                        json["entities"][i]["skinnedMesh"]["lods"][j]["maxDistance"];
+                }
+            }
+            else if (json["entities"][i]["skinnedMesh"].contains("path"))
+            {
+                lods.push_back({
+                    resourceManager->loadSkinnedMesh(json["entities"][i]["skinnedMesh"]["path"]),
+                    10000.0f
+                });
+            }
+
+            std::string vert = json["entities"][i]["skinnedMesh"]["shader"][0];
+            std::string frag = json["entities"][i]["skinnedMesh"]["shader"][1];
+            bool loop = json["entities"][i]["skinnedMesh"].value("loop", true);
+        
+            ShaderProgram *shader = resourceManager->loadShader(vert, frag);
+        
+            AnimationSystem *animSys = new AnimationSystem();
+            if (!lods.empty())
+            {
+                animSys->setMesh(lods[0].mesh);
+            }
+
+            if (json["entities"][i]["skinnedMesh"].contains("animation"))
+            {
+                std::string anim = json["entities"][i]["skinnedMesh"]["animation"];
+                animSys->play(anim, loop);
+            }
+        
+            scene->addSkinnedMesh(id, {lods, shader, animSys});
         }
 
-        ShaderProgram *shad = resourceManager->loadShader(
-            json["entities"][i]["mesh"]["shader"][0], 
-            json["entities"][i]["mesh"]["shader"][1]);
-Logger::info("Loading textures...");
-        int nTextures = json["entities"][i]["mesh"]["textures"].size();
-        std::vector<Texture*> textures(nTextures);
-        for (int j = 0; j < nTextures; ++j)
-        {
-std::string str = json["entities"][i]["mesh"]["textures"][j];
-Logger::info("Texture: " + str);
-            textures[j] = resourceManager->loadTexture(
-                json["entities"][i]["mesh"]["textures"][j]);
-        }
-
-        scene->addMesh(id, {lods, shad, textures});
-Logger::info("Loading collider...");
         if (json["entities"][i].contains("collider"))
         {
             std::string colType = json["entities"][i]["collider"]["type"];
-            Collider* collider = nullptr;
+            Collider *collider = nullptr;
 
             glm::vec3 offset = glm::vec3(0.0f);
             if (json["entities"][i]["collider"].contains("offset"))
@@ -87,7 +105,7 @@ Logger::info("Loading collider...");
                     json["entities"][i]["collider"]["offset"][2]
                 );
             }
-        
+
             if (colType == "SPHERE")
             {
                 float radius = json["entities"][i]["collider"]["radius"];
@@ -113,42 +131,88 @@ Logger::info("Loading collider...");
             else if (colType == "MESH")
             {
                 std::string path = json["entities"][i]["collider"]["path"];
-                auto groups = OBJParser::getVertices(path);
                 std::vector<glm::vec3> triangles;
-
+            
                 glm::mat4 model = glm::translate(glm::mat4(1.0f), position);
-                model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1,0,0));
-                model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0,1,0));
-                model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0,0,1));
+                model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1, 0, 0));
+                model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0, 1, 0));
+                model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0, 0, 1));
                 model = glm::scale(model, scale);
-
-                for (auto& [mat, verts] : groups)
+            
+                if (path.substr(path.find_last_of(".") + 1) == "glb")
                 {
-                    for (size_t v = 0; v < verts.size(); v += 8)
+                    cgltf_options options = {};
+                    cgltf_data *data = nullptr;
+                
+                    if (cgltf_parse_file(&options, path.c_str(), &data) == cgltf_result_success &&
+                        cgltf_load_buffers(&options, data, path.c_str()) == cgltf_result_success)
                     {
-                        glm::vec4 worldPos = model * glm::vec4(verts[v], verts[v+1], verts[v+2], 1.0f);
-                        triangles.push_back(glm::vec3(worldPos));
+                        for (size_t mi = 0; mi < data->meshes_count; ++mi)
+                        {
+                            const cgltf_mesh& mesh = data->meshes[mi];
+                            for (size_t pi = 0; pi < mesh.primitives_count; ++pi)
+                            {
+                                const cgltf_primitive& prim = mesh.primitives[pi];
+
+                                std::vector<glm::vec3> positions;
+                                for (size_t ai = 0; ai < prim.attributes_count; ++ai)
+                                {
+                                    const cgltf_attribute& attr = prim.attributes[ai];
+                                    if (attr.type == cgltf_attribute_type_position)
+                                    {
+                                        positions.resize(attr.data->count);
+                                        for (size_t v = 0; v < attr.data->count; ++v)
+                                        {
+                                            cgltf_accessor_read_float(attr.data, 
+                                                v, 
+                                                (float*)&positions[v], 
+                                                3);
+                                        }
+                                        break;
+                                    }
+                                }
+                            
+                                if (prim.indices && !positions.empty())
+                                {
+                                    size_t indexCount = prim.indices->count;
+                                    for (size_t ii = 0; ii < indexCount; ++ii)
+                                    {
+                                        uint32_t idx = 
+                                            (uint32_t)cgltf_accessor_read_index(prim.indices, ii);
+                                        glm::vec4 worldPos = 
+                                            model * glm::vec4(positions[idx], 1.0f);
+                                        triangles.push_back(glm::vec3(worldPos));
+                                    }
+                                }
+                            }
+                        }
+                        cgltf_free(data);
+                    }
+                    else
+                    {
+                        Logger::error("SceneLoader: Failed to load GLB collider: " + path);
                     }
                 }
+            
                 collider = new MeshCollider(triangles);
             }
-        
+
             if (collider)
             {
                 scene->addCollider(id, {collider});
                 physicsEngine->addCollider(id, collider);
             }
         }
-Logger::info("Loading rigidbody...");
+
         if (json["entities"][i].contains("rigidBody"))
         {
             float mass = json["entities"][i]["rigidBody"]["mass"];
             bool useGravity = json["entities"][i]["rigidBody"]["useGravity"];
             bool isKinematic = json["entities"][i]["rigidBody"]["isKinematic"];
 
-            RigidBody* body = new RigidBody();
+            RigidBody *body = new RigidBody();
             body->init(glm::vec3(0.0f), glm::vec3(0.0f), mass, useGravity, 
-                isKinematic);
+                       isKinematic);
             scene->addRigidBody(id, body);
             physicsEngine->addBody(id, body);
         }
