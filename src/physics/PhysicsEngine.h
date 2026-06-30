@@ -4,6 +4,7 @@
 #include <CapsuleCollider.h>
 #include <Collider.h>
 #include <EntityID.h>
+#include <Grid.h>
 #include <MeshCollider.h>
 #include <RigidBody.h>
 #include <Scene.h>
@@ -35,6 +36,8 @@ class PhysicsEngine
                     Collider *col1, TransformComponent *trans1, EntityID id1,
                     Collider *col2, TransformComponent *trans2, EntityID id2,
                     CollisionInfo &result);
+        void testMeshCollisions(Collider *col, TransformComponent *trans, 
+                                EntityID id, std::vector<CollisionInfo> &info);
 
     private:
         glm::vec3 closestPointOnTriangle(glm::vec3 P, glm::vec3 A, glm::vec3 B,
@@ -46,4 +49,11 @@ class PhysicsEngine
         std::unordered_map<EntityID, RigidBody*> bodies;
         std::unordered_map<EntityID, Collider*> colliders;
         float gravity = 2.0f;
+
+        std::vector<EntityID> dynamicObjects; // RigidBody and !isKinematic
+        std::vector<EntityID> staticObjects;  // !RigidBody or MESH
+
+        // AABB
+        std::unordered_map<uint64_t, GridCell> cells;
+        float cellSize = 5.0f;
 };

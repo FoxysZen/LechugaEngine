@@ -77,8 +77,8 @@ SkinnedMeshData GLTFLoader::load(const std::string &path,
 
         for (size_t i = 0; i < skin.joints_count; ++i)
         {
-            const cgltf_node* joint = skin.joints[i];
-            Bone& bone = result.skeleton.bones[i];
+            const cgltf_node *joint = skin.joints[i];
+            Bone &bone = result.skeleton.bones[i];
             bone.name = joint->name ? joint->name : "bone_" + std::to_string(i);
             bone.inverseBindMatrix = invBinds[i];
             bone.localTransform = nodeLocalTransform(joint);
@@ -201,7 +201,7 @@ SkinnedMeshData GLTFLoader::load(const std::string &path,
             // Texture
             if (prim.material && prim.material->pbr_metallic_roughness.base_color_texture.texture)
             {
-                const cgltf_image* image = prim.material->pbr_metallic_roughness
+                const cgltf_image *image = prim.material->pbr_metallic_roughness
                                                .base_color_texture.texture->image;
                 if (image->uri)
                 {
@@ -211,8 +211,8 @@ SkinnedMeshData GLTFLoader::load(const std::string &path,
                 else if (image->buffer_view)
                 {
                     // Textura embebida en el glb — extraer los bytes crudos
-                    const cgltf_buffer_view* bv = image->buffer_view;
-                    const unsigned char* bufferData = (const unsigned char*)bv->buffer->data + bv->offset;
+                    const cgltf_buffer_view *bv = image->buffer_view;
+                    const unsigned char *bufferData = (const unsigned char*)bv->buffer->data + bv->offset;
                     sub.embeddedTexture.assign(bufferData, bufferData + bv->size);
                     sub.embeddedMimeType = image->mime_type ? image->mime_type : "image/png";
                 }

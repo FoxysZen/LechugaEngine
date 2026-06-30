@@ -13,7 +13,7 @@ SkinnedMesh::~SkinnedMesh()
 }
 
 void SkinnedMesh::addSubMesh(const std::vector<SkinnedVertex> &vertices,
-                             const std::vector<unsigned int> & indices,
+                             const std::vector<unsigned int> &indices,
                              Texture *texture)
 {
     for (const auto &v : vertices)
@@ -22,7 +22,7 @@ void SkinnedMesh::addSubMesh(const std::vector<SkinnedVertex> &vertices,
     }
 
     SkinnedSubMeshGPU sub;
-    sub.texture    = texture;
+    sub.texture = texture;
     sub.indexCount = (int)indices.size();
 
     glGenVertexArrays(1, &sub.VAO);
@@ -72,8 +72,15 @@ void SkinnedMesh::addSubMesh(const std::vector<SkinnedVertex> &vertices,
     subMeshes.push_back(sub);
 }
 
-void SkinnedMesh::setSkeleton(const Skeleton &s) { skeleton = s; }
-Skeleton &SkinnedMesh::getSkeleton() { return skeleton; }
+void SkinnedMesh::setSkeleton(const Skeleton &s)
+{
+    skeleton = s;
+}
+
+Skeleton &SkinnedMesh::getSkeleton()
+{
+    return skeleton;
+}
 
 void SkinnedMesh::draw()
 {

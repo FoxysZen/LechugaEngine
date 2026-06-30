@@ -8,8 +8,8 @@
 
 struct SkinnedSubMeshGPU
 {
-    GLuint   VAO, VBO, EBO;
-    int      indexCount;
+    GLuint VAO, VBO, EBO;
+    int indexCount;
     Texture *texture = nullptr;
 };
 
