@@ -1,4 +1,4 @@
-#include "ColliderType.h"
+#include <ColliderType.h>
 #include <PhysicsEngine.h>
 #include <cstddef>
 #include <cstdint>
@@ -9,7 +9,13 @@ PhysicsEngine::~PhysicsEngine() {}
 
 void PhysicsEngine::addBody(EntityID id, RigidBody *body)
 {
+    if (id >= bodies.size())
+    {
+        bodies.resize(id + 1, nullptr);
+    }
+    
     bodies[id] = body;
+
     if (!body->getIsKinematic())
     {
         dynamicObjects.push_back(id);
@@ -66,8 +72,11 @@ void PhysicsEngine::addCollider(EntityID id, Collider *collider)
 
 void PhysicsEngine::step(float deltaTime, Scene *scene)
 {
-    for (auto &[id, body] : bodies)
+    for (EntityID id = 0; id < bodies.size(); ++id)
     {
+        RigidBody *body = bodies[id];
+        if (!body) continue;
+
         if (body->getMass() <= 0.0f) continue;
         if (!body->getIsKinematic())
         {
@@ -99,16 +108,17 @@ void PhysicsEngine::step(float deltaTime, Scene *scene)
         body->setIsGrounded(false);
     }
 
-    std::vector<CollisionInfo> collisions = detectCollisions(scene);
-    for (CollisionInfo info : collisions)
+    collisions.clear();
+    detectCollisions(scene, collisions);
+    for (CollisionInfo &info : collisions)
     {
         resolveCollision(scene, info);
     }
 }
 
-std::vector<CollisionInfo> PhysicsEngine::detectCollisions(Scene *scene)
+void PhysicsEngine::detectCollisions(Scene *scene, 
+                                     std::vector<CollisionInfo> &info)
 {
-    std::vector<CollisionInfo> info;
     for (size_t i = 0; i < dynamicObjects.size(); ++i)
     {
         EntityID id1 = dynamicObjects[i];
@@ -134,40 +144,53 @@ std::vector<CollisionInfo> PhysicsEngine::detectCollisions(Scene *scene)
         // Dynamic with MESH
         testMeshCollisions(col1, trans1, id1, info);
     }
-    
-    return info;
 }
 
-void PhysicsEngine::testMeshCollisions(Collider *col, 
-                                       TransformComponent *trans, EntityID id, 
+void PhysicsEngine::testMeshCollisions(Collider *col,
+                                       TransformComponent *trans, EntityID id,
                                        std::vector<CollisionInfo> &info)
 {
-    if (col->getType() != ColliderType::SPHERE && 
-        col->getType() != ColliderType::CAPSULE) 
-            return;
+    if (col->getType() != ColliderType::SPHERE &&
+        col->getType() != ColliderType::CAPSULE)
+        return;
 
+    EntityID id1 = id;
     float minX, maxX, minZ, maxZ;
+
+    SphereCollider *sphere1  = nullptr;
+    CapsuleCollider *capsule1 = nullptr;
+    glm::vec3 top, bottom;
+    float radius;
+    float invLengthSq = 0.0f;
 
     if (col->getType() == ColliderType::SPHERE)
     {
-        SphereCollider *sphere = static_cast<SphereCollider*>(col);
-        glm::vec3 spherePos = trans->position + sphere->offset;
-        float r = sphere->getRadius();
-        minX = spherePos.x - r; maxX = spherePos.x + r;
-        minZ = spherePos.z - r; maxZ = spherePos.z + r;
+        sphere1 = static_cast<SphereCollider*>(col);
+        glm::vec3 spherePos = trans->position + sphere1->offset;
+        radius = sphere1->getRadius();
+        minX = spherePos.x - radius; maxX = spherePos.x + radius;
+        minZ = spherePos.z - radius; maxZ = spherePos.z + radius;
     }
-    else // CAPSULE
+    else
     {
-        CapsuleCollider *capsule = static_cast<CapsuleCollider*>(col);
-        glm::vec3 pos = trans->position + capsule->offset;
-        float halfH = capsule->getHeight() / 2.0f;
-        glm::vec3 top = pos + glm::vec3(0.0f, halfH, 0.0f);
-        glm::vec3 bottom = pos - glm::vec3(0.0f, halfH, 0.0f);
-        float r = capsule->getRadius();
-        minX = std::min(top.x, bottom.x) - r;
-        maxX = std::max(top.x, bottom.x) + r;
-        minZ = std::min(top.z, bottom.z) - r;
-        maxZ = std::max(top.z, bottom.z) + r;
+        capsule1 = static_cast<CapsuleCollider*>(col);
+
+        glm::vec3 pos = trans->position + capsule1->offset;
+
+        float halfH = capsule1->getHeight() / 2.0f;
+
+        top    = pos + glm::vec3(0.0f,  halfH, 0.0f);
+        bottom = pos - glm::vec3(0.0f,  halfH, 0.0f);
+
+        radius = capsule1->getRadius();
+
+        minX = std::min(top.x, bottom.x) - radius;
+        maxX = std::max(top.x, bottom.x) + radius;
+        minZ = std::min(top.z, bottom.z) - radius;
+        maxZ = std::max(top.z, bottom.z) + radius;
+
+        glm::vec3 capsuleAB = bottom - top;
+        invLengthSq = 1.0f / glm::dot(capsuleAB, capsuleAB);
     }
 
     int minCellX = std::floor(minX / cellSize);
@@ -175,9 +198,11 @@ void PhysicsEngine::testMeshCollisions(Collider *col,
     int minCellZ = std::floor(minZ / cellSize);
     int maxCellZ = std::floor(maxZ / cellSize);
 
-    CollisionInfo bestMeshCollision;
-    float maxMeshDepth = 0.0f;
-    bool meshCollisionFound = false;
+    static std::vector<std::pair<EntityID, CollisionInfo>> bestFloor;
+    static std::vector<std::pair<EntityID, CollisionInfo>> bestWall;
+
+    bestFloor.clear();
+    bestWall.clear();
 
     for (int x = minCellX; x <= maxCellX; ++x)
     {
@@ -185,90 +210,125 @@ void PhysicsEngine::testMeshCollisions(Collider *col,
         for (int z = minCellZ; z <= maxCellZ; ++z)
         {
             uint64_t hash = hashX | (static_cast<uint64_t>(z) & 0xFFFFFFFF);
-
             auto it = cells.find(hash);
-            if (it != cells.end())
+            if (it == cells.end()) continue;
+
+            EntityID lastMeshId = 0;
+            MeshCollider *mesh2 = nullptr;
+            for (auto &[id2, t] : it->second.trisIndex)
             {
-                auto &cellTris = it->second.trisIndex;
-
-                for (size_t t_idx = 0; t_idx < cellTris.size(); ++t_idx)
+                if (id2 != lastMeshId) 
                 {
-                    EntityID meshEntityID = cellTris[t_idx].first;
-                    size_t t = cellTris[t_idx].second;
+                    mesh2 = static_cast<MeshCollider*>(colliders[id2]);
+                    lastMeshId = id2;
+                }
+                if (!mesh2) continue;
 
-                    MeshCollider *meshCollider = 
-                        static_cast<MeshCollider*>(colliders[meshEntityID]);
-                    if (!meshCollider) continue;
+                auto &triangles = mesh2->getTriangles();
 
-                    auto &triangles = meshCollider->getTriangles();
+                if (sphere1)
+                {
+                    glm::vec3 spherePos = trans->position + sphere1->offset;
+                    glm::vec3 closest = closestPointOnTriangle(spherePos,
+                        triangles[t], triangles[t+1], triangles[t+2]);
+                    glm::vec3 diff = spherePos - closest;
+                    float distSq = glm::dot(diff, diff);
 
-                    if (col->getType() == ColliderType::SPHERE)
+                    if (distSq < radius * radius)
                     {
-                        SphereCollider *sphere = static_cast<SphereCollider*>(col);
-                        glm::vec3 spherePos = trans->position + sphere->offset;
-                        float radius = sphere->getRadius();
-
-                        glm::vec3 closest = 
-                            closestPointOnTriangle(spherePos, triangles[t],
-                                                   triangles[t + 1],
-                                                   triangles[t + 2]);
-                        float dist = glm::distance(spherePos, closest);
-
-                        if (dist < radius && (radius - dist) > maxMeshDepth)
-                        {
-                            maxMeshDepth = radius - dist;
-                            glm::vec3 diff = spherePos - closest;
-                            bestMeshCollision = {id, meshEntityID,
-                                glm::length(diff) > 0.0001f ? glm::normalize(diff) : glm::vec3(0, 1, 0),
-                                maxMeshDepth};
-                            meshCollisionFound = true;
-                        }
-                    }
-                    else // CAPSULE
-                    {
-                        CapsuleCollider *capsule = static_cast<CapsuleCollider*>(col);
-                        glm::vec3 pos = trans->position + capsule->offset;
-                        float halfH = capsule->getHeight() / 2.0f;
-                        glm::vec3 top = pos + glm::vec3(0.0f, halfH, 0.0f);
-                        glm::vec3 bottom = pos - glm::vec3(0.0f, halfH, 0.0f);
-                        float radius = capsule->getRadius();
-
-                        glm::vec3 closestOnTri = closestPointOnTriangle(
-                            closestPointOnSegment(top, bottom, 
-                                (triangles[t] + triangles[t + 1] + triangles[t + 2]) / 3.0f),
-                            triangles[t], triangles[t + 1], triangles[t + 2]);
+                        float dist = std::sqrt(distSq);
+                        float depth = radius - dist;
                         
-                        glm::vec3 closestOnSeg = 
-                            closestPointOnSegment(top, bottom, closestOnTri);
-                        float dist = glm::distance(closestOnSeg, closestOnTri);
+                        CollisionInfo candidate = {
+                            id1, id2,
+                            dist > 0.0001f ? diff / dist : glm::vec3(0,1,0),
+                            depth
+                        };
 
-                        if (dist < radius && (radius - dist) > maxMeshDepth)
+                        bool isFloor = candidate.normal.y > 0.3f;
+                        auto &bestList = isFloor ? bestFloor : bestWall;
+
+                        bool found = false;
+                        for (auto &[eid, col] : bestList)
                         {
-                            maxMeshDepth = radius - dist;
-                            glm::vec3 diff = closestOnSeg - closestOnTri;
-                            bestMeshCollision = {id, meshEntityID,
-                                glm::length(diff) > 0.0001f ? glm::normalize(diff) : glm::vec3(0, 1, 0),
-                                maxMeshDepth};
-                            meshCollisionFound = true;
+                            if (eid == id2)
+                            {
+                                if (depth > col.depth) col = candidate;
+                                found = true;
+                                break;
+                            }
                         }
+                        if (!found) bestList.push_back({id2, candidate});
+                    }
+                }
+                else // Capsule
+                {
+                    glm::vec3 closestOnTri = closestPointOnTriangle(bottom,
+                                triangles[t], triangles[t+1], triangles[t+2]);
+                    
+                    glm::vec3 closestOnSeg = closestPointOnSegment(top, bottom,
+                                                    closestOnTri, invLengthSq);
+                    
+                    closestOnTri = closestPointOnTriangle(closestOnSeg,
+                                triangles[t], triangles[t+1], triangles[t+2]);
+
+                    glm::vec3 diff = closestOnSeg - closestOnTri;
+                    float distSq = glm::dot(diff, diff);
+
+                    if (distSq < radius * radius)
+                    {
+                        float dist = std::sqrt(distSq);
+                        float depth = radius - dist;
+                        
+                        glm::vec3 edge1 = triangles[t+1] - triangles[t];
+                        glm::vec3 edge2 = triangles[t+2] - triangles[t];
+                        glm::vec3 triNormal = glm::normalize(glm::cross(edge1, edge2));
+
+                        glm::vec3 normal = dist > 0.0001f ? diff / dist : triNormal;
+                        if (glm::dot(normal, triNormal) < 0.0f)
+                            normal = -normal;
+
+                        if (glm::dot(normal, triNormal) > 0.85f)
+                            normal = triNormal;
+                    
+                        bool isFloor = normal.y > 0.3f;
+                        auto &bestList = isFloor ? bestFloor : bestWall;
+                    
+                        bool found = false;
+                        for (auto &[eid, col] : bestList)
+                        {
+                            if (eid == id2)
+                            {
+                                if (depth > col.depth) col = {id1, id2, normal, depth};
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) bestList.push_back({id2, {id1, id2, normal, depth}});
                     }
                 }
             }
         }
     }
 
-    if (meshCollisionFound)
-    {
-        info.push_back(bestMeshCollision);
-    }
+    for (auto &[meshId, col] : bestFloor) info.push_back(col);
+    for (auto &[meshId, col] : bestWall)  info.push_back(col);
 }
 
 void PhysicsEngine::resolveCollision(Scene *scene, CollisionInfo info)
 {
-    RigidBody *body1 = bodies.count(info.entity1) ? 
-        bodies[info.entity1] : nullptr;
-    RigidBody *body2 = bodies.count(info.entity2) ? 
-        bodies[info.entity2] : nullptr;
+    RigidBody *body1 = nullptr;
+    RigidBody *body2 = nullptr;
+
+    if (info.entity1 < bodies.size() && bodies[info.entity1] != nullptr) 
+    {
+        body1 = bodies[info.entity1];
+    }
+
+    if (info.entity2 < bodies.size() && bodies[info.entity2] != nullptr) 
+    {
+        body2 = bodies[info.entity2];
+    }
 
     TransformComponent *trans1 = scene->getTransform(info.entity1);
     TransformComponent *trans2 = scene->getTransform(info.entity2);
@@ -322,25 +382,32 @@ void PhysicsEngine::resolveCollision(Scene *scene, CollisionInfo info)
     }
 }
 
-std::vector<CollisionInfo> PhysicsEngine::getCollisionsFor(EntityID id, 
-                                                           Scene *scene)
+void PhysicsEngine::getCollisionsFor(EntityID id, Scene *scene,
+                                     std::vector<CollisionInfo> &outCollisions)
 {
-    std::vector<CollisionInfo> info;
-    if (colliders.find(id) == colliders.end()) return info;
+    outCollisions.clear();
+    auto it = colliders.find(id);
+    if (it == colliders.end()) return;
+    Collider *mainCollider = it->second;
 
     for (auto &[otherId, otherCollider] : colliders)
     {
         if (otherId == id) continue;
+        if (otherCollider->getType() == ColliderType::MESH) continue;
         CollisionInfo result;
         if (testCollision(
-            colliders[id], scene->getTransform(id), id,
+            mainCollider, scene->getTransform(id), id,
             otherCollider, scene->getTransform(otherId), otherId,
             result))
         {
-            info.push_back(result);
+            outCollisions.push_back(result);
         }
     }
-    return info;
+
+    testMeshCollisions(mainCollider, 
+                       scene->getTransform(id), 
+                       id, 
+                       outCollisions);
 }
 
 bool PhysicsEngine::testCollision(
@@ -360,144 +427,34 @@ bool PhysicsEngine::testCollision(
     }
 
     SphereCollider *sphere1 = 
-        (type1 == ColliderType::SPHERE) ? dynamic_cast<SphereCollider*>(col1) : nullptr;
+        (type1 == ColliderType::SPHERE) ? static_cast<SphereCollider*>(col1) : nullptr;
     BoxCollider *box1 = 
-        (type1 == ColliderType::BOX) ? dynamic_cast<BoxCollider*>(col1) : nullptr;
+        (type1 == ColliderType::BOX) ? static_cast<BoxCollider*>(col1) : nullptr;
     CapsuleCollider *capsule1 = 
-        (type1 == ColliderType::CAPSULE) ? dynamic_cast<CapsuleCollider*>(col1) : nullptr;
+        (type1 == ColliderType::CAPSULE) ? static_cast<CapsuleCollider*>(col1) : nullptr;
 
     if (type1 == ColliderType::SPHERE && type2 == ColliderType::SPHERE)
     {
-        SphereCollider *sphere2 = dynamic_cast<SphereCollider*>(col2);
+        SphereCollider *sphere2 = static_cast<SphereCollider*>(col2);
         glm::vec3 pos1 = trans1->position + sphere1->offset;
         glm::vec3 pos2 = trans2->position + sphere2->offset;
-        float dist = glm::distance(pos1, pos2);
+        
+        glm::vec3 diff = pos2 - pos1;
+        float distSq = glm::dot(diff, diff);
         float sumRadius = sphere1->getRadius() + sphere2->getRadius();
-        if (dist <= sumRadius)
+        
+        if (distSq <= sumRadius * sumRadius)
         {
-            glm::vec3 diff = pos2 - pos1;
+            float dist = std::sqrt(distSq);
             result = {id1, id2,
-                glm::length(diff) > 0.0001f ? glm::normalize(diff) : glm::vec3(0,1,0),
+                dist > 0.0001f ? diff / dist : glm::vec3(0,1,0),
                 sumRadius - dist};
             return true;
         }
     }
-    else if (type1 == ColliderType::SPHERE && type2 == ColliderType::MESH)
-    {
-        MeshCollider *mesh2 = dynamic_cast<MeshCollider*>(col2);
-        glm::vec3 spherePos = trans1->position + sphere1->offset;
-        float radius = sphere1->getRadius();
-        auto &triangles = mesh2->getTriangles();
-        CollisionInfo bestCollision;
-        float maxDepth = 0.0f;
-        bool found = false;
-
-        float minX = spherePos.x - radius;
-        float maxX = spherePos.x + radius;
-        float minZ = spherePos.z - radius;
-        float maxZ = spherePos.z + radius;
-
-        int minCellX = std::floor(minX / cellSize);
-        int minCellZ = std::floor(minZ / cellSize);
-        int maxCellX = std::floor(maxX / cellSize);
-        int maxCellZ = std::floor(maxZ / cellSize);
-
-        for (int x = minCellX; x <= maxCellX; ++x)
-        {
-            uint64_t hashX = static_cast<uint64_t>(x) << 32;
-            for (int z = minCellZ; z <= maxCellZ; ++z)
-            {
-                uint64_t hash = hashX | (static_cast<uint64_t>(z) & 0xFFFFFFFF);
-                auto it = cells.find(hash);
-                if (it != cells.end())
-                {
-                    auto &cellTris = it->second.trisIndex;
-                    for (size_t i = 0; i < cellTris.size(); ++i)
-                    {
-                        size_t t = cellTris[i].second;
-                        glm::vec3 closest = closestPointOnTriangle(spherePos,
-                                                        triangles[t],
-                                                        triangles[t + 1],
-                                                        triangles[t + 2]);
-                        float dist = glm::distance(spherePos, closest);
-                        if (dist < radius && (radius - dist) > maxDepth)
-                        {
-                            maxDepth = radius - dist;
-                            glm::vec3 diff = spherePos - closest;
-                            bestCollision = {id1, id2,
-                                glm::length(diff) > 0.0001f ? glm::normalize(diff) : glm::vec3(0,1,0),
-                                maxDepth};
-                            found = true;
-                        }
-                    }
-                }
-            }
-        }
-        if (found) { result = bestCollision; return true; }
-    }
-    else if (type1 == ColliderType::CAPSULE && type2 == ColliderType::MESH)
-    {
-        MeshCollider *mesh2 = dynamic_cast<MeshCollider*>(col2);
-        glm::vec3 pos = trans1->position + capsule1->offset;
-        float halfH = capsule1->getHeight() / 2.0f;
-        glm::vec3 top = pos + glm::vec3(0.0f, halfH, 0.0f);
-        glm::vec3 bottom = pos - glm::vec3(0.0f, halfH, 0.0f);
-        float radius = capsule1->getRadius();
-        auto &triangles = mesh2->getTriangles();
-        CollisionInfo bestCollision;
-        float maxDepth = 0.0f;
-        bool found = false;
-
-        float minX = std::min(top.x, bottom.x) - radius;
-        float maxX = std::max(top.x, bottom.x) + radius;
-        float minZ = std::min(top.z, bottom.z) - radius;
-        float maxZ = std::max(top.z, bottom.z) + radius;
-
-        int minCellX = std::floor(minX / cellSize);
-        int maxCellX = std::floor(maxX / cellSize);
-        int minCellZ = std::floor(minZ / cellSize);
-        int maxCellZ = std::floor(maxZ / cellSize);
-
-        for (int x = minCellX; x <= maxCellX; ++x)
-        {
-            uint64_t hashX = static_cast<uint64_t>(x) << 32;
-            for (int z = minCellZ; z <= maxCellZ; ++z)
-            {
-                uint64_t hash = hashX | (static_cast<uint64_t>(z) & 0xFFFFFFFF);
-
-                auto it = cells.find(hash);
-                if (it != cells.end())
-                {
-                    auto &cellTris = it->second.trisIndex;
-
-                    for (size_t i = 0; i < cellTris.size(); ++i)
-                    {
-                        size_t t = cellTris[i].second;
-                        glm::vec3 closestOnTri = closestPointOnTriangle(
-                            closestPointOnSegment(top, bottom,
-                                (triangles[t] + triangles[t+1] + triangles[t+2]) / 3.0f),
-                            triangles[t], triangles[t+1], triangles[t+2]);
-                        glm::vec3 closestOnSeg = closestPointOnSegment(top, bottom, 
-                                                                       closestOnTri);
-                        float dist = glm::distance(closestOnSeg, closestOnTri);
-                        if (dist < radius && (radius - dist) > maxDepth)
-                        {
-                            maxDepth = radius - dist;
-                            glm::vec3 diff = closestOnSeg - closestOnTri;
-                            bestCollision = {id1, id2,
-                                glm::length(diff) > 0.0001f ? glm::normalize(diff) : glm::vec3(0,1,0),
-                                maxDepth};
-                            found = true;
-                        }
-                    }
-                }
-            }
-        }
-        if (found) { result = bestCollision; return true; }
-    }
     else if (type1 == ColliderType::CAPSULE && type2 == ColliderType::CAPSULE)
     {
-        CapsuleCollider *capsule2 = dynamic_cast<CapsuleCollider*>(col2);
+        CapsuleCollider *capsule2 = static_cast<CapsuleCollider*>(col2);
         glm::vec3 pos1 = trans1->position + capsule1->offset;
         float halfH1 = capsule1->getHeight() / 2.0f;
         glm::vec3 top1 = pos1 + glm::vec3(0.0f, halfH1, 0.0f);
@@ -509,20 +466,23 @@ bool PhysicsEngine::testCollision(
         glm::vec3 closest1, closest2;
         closestPointsBetweenSegments(bot1, top1, bot2, top2, closest1, 
                                      closest2);
-        float dist = glm::distance(closest1, closest2);
+        
+        glm::vec3 diff = closest1 - closest2;
+        float distSq = glm::dot(diff, diff);
         float sumRadius = capsule1->getRadius() + capsule2->getRadius();
-        if (dist <= sumRadius)
+        
+        if (distSq <= sumRadius * sumRadius)
         {
-            glm::vec3 diff = closest1 - closest2;
+            float dist = std::sqrt(distSq);
             result = {id1, id2,
-                glm::length(diff) > 0.0001f ? glm::normalize(diff) : glm::vec3(0,1,0),
+                dist > 0.0001f ? diff / dist : glm::vec3(0,1,0),
                 sumRadius - dist};
             return true;
         }
     }
     else if (type1 == ColliderType::BOX && type2 == ColliderType::CAPSULE)
     {
-        CapsuleCollider *capsule2 = dynamic_cast<CapsuleCollider*>(col2);
+        CapsuleCollider *capsule2 = static_cast<CapsuleCollider*>(col2);
         glm::vec3 capPos = trans2->position + capsule2->offset;
         float halfH = capsule2->getHeight() / 2.0f;
         glm::vec3 top = capPos + glm::vec3(0.0f, halfH, 0.0f);
@@ -551,16 +511,20 @@ bool PhysicsEngine::testCollision(
         }
 
         glm::vec3 bestBoxPoint = glm::clamp(bestSegPoint, boxMin, boxMax);
-        float dist = glm::distance(bestSegPoint, bestBoxPoint);
+        
+        glm::vec3 diff = bestBoxPoint - bestSegPoint;
+        float distSq = glm::dot(diff, diff);
+        float radiusSq = radius * radius;
 
-        if (dist <= radius)
+        if (distSq <= radiusSq)
         {
+            float dist = std::sqrt(distSq);
             glm::vec3 normal;
             float depth;
 
             if (dist > 0.0001f)
             {
-                normal = (bestBoxPoint - bestSegPoint) / dist; 
+                normal = diff / dist; 
                 depth = radius - dist;
             }
             else
@@ -589,7 +553,7 @@ bool PhysicsEngine::testCollision(
     }
     else if (type1 == ColliderType::SPHERE && type2 == ColliderType::CAPSULE)
     {
-        CapsuleCollider *capsule2 = dynamic_cast<CapsuleCollider*>(col2);
+        CapsuleCollider *capsule2 = static_cast<CapsuleCollider*>(col2);
         
         glm::vec3 capPos = trans2->position + capsule2->offset;
         float halfH = capsule2->getHeight() / 2.0f;
@@ -600,20 +564,26 @@ bool PhysicsEngine::testCollision(
         glm::vec3 spherePos = trans1->position + sphere1->offset;
         float sphereRadius = sphere1->getRadius();
 
-        glm::vec3 closestPointSegment = closestPointOnSegment(bot, top, 
-                                                              spherePos);
+        glm::vec3 capsuleAB = top - bot;
+        float invLengthSq = 1.0f / glm::dot(capsuleAB, capsuleAB);
 
-        float dist = glm::distance(spherePos, closestPointSegment);
+        glm::vec3 closestPointSegment = closestPointOnSegment(bot, top, 
+                                                              spherePos,
+                                                              invLengthSq);
+
+        glm::vec3 diff = spherePos - closestPointSegment;
+        float distSq = glm::dot(diff, diff);
         float sumRadius = sphereRadius + capRadius;
 
-        if (dist <= sumRadius)
+        if (distSq <= sumRadius * sumRadius)
         {
+            float dist = std::sqrt(distSq);
             glm::vec3 normal;
             float depth = sumRadius - dist;
 
             if (dist > 0.0001f)
             {
-                normal = (spherePos - closestPointSegment) / dist;
+                normal = diff / dist;
             }
             else
             {
@@ -676,10 +646,10 @@ glm::vec3 PhysicsEngine::closestPointOnTriangle(glm::vec3 P, glm::vec3 A,
 }
 
 glm::vec3 PhysicsEngine::closestPointOnSegment(glm::vec3 A, glm::vec3 B, 
-    glm::vec3 P)
+    glm::vec3 P, float invLengthSq)
 {
     glm::vec3 AB = B - A;
-    float t = glm::dot(P - A, AB) / glm::dot(AB, AB);
+    float t = glm::dot(P - A, AB) * invLengthSq;
     t = glm::clamp(t, 0.0f, 1.0f);
     return A + t * AB;
 }
