@@ -24,12 +24,66 @@
         },
         {
             "transform": {
+                "position": [0, 5, 7],
+                "rotation": [0, 0, 0],
+                "scale": [1, 1, 1]
+            },
+            "skinnedMesh": {
+                "lods": [
+                    {"path": "assets/meshes/handkerchief_lod0.glb", "maxDistance": 10.0},
+                    {"path": "assets/meshes/handkerchief_lod1.glb", "maxDistance": 50.0}
+                ],
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "textures": ["assets/textures/char_body_texture.png", "assets/textures/char_face_texture.png"],
+                "loop": true
+            },
+            "collider": {
+                "type": "SPHERE",
+                "radius": 0.25,
+                "offset": [0, 1, 0]
+            },
+            "rigidBody": {
+                "mass": 1,
+                "useGravity": true,
+                "isKinematic": false
+            }
+        },
+        {
+            "transform": {
+                "position": [0, 5, 0],
+                "rotation": [0, 0, 0],
+                "scale": [1, 1, 1]
+            },
+            "skinnedMesh": {
+                "lods": [
+                    {"path": "assets/meshes/fauna/pygmy.glb", "maxDistance": 10.0},
+                    {"path": "assets/meshes/fauna/pygmy.glb", "maxDistance": 50.0}
+                ],
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "textures": ["assets/textures/char_body_texture.png", "assets/textures/char_face_texture.png"],
+                "animation": "looking",
+                "loop": true
+            },
+            "collider": {
+                "type": "CAPSULE",
+                "radius": 0.25,
+                "height": 1.5,
+                "offset": [0, 1, 0]
+            },
+            "rigidBody": {
+                "mass": 2,
+                "useGravity": true,
+                "isKinematic": false
+            }
+        },
+        {
+            "transform": {
                 "position": [0, -5, 0],
                 "rotation": [0, 0, 0],
                 "scale": [1, 1, 1]
             },
             "skinnedMesh": {
-                "path": "assets/meshes/terrain/terrain.glb",
+                "path": "assets/meshes/terrain/terrain_col.glb",
                 "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
                 "loop": true
             },

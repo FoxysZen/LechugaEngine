@@ -13,7 +13,7 @@ SkinnedMesh::~SkinnedMesh()
 }
 
 void SkinnedMesh::addSubMesh(const std::vector<SkinnedVertex> &vertices,
-                             const std::vector<unsigned int> & indices,
+                             const std::vector<unsigned int> &indices,
                              Texture *texture)
 {
     for (const auto &v : vertices)
@@ -22,7 +22,7 @@ void SkinnedMesh::addSubMesh(const std::vector<SkinnedVertex> &vertices,
     }
 
     SkinnedSubMeshGPU sub;
-    sub.texture    = texture;
+    sub.texture = texture;
     sub.indexCount = (int)indices.size();
 
     glGenVertexArrays(1, &sub.VAO);
@@ -72,19 +72,48 @@ void SkinnedMesh::addSubMesh(const std::vector<SkinnedVertex> &vertices,
     subMeshes.push_back(sub);
 }
 
-void SkinnedMesh::setSkeleton(const Skeleton &s) { skeleton = s; }
-Skeleton &SkinnedMesh::getSkeleton() { return skeleton; }
+void SkinnedMesh::setSkeleton(const Skeleton &s)
+{
+    skeleton = s;
+}
+
+Skeleton &SkinnedMesh::getSkeleton()
+{
+    return skeleton;
+}
 
 void SkinnedMesh::draw()
 {
-    for (auto &sub : subMeshes)
+    /*for (auto &sub : subMeshes)
     {
         if (sub.texture) sub.texture->bind(0);
         glBindVertexArray(sub.VAO);
         glDrawElements(GL_TRIANGLES, sub.indexCount, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         if (sub.texture) sub.texture->unbind(0);
+    }*/
+
+    for (auto &sub : subMeshes)
+    {
+        if (sub.texture) sub.texture->bind(0);
+        glBindVertexArray(sub.VAO);
+        
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
+        glDrawElements(GL_TRIANGLES, sub.indexCount, GL_UNSIGNED_INT, 0);
+        
+        if (sub.texture) sub.texture->unbind(0);
+
+        glEnable(GL_POLYGON_OFFSET_LINE);
+        glPolygonOffset(-1.0f, -1.0f);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        
+        glDrawElements(GL_TRIANGLES, sub.indexCount, GL_UNSIGNED_INT, 0);
+        
+        glDisable(GL_POLYGON_OFFSET_LINE);
+        glBindVertexArray(0);
     }
+    
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void SkinnedMesh::calculateBounds()

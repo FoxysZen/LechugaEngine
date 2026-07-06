@@ -149,15 +149,15 @@ Logger::info("Loading mesh...");
                     {
                         for (size_t mi = 0; mi < data->meshes_count; ++mi)
                         {
-                            const cgltf_mesh& mesh = data->meshes[mi];
+                            const cgltf_mesh &mesh = data->meshes[mi];
                             for (size_t pi = 0; pi < mesh.primitives_count; ++pi)
                             {
-                                const cgltf_primitive& prim = mesh.primitives[pi];
+                                const cgltf_primitive &prim = mesh.primitives[pi];
 
                                 std::vector<glm::vec3> positions;
                                 for (size_t ai = 0; ai < prim.attributes_count; ++ai)
                                 {
-                                    const cgltf_attribute& attr = prim.attributes[ai];
+                                    const cgltf_attribute &attr = prim.attributes[ai];
                                     if (attr.type == cgltf_attribute_type_position)
                                     {
                                         positions.resize(attr.data->count);
