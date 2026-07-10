@@ -18,14 +18,7 @@ void main()
                     + boneMatrices[boneIDs.z] * boneWeights.z
                     + boneMatrices[boneIDs.w] * boneWeights.w;
 
-    //vec4 skinnedPos = skinMatrix * vec4(position, 1.0);
-    //vec4 skinnedNormal = skinMatrix * vec4(normal, 0.0);
-//
-    //float offset = 0.05;
-    //vec4 offsetPos = skinnedPos + skinnedNormal * offset;
-
     vec4 skinnedPos = skinMatrix * vec4(position, 1.0);
 
-    //gl_Position = lightSpaceMatrix * model * offsetPos;
     gl_Position = lightSpaceMatrix * model * skinnedPos;
 }
