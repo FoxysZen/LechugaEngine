@@ -1,3 +1,4 @@
+#include "EntityID.h"
 #include <Scene.h>
 
 Scene::Scene()
@@ -94,7 +95,7 @@ void Scene::update(float deltaTime)
         if (sm.animSys) sm.animSys->update(deltaTime);
 }
 
-void Scene::render(Renderer *renderer)
+void Scene::render(Renderer *renderer, EntityID playerId)
 {
     std::vector<LightComponent> lightList;
     for (auto& [id, light] : lights)
@@ -103,6 +104,19 @@ void Scene::render(Renderer *renderer)
     }
     renderer->setLights(lightList);
 
+    // Shadow Map
+    renderer->beginShadowPass(getTransform(playerId)->position);
+
+    for (auto &[id, sm] : skinnedMeshes)
+    {
+        if (transforms.count(id) > 0)
+        {
+            renderer->render(sm, transforms[id]); 
+        }
+    }
+    renderer->endShadowPass();
+
+    // Normal Render
     for (auto &[id, sm] : skinnedMeshes)
     {
         if (transforms.count(id) > 0)

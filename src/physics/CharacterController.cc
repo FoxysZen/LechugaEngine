@@ -81,3 +81,8 @@ void CharacterController::setGrounded(bool g)
 {
     grounded = g;
 }
+
+EntityID CharacterController::getPlayerId() const
+{
+    return id;
+}

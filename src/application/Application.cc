@@ -29,7 +29,7 @@ bool Application::init()
     audioManager->setVolume(AudioChannel::UI,    0.6f);
 
     Logger::info("Creating renderer...");
-    renderer = std::make_unique<Renderer>();
+    renderer = std::make_unique<Renderer>(width, height, resourceManager.get());
 
     Logger::info("Creating physics engine...");
     physicsEngine = std::make_unique<PhysicsEngine>();
@@ -180,7 +180,7 @@ void Application::run()
 
         scene->update(deltaTime);
 
-        scene->render(renderer.get());
+        scene->render(renderer.get(), characterController->getPlayerId());
 
         uiManager->handleHover(input->getMouseX(), input->getMouseY());
         uiManager->draw();
@@ -199,6 +199,7 @@ void Application::run()
             }
         }
 
+        renderer->endFrame();
         window->swapBuffers();
         input->updateMouseLast();
     }

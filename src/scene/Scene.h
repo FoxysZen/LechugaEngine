@@ -36,7 +36,7 @@ class Scene
         std::unordered_map<EntityID, SkinnedMeshComponent> *getSkinnedMeshMap();
 
         void update(float deltaTime);
-        void render(Renderer *renderer);
+        void render(Renderer *renderer, EntityID playerId);
     
     private:
         uint32_t nextID = 0;
