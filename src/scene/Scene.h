@@ -37,6 +37,7 @@ class Scene
 
         void update(float deltaTime);
         void render(Renderer *renderer, EntityID playerId);
+        void updateShadowCamera(float deltaTime, glm::vec3 playerPos);
     
     private:
         uint32_t nextID = 0;
@@ -46,4 +47,9 @@ class Scene
         std::unordered_map<EntityID, ParticleComponent> particles;
         std::unordered_map<EntityID, ColliderComponent> colliders;
         std::unordered_map<EntityID, RigidBody*> rigidBodies;
+
+        // Sun movement
+        bool isSun = true;
+        float sunSeconds = 0.0f;
+        glm::vec3 sunPos = glm::vec3(0.0f);
 };

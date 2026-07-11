@@ -247,7 +247,7 @@ void Renderer::initShadowMapping(ResourceManager *resManager)
                                           "assets/shaders/shadow.frag");
 }
 
-void Renderer::beginShadowPass(const glm::vec3 playerPos)
+void Renderer::beginShadowPass(const glm::vec3 sunPos, const glm::vec3 playerPos)
 {
     if (currentLights.empty()) return;
 
@@ -260,9 +260,10 @@ void Renderer::beginShadowPass(const glm::vec3 playerPos)
     glEnable(GL_POLYGON_OFFSET_FILL);
     glPolygonOffset(2.0f, 4.0f);
 
-    // This asumes the first light is the Sun
-    glm::vec3 lightPos = currentLights[0].position; 
+    float lightDistance = 40.0f; 
+    glm::vec3 normalizedSunPos = glm::normalize(sunPos);
     glm::vec3 lightTarget = playerPos;
+    glm::vec3 lightPos = lightTarget + (normalizedSunPos * lightDistance);
 
     float boxSize = 20.0f;
     float near_plane = 1.0f;

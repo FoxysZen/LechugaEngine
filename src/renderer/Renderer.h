@@ -35,7 +35,7 @@ class Renderer
         // Shadow Map
         unsigned int getShadowTexture() const;
         glm::mat4 getLightSpaceMatrix() const;
-        void beginShadowPass(const glm::vec3 playerPos);
+        void beginShadowPass(const glm::vec3 sunPos, const glm::vec3 playerPos);
         void endShadowPass();
     
     private:
