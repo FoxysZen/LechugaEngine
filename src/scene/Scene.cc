@@ -105,9 +105,6 @@ void Scene::update(float deltaTime)
         std::cos(currentAngle) * 10.0f
     );
 
-    Logger::info("SunPos: X: " + std::to_string(sunPos.x) + ", Y: " + std::to_string(sunPos.y) + ", Z: " + std::to_string(sunPos.z));
-
-
     for (auto &[id, particle] : particles)
         particle.system->update(deltaTime);
 
