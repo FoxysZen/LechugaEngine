@@ -16,6 +16,8 @@ class CharacterController
         bool isGrounded();
         void setGrounded(bool g);
 
+        EntityID getPlayerId() const;
+
     private:
         EntityID id;
 

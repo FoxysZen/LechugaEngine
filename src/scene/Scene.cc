@@ -1,3 +1,4 @@
+#include "EntityID.h"
 #include <Scene.h>
 
 Scene::Scene()
@@ -27,6 +28,11 @@ void Scene::addSkinnedMesh(EntityID id, SkinnedMeshComponent component)
 
 void Scene::addLight(EntityID id, LightComponent light)
 {
+    if (isSun)
+    {
+        sunPos = light.position;
+        isSun = false;
+    }
     lights[id] = light;
 }
 
@@ -87,6 +93,18 @@ RigidBody *Scene::getRigidBody(EntityID id)
 
 void Scene::update(float deltaTime)
 {
+    // Update Sun
+    sunSeconds += deltaTime;
+
+    float speedMultiplier = 0.05f;
+    float currentAngle = sunSeconds * speedMultiplier;
+
+    sunPos = glm::vec3(
+        std::sin(currentAngle) * 10.0f,
+        sunPos.y,
+        std::cos(currentAngle) * 10.0f
+    );
+
     for (auto &[id, particle] : particles)
         particle.system->update(deltaTime);
 
@@ -94,7 +112,7 @@ void Scene::update(float deltaTime)
         if (sm.animSys) sm.animSys->update(deltaTime);
 }
 
-void Scene::render(Renderer *renderer)
+void Scene::render(Renderer *renderer, EntityID playerId)
 {
     std::vector<LightComponent> lightList;
     for (auto& [id, light] : lights)
@@ -103,6 +121,19 @@ void Scene::render(Renderer *renderer)
     }
     renderer->setLights(lightList);
 
+    // Shadow Map
+    renderer->beginShadowPass(sunPos, getTransform(playerId)->position);
+
+    for (auto &[id, sm] : skinnedMeshes)
+    {
+        if (transforms.count(id) > 0)
+        {
+            renderer->render(sm, transforms[id]); 
+        }
+    }
+    renderer->endShadowPass();
+
+    // Normal Render
     for (auto &[id, sm] : skinnedMeshes)
     {
         if (transforms.count(id) > 0)

@@ -15,10 +15,11 @@
 class Renderer
 {
     public:
-        Renderer();
+        Renderer(int _width, int _height, ResourceManager *resManager);
         ~Renderer();
 
         void beginFrame(Camera *camera, float deltaTime);
+        void endFrame();
         void render(const SkinnedMeshComponent &sm, 
                     const TransformComponent &transform);
         void setLights(const std::vector<LightComponent> &lights);
@@ -30,8 +31,16 @@ class Renderer
         int getDrawCalls();
         void addDrawCalls(int n);
         void resetDrawCalls();
+
+        // Shadow Map
+        unsigned int getShadowTexture() const;
+        glm::mat4 getLightSpaceMatrix() const;
+        void beginShadowPass(const glm::vec3 sunPos, const glm::vec3 playerPos);
+        void endShadowPass();
     
     private:
+        void initShadowMapping(ResourceManager *resManager);
+
         glm::mat4 currentView;
         glm::mat4 currentProj;
         glm::vec3 currentViewPos;
@@ -44,4 +53,17 @@ class Renderer
         Skydome *skydome = nullptr;
 
         int drawCalls = 0;
+
+        // Shadow Mapping
+        unsigned int shadowFBO = 0;
+        unsigned int shadowDepthTex = 0;
+        const unsigned int SHADOW_WIDTH = 2048;
+        const unsigned int SHADOW_HEIGHT = 2048;
+        
+        glm::mat4 lightSpaceMatrix;
+        int screenWidth = 1280;
+        int screenHeight = 720;
+        bool isShadowPass = true;
+
+        ShaderProgram *shadowShader = nullptr;
 };
