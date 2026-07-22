@@ -14,6 +14,7 @@ class Window
         void swapBuffers();
 
         SDL_Window *getWindow();
+        SDL_GLContext getGLContext();
         int getHeight();
         int getWidth();
         bool isOpen();

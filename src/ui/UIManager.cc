@@ -55,6 +55,11 @@ void UIManager::handleHover(int mouseX, int mouseY)
     }
 }
 
+std::vector<UIElement*> *UIManager::getElements()
+{
+    return &elements;
+}
+
 void UIManager::registerCallback(std::string id, 
     std::function<void()> callback)
 {

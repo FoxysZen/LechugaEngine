@@ -18,6 +18,7 @@ class UIManager
         void draw();
         bool handleClick(int mouseX, int mouseY);
         void handleHover(int mouseX, int mouseY);
+        std::vector<UIElement*> *getElements();
 
         void registerCallback(std::string id, std::function<void()> callback);
         std::unordered_map<std::string, std::function<void()>> callbacks;

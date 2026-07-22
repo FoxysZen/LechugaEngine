@@ -86,6 +86,15 @@ std::unordered_map<EntityID, SkinnedMeshComponent> *Scene::getSkinnedMeshMap()
     return &skinnedMeshes;
 }
 
+std::unordered_map<EntityID, TransformComponent> *Scene::getTransformMap()
+{
+    return &transforms;
+}
+std::unordered_map<EntityID, LightComponent> *Scene::getLights()
+{
+    return &lights;
+}
+
 RigidBody *Scene::getRigidBody(EntityID id)
 {
     return rigidBodies[id];

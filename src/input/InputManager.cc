@@ -9,6 +9,16 @@ void InputManager::pollEvents()
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
+#ifndef NDEBUG
+        ImGui_ImplSDL3_ProcessEvent(&event);
+        
+        ImGuiIO& io = ImGui::GetIO();
+        if ((event.type == SDL_EVENT_KEY_DOWN || event.type == SDL_EVENT_KEY_UP) 
+            && io.WantCaptureKeyboard)
+        {
+            continue;
+        }
+#endif
         switch (event.type)
         {
             case SDL_EVENT_QUIT:

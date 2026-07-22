@@ -60,4 +60,6 @@ class Application
 
         std::string debugStats = "";
 
+        EntityID selectedEntityIdx = 999999;
+        bool objSelected = false;
 };

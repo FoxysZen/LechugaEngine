@@ -18,6 +18,15 @@ add_subdirectory(vendor/glm)
 
 find_package(OpenGL REQUIRED)
 
+set(IMGUI_SOURCES
+    vendor/imgui/imgui.cpp
+    vendor/imgui/imgui_draw.cpp
+    vendor/imgui/imgui_tables.cpp
+    vendor/imgui/imgui_widgets.cpp
+    vendor/imgui/imgui_impl_sdl3.cpp
+    vendor/imgui/imgui_impl_opengl3.cpp
+)
+
 add_executable(LechugaEngine
     src/main.cc
 
@@ -70,6 +79,7 @@ add_executable(LechugaEngine
     src/window/Window.cc
 
     vendor/glad/src/glad.c
+    ${IMGUI_SOURCES}
 )
 
 target_include_directories(LechugaEngine PRIVATE
@@ -93,6 +103,7 @@ target_include_directories(LechugaEngine SYSTEM PRIVATE
     vendor/nlohmann
     vendor/SDL3/include
     vendor/stb
+    vendor/imgui
 )
 
 target_link_libraries(LechugaEngine PRIVATE

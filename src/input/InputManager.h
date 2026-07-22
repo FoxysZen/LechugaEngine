@@ -3,9 +3,13 @@
 #include <EventSystem.h>
 #include <glm/glm.hpp>
 #include <Logger.h>
-#include <memory>
 #include <SDL3/SDL.h>
 #include <unordered_map>
+
+#ifndef NDEBUG
+#include "imgui.h"
+#include "imgui_impl_sdl3.h"
+#endif
 
 class InputManager
 {

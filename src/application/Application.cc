@@ -4,6 +4,12 @@
 #include <memory>
 #include <string>
 
+#ifndef NDEBUG
+#include "imgui.h"
+#include "imgui_impl_sdl3.h"
+#include "imgui_impl_opengl3.h"
+#endif
+
 Application::Application() {}
 
 Application::~Application() {}
@@ -74,9 +80,8 @@ bool Application::init()
     characterController = std::make_unique<CharacterController>(0, 
                                             physicsEngine.get(), scene.get());
 
-    Font *font = new Font();
-    font = resourceManager->loadFont("assets/fonts/SansSerif.fnt",
-                                     "assets/fonts/SansSerif.png");
+    Font *font = resourceManager->loadFont("assets/fonts/SansSerif.fnt",
+                                           "assets/fonts/SansSerif.png");
     debugLabel = new UILabel(10, 10, "", font);
     debugLabel->setVisible(false);
     debugLabel->setLayer(10);
@@ -89,7 +94,6 @@ bool Application::init()
     uiManager->registerCallback("btnPlay", [this]() {
         Logger::info("Play pulsado");
         audioManager->playSFX("assets/audio/sfx/button.mp3");
-        //animSystem->play("picoteo", false);
     });
 
     Logger::info("Adding subscriptions");
@@ -103,6 +107,10 @@ bool Application::init()
     });
 
     EventSystem::getInstance().subscribe<LeftMousePressedEvent>([this](const LeftMousePressedEvent&) {
+#ifndef NDEBUG
+        if (ImGui::GetIO().WantCaptureMouse) return;
+#endif
+
         if (!uiManager->handleClick(input->getMouseX(), input->getMouseY()))
         {
             camera->setLeftMouse(true);
@@ -121,6 +129,16 @@ bool Application::init()
     EventSystem::getInstance().subscribe<LeftMouseReleasedEvent>([this](const LeftMouseReleasedEvent&) {
         camera->setLeftMouse(false);
     });
+
+#ifndef NDEBUG
+    Logger::info("Initializing Dear ImGui Editor...");
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplSDL3_InitForOpenGL(window->getWindow(), window->getGLContext());
+    ImGui_ImplOpenGL3_Init("#version 410 core");
+#endif
     
     Logger::info("Init complete");
     return window->isOpen();
@@ -157,18 +175,32 @@ void Application::run()
         }
 
         input->pollEvents();
-    ///////// character movement controler
-        glm::vec3 forward = glm::normalize(glm::vec3(camera->getForward().x,
-                                           0.0f, camera->getForward().z));
-        glm::vec3 right = glm::normalize(glm::vec3(camera->getRight().x,
-                                         0.0f, camera->getRight().z));
 
+    ///////// dear ImGui
+        bool ignoreGameInput = false;
+#ifndef NDEBUG
+        ImGuiIO &io = ImGui::GetIO();
+        if (io.WantCaptureMouse || io.WantCaptureKeyboard)
+        {
+            ignoreGameInput = true;
+        }
+#endif
+
+    ///////// character movement controler
         glm::vec3 direction = glm::vec3(0.0f);
-        if (input->isKeyDown(SDLK_UP)) direction += forward;
-        if (input->isKeyDown(SDLK_DOWN)) direction -= forward;
-        if (input->isKeyDown(SDLK_LEFT)) direction -= right;
-        if (input->isKeyDown(SDLK_RIGHT)) direction += right;
-        if (glm::length(direction) > 0.0f) direction = glm::normalize(direction);
+        if (!ignoreGameInput)
+        {
+            glm::vec3 forward = glm::normalize(glm::vec3(camera->getForward().x,
+                                               0.0f, camera->getForward().z));
+            glm::vec3 right = glm::normalize(glm::vec3(camera->getRight().x,
+                                             0.0f, camera->getRight().z));
+
+            if (input->isKeyDown(SDLK_UP)) direction += forward;
+            if (input->isKeyDown(SDLK_DOWN)) direction -= forward;
+            if (input->isKeyDown(SDLK_LEFT)) direction -= right;
+            if (input->isKeyDown(SDLK_RIGHT)) direction += right;
+            if (glm::length(direction) > 0.0f) direction = glm::normalize(direction);
+        }
 
         characterController->move(direction, 5.0f, deltaTime);
     /////////
@@ -199,6 +231,64 @@ void Application::run()
             }
         }
 
+    //////// Render Dear ImGui
+#ifndef NDEBUG
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplSDL3_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::Begin("Scene Hierarchy");
+        auto *meshesMap = scene->getSkinnedMeshMap();
+        if (meshesMap)
+        {
+            for (auto &[id, mesh] : *meshesMap)
+            {
+                std::string name = "Entity ID: " + std::to_string(id);
+
+                bool isSelected = (objSelected && selectedEntityIdx == id);
+                if (ImGui::Selectable(name.c_str(), isSelected))
+                {
+                    selectedEntityIdx = id;
+                    objSelected = true;
+                }
+            }
+        }
+        ImGui::End();
+
+        ImGui::Begin("Inspector");
+        if (objSelected)
+        {
+            TransformComponent *t = scene->getTransform(selectedEntityIdx);
+            if (t)
+            {
+                ImGui::Text("Entity %u", selectedEntityIdx);
+                ImGui::DragFloat3("Position", &t->position.x, 0.05f);
+                ImGui::DragFloat3("Rotation", &t->rotation.x, 0.5f);
+                ImGui::DragFloat3("Scale",   &t->scale.x,   0.01f);
+
+                ImGui::Separator();
+            
+                // TODO: Save button fix
+                if (ImGui::Button("Save Scene (JSON)", ImVec2(-1, 30)))
+                {
+                    SceneLoader temporalLoader(scene.get(), 
+                                               resourceManager.get(), 
+                                               uiManager.get(), 
+                                               physicsEngine.get());
+                    temporalLoader.saveScene("assets/scenes/testScene.json");
+                }
+            }
+        }
+        else
+        {
+            ImGui::Text("Select Object from Hierarchy");
+        }
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#endif
+
         renderer->endFrame();
         window->swapBuffers();
         input->updateMouseLast();
@@ -207,5 +297,11 @@ void Application::run()
 
 void Application::shutdown()
 {
+#ifndef NDEBUG
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL3_Shutdown();
+    ImGui::DestroyContext();
+#endif
+
     delete debugLabel;
 }

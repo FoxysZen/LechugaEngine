@@ -17,6 +17,11 @@ $(BUILD_DIR)/Makefile:
 run: build
 	./$(BUILD_DIR)/LechugaEngine
 
+release:
+	$(MAKE) clean
+	$(MAKE) build BUILD_TYPE=Release
+	@echo "Release Version compiled in $(BUILD_DIR)/"
+
 clean:
 	rm -rf $(BUILD_DIR)
 

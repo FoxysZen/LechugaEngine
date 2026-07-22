@@ -79,6 +79,11 @@ SDL_Window *Window::getWindow()
     return window;
 }
 
+SDL_GLContext Window::getGLContext()
+{
+    return glContext;
+}
+
 int Window::getHeight()
 {
     return height;

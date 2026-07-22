@@ -14,7 +14,7 @@ SceneLoader::~SceneLoader()
 
 }
 
-void SceneLoader::loadScene(std::string sceneName)
+void SceneLoader::loadScene(const std::string &sceneName)
 {
     std::string file = FileSystem::readFile("assets/scenes/" + sceneName);
     nlohmann::json json = nlohmann::json::parse(file);
@@ -388,4 +388,185 @@ Logger::info("Loading mesh...");
             }
         }
     }
+}
+
+void SceneLoader::saveScene(const std::string &path)
+{
+    //nlohmann::json rootJson;
+    //
+    //auto *transformMap = scene->getTransformMap();
+    //if (!transformMap) return;
+//
+    //nlohmann::json jsonEntities = nlohmann::json::array();
+//
+    //for (auto &[entityId, transform] : *transformMap)
+    //{
+    //    nlohmann::json entityJson;
+//
+    //    entityJson["transform"]["position"] = {
+    //        transform.position.x,
+    //        transform.position.y,
+    //        transform.position.z};
+    //    entityJson["transform"]["rotation"] = {
+    //        transform.rotation.x,
+    //        transform.rotation.y,
+    //        transform.rotation.z };
+    //    entityJson["transform"]["scale"] = {
+    //        transform.scale.x,
+    //        transform.scale.y,
+    //        transform.scale.z};
+//
+    //    auto *meshMap = scene->getSkinnedMeshMap();
+    //    if (meshMap && meshMap->find(entityId) != meshMap->end())
+    //    {
+    //        auto &mesh = meshMap->at(entityId);
+    //        
+    //        if (!mesh.lods.empty())
+    //        {
+    //            nlohmann::json lodsArray = nlohmann::json::array();
+    //            for (auto &lod : mesh.lods)
+    //            {
+    //                std::string modelPath = resourceManager->getModelPath(lod.modelPtr);
+    //                lodsArray.push_back({{"path", modelPath}, {"maxDistance", lod.maxDistance}});
+    //            }
+    //            entityJson["skinnedMesh"]["lods"] = lodsArray;
+    //        }
+    //        else
+    //        {
+    //            entityJson["skinnedMesh"]["path"] = resourceManager->getModelPath(mesh.modelPtr);
+    //        }
+    //        
+    //        entityJson["skinnedMesh"]["shader"] = { 
+    //            resourceManager->getShaderPath(mesh.vertexShaderPtr),
+    //            resourceManager->getShaderPath(mesh.fragmentShaderPtr) 
+    //        };
+    //        
+    //        entityJson["skinnedMesh"]["loop"] = mesh.loop;
+    //        if (!mesh.currentAnimation.empty())
+    //        {
+    //            entityJson["skinnedMesh"]["animation"] = mesh.currentAnimation;
+    //        }
+    //    }
+//
+    //    auto *colliderMap = scene->getColliderMap();
+    //    if (colliderMap && colliderMap->find(entityId) != colliderMap->end())
+    //    {
+    //        auto &col = colliderMap->at(entityId);
+    //        entityJson["collider"]["type"] = col.typeStr;
+    //        entityJson["collider"]["offset"] = { col.offset.x, col.offset.y, col.offset.z };
+    //        
+    //        if (col.typeStr == "BOX")
+    //        {
+    //            entityJson["collider"]["halfExtents"] = { col.halfExtents.x, col.halfExtents.y, col.halfExtents.z };
+    //        }
+    //        else if (col.typeStr == "SPHERE")
+    //        {
+    //            entityJson["collider"]["radius"] = col.radius;
+    //        }
+    //        else if (col.typeStr == "CAPSULE")
+    //        {
+    //            entityJson["collider"]["radius"] = col.radius;
+    //            entityJson["collider"]["height"] = col.height;
+    //        }
+    //        else if (col.typeStr == "MESH")
+    //        {
+    //            entityJson["collider"]["path"] = resourceManager->getColliderMeshPath(col.meshPtr);
+    //        }
+    //    }
+//
+    //    auto *rbMap = physicsEngine->getRigidBodyMap();
+    //    if (rbMap && rbMap->find(entityId) != rbMap->end())
+    //    {
+    //        auto &rb = rbMap->at(entityId);
+    //        entityJson["rigidBody"]["mass"] = rb.mass;
+    //        entityJson["rigidBody"]["useGravity"] = rb.useGravity;
+    //        entityJson["rigidBody"]["isKinematic"] = rb.isKinematic;
+    //    }
+//
+    //    jsonEntities.push_back(entityJson);
+    //}
+//
+    //rootJson["entities"] = jsonEntities;
+//
+    //// Lights
+    //nlohmann::json jsonLights = nlohmann::json::array();
+    //for (const auto &light : *scene->getLights()) 
+    //{
+    //    nlohmann::json lightJson;
+    //    lightJson["position"] = {
+    //        light.position.x,
+    //        light.position.y,
+    //        light.position.z};
+    //    lightJson["color"] = {
+    //        light.color.r,
+    //        light.color.g,
+    //        light.color.b};
+    //    lightJson["intensity"] = light.intensity;
+    //    jsonLights.push_back(lightJson);
+    //}
+    //rootJson["lights"] = jsonLights;
+//
+    //// Particles
+    //nlohmann::json jsonParticles = nlohmann::json::array();
+    //for (const auto &system : *particleSystem->getSystems()) 
+    //{
+    //    nlohmann::json pJson;
+    //    pJson["position"] = {
+    //        system.position.x,
+    //        system.position.y,
+    //        system.position.z};
+    //    pJson["direction"] = {
+    //        system.direction.x,
+    //        system.direction.y,
+    //        system.direction.z};
+    //    pJson["startColor"] = {
+    //        system.startColor.r,
+    //        system.startColor.g,
+    //        system.startColor.b};
+    //    pJson["endColor"] = {
+    //        system.endColor.r,
+    //        system.endColor.g,
+    //        system.endColor.b};
+    //    pJson["velocity"] = system.velocity;
+    //    pJson["lifeTime"] = system.lifeTime;
+    //    pJson["startSize"] = system.startSize;
+    //    pJson["endSize"] = system.endSize;
+    //    pJson["sizeCurve"] = system.sizeCurve;
+    //    pJson["colorCurve"] = system.colorCurve;
+    //    pJson["spread"] = system.spread;
+    //    pJson["emissionRate"] = system.emissionRate;
+    //    pJson["spiralSpeed"] = system.spiralSpeed;
+    //    pJson["gravity"] = system.gravity;
+    //    pJson["maxParticles"] = system.maxParticles;
+    //    pJson["type"] = system.typeStr;
+    //    pJson["shape"] = system.shapeStr;
+    //    pJson["renderMode"] = system.renderModeStr;
+    //    pJson["texture"] = system.texturePath;
+    //    jsonParticles.push_back(pJson);
+    //}
+    //rootJson["particles"] = jsonParticles;
+//
+    //// Ui
+    //nlohmann::json jsonUi = nlohmann::json::array();
+    //for (const auto &element : *uiManager->getElements()) 
+    //{
+    //    nlohmann::json uiJson;
+    //    uiJson["type"] = element->getTypeStr();
+    //    uiJson["id"] = element->getId();
+    //    uiJson["x"] = element->getX();
+    //    uiJson["y"] = element->getY();
+    //    uiJson["width"] = element->getWidth();
+    //    uiJson["height"] = element->getHeight();
+    //    uiJson["normalTexture"] = element->getNormalTexturePath();
+    //    uiJson["hoverTexture"] = element->getHoverTexturePath();
+    //    uiJson["visible"] = element->isVisible();
+    //    jsonUi.push_back(uiJson);
+    //}
+    //rootJson["ui"] = jsonUi;
+//
+    //std::ofstream file(path);
+    //if (file.is_open())
+    //{
+    //    file << rootJson.dump(4);
+    //}
 }

@@ -25,7 +25,8 @@ class SceneLoader
             UIManager *_uiManager, PhysicsEngine *_physicsEngine);
         ~SceneLoader();
 
-        void loadScene(std::string sceneName);
+        void loadScene(const std::string &sceneName);
+        void saveScene(const std::string &filepath);
 
     private:
         Scene *scene;
