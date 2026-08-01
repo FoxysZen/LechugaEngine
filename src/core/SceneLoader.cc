@@ -9,10 +9,7 @@ SceneLoader::SceneLoader(Scene *_scene, ResourceManager *_resourceManager,
     physicsEngine = _physicsEngine;
 }
 
-SceneLoader::~SceneLoader()
-{
-
-}
+SceneLoader::~SceneLoader() {}
 
 void SceneLoader::loadScene(const std::string &sceneName)
 {
@@ -215,6 +212,27 @@ Logger::info("Loading mesh...");
                        isKinematic);
             scene->addRigidBody(id, body);
             physicsEngine->addBody(id, body);
+        }
+
+        if (json["entities"][i].contains("material"))
+        {
+            bool cellShaded = json["entities"][i]["material"]["cellShaded"];
+            bool foliage = json["entities"][i]["material"]["foliage"];
+
+            glm::vec3 diffuse = glm::vec3(
+                json["entities"][i]["material"]["diffuse"][0],
+                json["entities"][i]["material"]["diffuse"][1],
+                json["entities"][i]["material"]["diffuse"][2]
+            );
+            glm::vec3 specular = glm::vec3(
+                json["entities"][i]["material"]["specular"][0],
+                json["entities"][i]["material"]["specular"][1],
+                json["entities"][i]["material"]["specular"][2]
+            );
+            float shin = json["entities"][i]["material"]["shin"];
+
+            
+            scene->addMaterial(id, {cellShaded, foliage, diffuse, specular, shin});
         }
     }
 

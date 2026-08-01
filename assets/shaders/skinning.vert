@@ -9,7 +9,6 @@ layout(location = 4) in vec4 boneWeights;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 proj;
-uniform mat4 lightSpaceMatrix;
 
 const int MAX_BONES = 64;
 uniform mat4 boneMatrices[MAX_BONES];
@@ -17,7 +16,6 @@ uniform mat4 boneMatrices[MAX_BONES];
 out vec3 fragPos;
 out vec3 fragNormal;
 out vec2 uv;
-out vec4 FragPosLightSpace;
 
 void main()
 {
@@ -32,8 +30,6 @@ void main()
     fragPos = vec3(view * model * skinnedPos);
     fragNormal = mat3(transpose(inverse(view * model))) * vec3(skinnedNormal);
     uv = texCoord;
-
-    FragPosLightSpace = lightSpaceMatrix * model * skinnedPos;
 
     gl_Position = proj * view * model * skinnedPos;
 }

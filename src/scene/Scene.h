@@ -2,6 +2,7 @@
 #include <ColliderComponent.h>
 #include <EntityID.h>
 #include <LightComponent.h>
+#include <Material.h>
 #include <ParticleComponent.h>
 #include <Renderer.h>
 #include <RigidBody.h>
@@ -23,8 +24,7 @@ class Scene
         void addParticle(EntityID id, ParticleComponent particle);
         void addCollider(EntityID id, ColliderComponent collider);
         void addRigidBody(EntityID id, RigidBody *rigidbody);
-        void drawParticles(const std::unordered_map<EntityID, 
-                           ParticleComponent>& particles);
+        void addMaterial(EntityID id, Material material);
 
         TransformComponent *getTransform(EntityID id);
         SkinnedMeshComponent *getSkinnedMesh(EntityID id);
@@ -32,6 +32,7 @@ class Scene
         ParticleComponent *getParticle(EntityID id);
         ColliderComponent *getCollider(EntityID id);
         RigidBody *getRigidBody(EntityID id);
+        Material *getMaterial(EntityID id);
 
         std::unordered_map<EntityID, ColliderComponent> *getColliderMap();
         std::unordered_map<EntityID, SkinnedMeshComponent> *getSkinnedMeshMap();
@@ -39,8 +40,10 @@ class Scene
         std::unordered_map<EntityID, LightComponent> *getLights();
 
         void update(float deltaTime);
-        void render(Renderer *renderer, EntityID playerId);
+        void render(Renderer *renderer);
         void updateShadowCamera(float deltaTime, glm::vec3 playerPos);
+        void drawParticles(const std::unordered_map<EntityID, 
+                           ParticleComponent>& particles);
     
     private:
         uint32_t nextID = 0;
@@ -50,6 +53,7 @@ class Scene
         std::unordered_map<EntityID, ParticleComponent> particles;
         std::unordered_map<EntityID, ColliderComponent> colliders;
         std::unordered_map<EntityID, RigidBody*> rigidBodies;
+        std::unordered_map<EntityID, Material> materials;
 
         // Sun movement
         bool isSun = true;

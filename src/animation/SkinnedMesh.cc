@@ -93,6 +93,7 @@ void SkinnedMesh::draw()
         if (sub.texture) sub.texture->unbind(0);
     }
 
+    // WireFrame
     //for (auto &sub : subMeshes)
     //{
     //    if (sub.texture) sub.texture->bind(0);

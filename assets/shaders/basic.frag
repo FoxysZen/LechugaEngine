@@ -4,10 +4,14 @@
 in vec2 uv;
 in vec3 fragNormal;
 in vec3 fragPos;
-in vec4 FragPosLightSpace;
+
+// Material settings
+uniform bool cellShaded;
+uniform vec3 matDiffuse;
+uniform vec3 matSpecular;
+uniform int matShin;
 
 uniform sampler2D textures[8];
-uniform sampler2D shadowMap;
 uniform vec3 lightPos[MAX_LIGHTS];
 uniform vec3 lightColor[MAX_LIGHTS];
 uniform int numLights;
@@ -16,80 +20,80 @@ out vec4 fragColor;
 
 vec3 calcAmbient(vec3 color)
 {
-    return 0.1 * color;
+    return color;
 }
 
 vec3 calcDiffuse(vec3 color, vec3 norm, vec3 lightDir)
 {
     float diff = max(dot(norm, lightDir), 0.0);
-    return diff * color;
+    return diff * matDiffuse * color;
 }
 
 vec3 calcSpecular(vec3 color, vec3 norm, vec3 lightDir)
 {
     vec3 viewDir = normalize(-fragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    return 0.5 * spec * color;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), matShin);
+    return 0.0 + matSpecular * spec * color;
+}
+
+vec3 specular (vec3 color, vec3 norm, vec3 lightDir)
+{
+    vec3 colRes = vec3(0);
+
+    if ((dot(norm,lightDir) < 0) || (matShin == 0))
+        return colRes;
+
+    vec3 R = reflect(-lightDir, norm);
+    vec3 V = normalize(-fragPos);
+
+    if (dot(R, V) < 0)
+        return colRes;
+
+    float shine = pow(max(0.0, dot(R, V)), matShin);
+    return (colRes + matSpecular * color * shine);
 }
 
 vec3 calcDiffuseCellShading(vec3 color, vec3 norm, vec3 lightDir)
 {
     float diff = max(dot(norm, lightDir), 0.0);
-    if (diff > 0.6)      diff = 1.0;
+    if (diff > 0.6) diff = 1.0;
     else if (diff > 0.3) diff = 0.5;
-    else                 diff = 0.1;
-    return diff * color;
+    else diff = 0.1;
+    return diff * matDiffuse * color;
 }
 
 vec3 calcSpecularCellShading(vec3 color, vec3 norm, vec3 lightDir)
 {
     vec3 viewDir = normalize(-fragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), matShin);
     if (spec > 0.5) spec = 1.0;
-    else            spec = 0.0;
-    return 0.5 * spec * color;
-}
-
-float CalculateShadow(vec4 fragPosLightSpace)
-{
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    
-    // From [-1,1] to [0,1]
-    projCoords = projCoords * 0.5 + 0.5;
-    
-    if(projCoords.z > 1.0) return 0.0;
-
-    float closestDepth = texture(shadowMap, projCoords.xy).r;
-    float currentDepth = projCoords.z;
-
-    float bias = 0.0015; 
-    
-    return (currentDepth - bias > closestDepth) ? 1.0 : 0.0;
+    else spec = 0.0;
+    return matSpecular * spec * color;
 }
 
 void main()
 {
     vec3 norm = normalize(fragNormal);
-    vec3 result = vec3(0.0);
+    vec3 result = calcAmbient(lightColor[0]);
 
-    float shadow = CalculateShadow(FragPosLightSpace);
-
-    for (int i = 0; i < numLights; i++)
+    for (int i = 0; i < numLights; ++i)
     {
         vec3 lightDir = normalize(lightPos[i] - fragPos);
-        result += calcAmbient(lightColor[i]);
-        vec3 diffuse = calcDiffuseCellShading(lightColor[i], norm, lightDir);
-
-        if (i == 0)
+        vec3 diffuse = vec3(0.0);
+        if (cellShaded)
         {
-            result += (1.0 - shadow) * diffuse;
+            diffuse = calcDiffuseCellShading(lightColor[i], norm, lightDir);
         }
         else
         {
-            result += diffuse;
+            diffuse = calcDiffuse(lightColor[i], norm, lightDir);
         }
+
+        result += diffuse;
+
+        result += specular(lightColor[i], norm, lightDir);
     }
 
     vec4 texColor = texture(textures[0], uv);

@@ -16,6 +16,8 @@ Application::~Application() {}
 
 bool Application::init()
 {
+    Logger::info("C++ version: " + std::to_string(__cplusplus));
+
     Logger::info("Reading config.json");
     Config::getInstance().load("assets/config.json");
 
@@ -35,7 +37,7 @@ bool Application::init()
     audioManager->setVolume(AudioChannel::UI,    0.6f);
 
     Logger::info("Creating renderer...");
-    renderer = std::make_unique<Renderer>(width, height, resourceManager.get());
+    renderer = std::make_unique<Renderer>(width, height);
 
     Logger::info("Creating physics engine...");
     physicsEngine = std::make_unique<PhysicsEngine>();
@@ -202,7 +204,7 @@ void Application::run()
             if (glm::length(direction) > 0.0f) direction = glm::normalize(direction);
         }
 
-        characterController->move(direction, 5.0f, deltaTime);
+        characterController->move(direction, 5.0f, deltaTime); // TODO: speed not hardcoded
     /////////
 
         physicsEngine->step(deltaTime, scene.get());
@@ -212,7 +214,7 @@ void Application::run()
 
         scene->update(deltaTime);
 
-        scene->render(renderer.get(), characterController->getPlayerId());
+        scene->render(renderer.get());
 
         uiManager->handleHover(input->getMouseX(), input->getMouseY());
         uiManager->draw();

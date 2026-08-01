@@ -4,8 +4,8 @@
 #include <Frustum.h>
 #include <glad/glad.h>
 #include <LightComponent.h>
+#include <Material.h>
 #include <ParticleComponent.h>
-#include <ResourceManager.h>
 #include <SDL3/SDL.h>
 #include <ShaderProgram.h>
 #include <SkinnedMeshComponent.h>
@@ -15,13 +15,14 @@
 class Renderer
 {
     public:
-        Renderer(int _width, int _height, ResourceManager *resManager);
+        Renderer(int _width, int _height);
         ~Renderer();
 
         void beginFrame(Camera *camera, float deltaTime);
         void endFrame();
-        void render(const SkinnedMeshComponent &sm, 
-                    const TransformComponent &transform);
+        void render(const SkinnedMeshComponent &sm,
+                    const TransformComponent &transform, bool matExists,
+                    const Material &mat);
         void setLights(const std::vector<LightComponent> &lights);
         void onResize(int width, int height);
         void setSkydome(Skydome *skydome);
@@ -31,16 +32,8 @@ class Renderer
         int getDrawCalls();
         void addDrawCalls(int n);
         void resetDrawCalls();
-
-        // Shadow Map
-        unsigned int getShadowTexture() const;
-        glm::mat4 getLightSpaceMatrix() const;
-        void beginShadowPass(const glm::vec3 sunPos, const glm::vec3 playerPos);
-        void endShadowPass();
     
     private:
-        void initShadowMapping(ResourceManager *resManager);
-
         glm::mat4 currentView;
         glm::mat4 currentProj;
         glm::vec3 currentViewPos;
@@ -54,16 +47,6 @@ class Renderer
 
         int drawCalls = 0;
 
-        // Shadow Mapping
-        unsigned int shadowFBO = 0;
-        unsigned int shadowDepthTex = 0;
-        const unsigned int SHADOW_WIDTH = 2048;
-        const unsigned int SHADOW_HEIGHT = 2048;
-        
-        glm::mat4 lightSpaceMatrix;
         int screenWidth = 1280;
         int screenHeight = 720;
-        bool isShadowPass = true;
-
-        ShaderProgram *shadowShader = nullptr;
 };

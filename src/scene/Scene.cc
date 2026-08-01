@@ -51,6 +51,11 @@ void Scene::addRigidBody(EntityID id, RigidBody *rigidbody)
     rigidBodies[id] = rigidbody;
 }
 
+void Scene::addMaterial(EntityID id, Material material)
+{
+    materials[id] = material;
+}
+
 TransformComponent *Scene::getTransform(EntityID id)
 {
     return &transforms[id];
@@ -100,6 +105,11 @@ RigidBody *Scene::getRigidBody(EntityID id)
     return rigidBodies[id];
 }
 
+Material *Scene::getMaterial(EntityID id)
+{
+    return &materials[id];
+}
+
 void Scene::update(float deltaTime)
 {
     // Update Sun
@@ -121,7 +131,7 @@ void Scene::update(float deltaTime)
         if (sm.animSys) sm.animSys->update(deltaTime);
 }
 
-void Scene::render(Renderer *renderer, EntityID playerId)
+void Scene::render(Renderer *renderer)
 {
     std::vector<LightComponent> lightList;
     for (auto& [id, light] : lights)
@@ -130,24 +140,20 @@ void Scene::render(Renderer *renderer, EntityID playerId)
     }
     renderer->setLights(lightList);
 
-    // Shadow Map
-    renderer->beginShadowPass(sunPos, getTransform(playerId)->position);
-
-    for (auto &[id, sm] : skinnedMeshes)
-    {
-        if (transforms.count(id) > 0)
-        {
-            renderer->render(sm, transforms[id]); 
-        }
-    }
-    renderer->endShadowPass();
-
     // Normal Render
     for (auto &[id, sm] : skinnedMeshes)
     {
-        if (transforms.count(id) > 0)
+        if (transforms.count(id))
         {
-            renderer->render(sm, transforms[id]);
+            if (materials.count(id))
+            {
+                renderer->render(sm, transforms[id], true, materials[id]);
+            }
+            else
+            {
+                static const Material dummyMat{};
+                renderer->render(sm, transforms[id], false, dummyMat);
+            }
         }
     }
 

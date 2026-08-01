@@ -22,7 +22,7 @@ class SceneLoader
 {
     public:
         SceneLoader(Scene *_scene, ResourceManager *_resourceManager, 
-            UIManager *_uiManager, PhysicsEngine *_physicsEngine);
+                    UIManager *_uiManager, PhysicsEngine *_physicsEngine);
         ~SceneLoader();
 
         void loadScene(const std::string &sceneName);
