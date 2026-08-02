@@ -26,6 +26,10 @@ void Renderer::beginFrame(Camera *camera, float deltaTime)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
+    // Activate Alpha channel
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     if (skydome)
     {
         skydome->draw(currentView, currentProj, deltaTime);
@@ -41,8 +45,6 @@ void Renderer::endFrame()
 {
     glUseProgram(0);
 
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, 0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
@@ -84,7 +86,7 @@ void Renderer::render(const SkinnedMeshComponent &sm,
     sm.shader->setUniformMat4("model", model);
 
     sm.shader->setUniformInt("textures[0]", 0);
-    glActiveTexture(GL_TEXTURE1);
+    glActiveTexture(GL_TEXTURE0);
 
     int size = currentLights.size();
     sm.shader->setUniformInt("numLights", size);
@@ -123,7 +125,7 @@ void Renderer::render(const SkinnedMeshComponent &sm,
     else
     {
         sm.shader->setUniformInt("cellShaded", false);
-        sm.shader->setUniformVec3("matDiffuse", glm::vec3(0.0f));
+        sm.shader->setUniformVec3("matDiffuse", glm::vec3(1.0f));
         sm.shader->setUniformVec3("matSpecular", glm::vec3(0.0f));
         sm.shader->setUniformInt("matShin", 0);
     }

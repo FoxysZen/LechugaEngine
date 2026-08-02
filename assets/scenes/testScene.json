@@ -71,6 +71,13 @@
                 "type": "BOX",
                 "halfExtents": [0.25, 1.5, 0.25],
                 "offset": [0, 1.5, 0]
+            },
+            "material": {
+                "cellShaded": false,
+                "foliage": false,
+                "diffuse": [1.0, 1.0, 1.0],
+                "specular": [1.0, 1.0, 1.0],
+                "shin": 150
             }
         },
         {
@@ -240,6 +247,13 @@
                 "path": "assets/meshes/terrain/flora/bush.glb",
                 "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
                 "loop": true
+            },
+            "material": {
+                "cellShaded": false,
+                "foliage": true,
+                "diffuse": [1.0, 1.0, 1.0],
+                "specular": [1.0, 1.0, 1.0],
+                "shin": 0
             }
         }
     ],

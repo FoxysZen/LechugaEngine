@@ -19,6 +19,13 @@
                 "radius": 0.25,
                 "height": 1.5,
                 "offset": [0, 1, 0]
+            },
+            "material": {
+                "cellShaded": true,
+                "foliage": false,
+                "diffuse": [1.0, 1.0, 1.0],
+                "specular": [1.0, 1.0, 1.0],
+                "shin": 0
             }
         },
         {
@@ -64,11 +71,18 @@
                 "type": "BOX",
                 "halfExtents": [0.25, 1.5, 0.25],
                 "offset": [0, 1.5, 0]
+            },
+            "material": {
+                "cellShaded": false,
+                "foliage": false,
+                "diffuse": [1.0, 1.0, 1.0],
+                "specular": [1.0, 1.0, 1.0],
+                "shin": 150
             }
         },
         {
             "transform": {
-                "position": [0, 5, 0],
+                "position": [5, 5, 5],
                 "rotation": [0, 0, 0],
                 "scale": [1, 1, 1]
             },
@@ -111,7 +125,7 @@
         },
         {
             "transform": {
-                "position": [-7, -3, 7],
+                "position": [-7, 3.8, 7],
                 "rotation": [0, 0, 0],
                 "scale": [1, 1, 1]
             },
@@ -142,13 +156,112 @@
                 "halfExtents": [5, 2, 5],
                 "offset": [0, 2, 0]
             }
+        },
+        {
+            "transform": {
+                "position": [-6, -2.79, 14.85],
+                "rotation": [0, 0, 0],
+                "scale": [1, 1, 1]
+            },
+            "skinnedMesh": {
+                "path": "assets/meshes/terrain/wall.glb",
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "loop": true
+            },
+            "collider": {
+                "type": "MESH",
+                "path": "assets/meshes/terrain/wall_col.glb"
+            }
+        },
+        {
+            "transform": {
+                "position": [-8, -2.79, 12.85],
+                "rotation": [0, -90, 0],
+                "scale": [1, 1, 1]
+            },
+            "skinnedMesh": {
+                "path": "assets/meshes/terrain/wall.glb",
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "loop": true
+            },
+            "collider": {
+                "type": "MESH",
+                "path": "assets/meshes/terrain/wall_col.glb"
+            }
+        },
+        {
+            "transform": {
+                "position": [-8, -2.79, 10.85],
+                "rotation": [0, 90, 0],
+                "scale": [1, 1, 1]
+            },
+            "skinnedMesh": {
+                "path": "assets/meshes/terrain/wall_end.glb",
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "loop": true
+            },
+            "collider": {
+                "type": "MESH",
+                "path": "assets/meshes/terrain/wall_end_col.glb"
+            }
+        },
+        {
+            "transform": {
+                "position": [-4, -2.79, 14.85],
+                "rotation": [0, 0, 0],
+                "scale": [1, 1, 1]
+            },
+            "skinnedMesh": {
+                "path": "assets/meshes/terrain/wall_end.glb",
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "loop": true
+            },
+            "collider": {
+                "type": "MESH",
+                "path": "assets/meshes/terrain/wall_end_col.glb"
+            }
+        },
+        {
+            "transform": {
+                "position": [-7, -2.79, 14.85],
+                "rotation": [0, 0, 0],
+                "scale": [1, 1, 1]
+            },
+            "skinnedMesh": {
+                "path": "assets/meshes/terrain/wall_curve.glb",
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "loop": true
+            },
+            "collider": {
+                "type": "MESH",
+                "path": "assets/meshes/terrain/wall_curve_col.glb"
+            }
+        },
+        {
+            "transform": {
+                "position": [-6.2, -2.94, 13.25],
+                "rotation": [0, 0, 0],
+                "scale": [1, 1, 1]
+            },
+            "skinnedMesh": {
+                "path": "assets/meshes/terrain/flora/bush.glb",
+                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
+                "loop": true
+            },
+            "material": {
+                "cellShaded": false,
+                "foliage": true,
+                "diffuse": [1.0, 1.0, 1.0],
+                "specular": [1.0, 1.0, 1.0],
+                "shin": 0
+            }
         }
     ],
     "lights": [
         {
-            "position": [0, 30, 0],
+            "position": [5, 5, 5],
             "color": [1, 1, 1],
-            "intensity": 1.0
+            "intensity": 0.1
         }
     ],
     "particles": [
