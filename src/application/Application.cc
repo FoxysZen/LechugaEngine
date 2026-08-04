@@ -5,9 +5,11 @@
 #include <string>
 
 #ifndef NDEBUG
-#include "imgui.h"
-#include "imgui_impl_sdl3.h"
-#include "imgui_impl_opengl3.h"
+#include <imgui.h>
+#include <imgui_impl_sdl3.h>
+#include <imgui_impl_opengl3.h>
+#include <ImGuizmo.h>
+#include <glm/gtc/type_ptr.hpp>
 #endif
 
 Application::Application() {}
@@ -74,7 +76,7 @@ bool Application::init()
     uiManager->init(uiRenderer.get());
 
     Logger::info("Loading Scene");
-    auto sceneLoader = std::make_unique<SceneLoader>(scene.get(), 
+    sceneLoader = std::make_unique<SceneLoader>(scene.get(), 
         resourceManager.get(), uiManager.get(), physicsEngine.get());
     sceneLoader->loadScene("testScene.json");
 
@@ -110,7 +112,8 @@ bool Application::init()
 
     EventSystem::getInstance().subscribe<LeftMousePressedEvent>([this](const LeftMousePressedEvent&) {
 #ifndef NDEBUG
-        if (ImGui::GetIO().WantCaptureMouse) return;
+        if (ImGui::GetIO().WantCaptureMouse || ImGuizmo::IsOver() || ImGuizmo::IsUsing()) 
+            return;
 #endif
 
         if (!uiManager->handleClick(input->getMouseX(), input->getMouseY()))
@@ -149,9 +152,18 @@ bool Application::init()
 void Application::run()
 {
     Logger::info("Starting run loop...");
+
+    // Temporal
     audioManager->playMusic("assets/audio/music/town.mp3");
+
     int frames = 0;
     float elapsed = 0.0f;
+
+#ifndef NDEBUG
+    static ImGuizmo::OPERATION currentGizmoOperation = ImGuizmo::TRANSLATE;
+    static ImGuizmo::MODE currentGizmoMode = ImGuizmo::LOCAL;
+#endif
+
     while (window->isOpen())
     {
         timer->tick();
@@ -178,13 +190,32 @@ void Application::run()
 
         input->pollEvents();
 
+#ifndef NDEBUG
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplSDL3_NewFrame();
+        ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
+        ImGuizmo::Enable(true);
+#endif
+
     ///////// dear ImGui
         bool ignoreGameInput = false;
 #ifndef NDEBUG
         ImGuiIO &io = ImGui::GetIO();
-        if (io.WantCaptureMouse || io.WantCaptureKeyboard)
+        if (io.WantCaptureMouse || io.WantCaptureKeyboard ||
+            ImGuizmo::IsUsing() || ImGuizmo::IsOver())
         {
             ignoreGameInput = true;
+        }
+
+        if (!io.WantCaptureKeyboard)
+        {
+            if (input->isKeyDown(SDLK_1))
+                currentGizmoOperation = ImGuizmo::TRANSLATE;
+            if (input->isKeyDown(SDLK_2))
+                currentGizmoOperation = ImGuizmo::ROTATE;
+            if (input->isKeyDown(SDLK_3))
+                currentGizmoOperation = ImGuizmo::SCALE;
         }
 #endif
 
@@ -209,7 +240,15 @@ void Application::run()
 
         physicsEngine->step(deltaTime, scene.get());
 
+#ifndef NDEBUG
+        if (!ImGuizmo::IsUsing())
+        {
+            camera->update(input.get(), deltaTime);
+        }
+#else
         camera->update(input.get(), deltaTime);
+#endif
+
         renderer->beginFrame(camera.get(), deltaTime);
 
         scene->update(deltaTime);
@@ -233,12 +272,8 @@ void Application::run()
             }
         }
 
-    //////// Render Dear ImGui
 #ifndef NDEBUG
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplSDL3_NewFrame();
-        ImGui::NewFrame();
-
+    //////// Render Dear ImGui
         ImGui::Begin("Scene Hierarchy");
         auto *meshesMap = scene->getSkinnedMeshMap();
         if (meshesMap)
@@ -264,20 +299,28 @@ void Application::run()
             if (t)
             {
                 ImGui::Text("Entity %u", selectedEntityIdx);
+
+                if (ImGui::RadioButton("Translate (1)", currentGizmoOperation == ImGuizmo::TRANSLATE))
+                    currentGizmoOperation = ImGuizmo::TRANSLATE;
+                ImGui::SameLine();
+                if (ImGui::RadioButton("Rotate (2)", currentGizmoOperation == ImGuizmo::ROTATE))
+                    currentGizmoOperation = ImGuizmo::ROTATE;
+                ImGui::SameLine();
+                if (ImGui::RadioButton("Scale (3)", currentGizmoOperation == ImGuizmo::SCALE))
+                    currentGizmoOperation = ImGuizmo::SCALE;
+
+                ImGui::Separator();
+
                 ImGui::DragFloat3("Position", &t->position.x, 0.05f);
                 ImGui::DragFloat3("Rotation", &t->rotation.x, 0.5f);
-                ImGui::DragFloat3("Scale",   &t->scale.x,   0.01f);
+                ImGui::DragFloat3("Scale", &t->scale.x, 0.01f);
 
                 ImGui::Separator();
             
-                // TODO: Save button fix
                 if (ImGui::Button("Save Scene (JSON)", ImVec2(-1, 30)))
                 {
-                    SceneLoader temporalLoader(scene.get(), 
-                                               resourceManager.get(), 
-                                               uiManager.get(), 
-                                               physicsEngine.get());
-                    temporalLoader.saveScene("assets/scenes/testScene.json");
+                    sceneLoader->saveScene("assets/scenes/testScene.json");
+                    Logger::info("Scene Saved!");
                 }
             }
         }
@@ -286,6 +329,50 @@ void Application::run()
             ImGui::Text("Select Object from Hierarchy");
         }
         ImGui::End();
+
+        if (objSelected)
+        {
+            TransformComponent *t = scene->getTransform(selectedEntityIdx);
+            if (t && camera)
+            {
+                ImGuizmo::SetOrthographic(false);
+                ImGuizmo::SetDrawlist(ImGui::GetForegroundDrawList());
+            
+                ImGuiIO &io = ImGui::GetIO();
+                ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+            
+                glm::mat4 view = camera->getViewMatrix();
+                glm::mat4 proj = camera->getProjectionMatrix();
+            
+                ImGuizmo::MODE mode = (currentGizmoOperation == ImGuizmo::SCALE) ? ImGuizmo::LOCAL : currentGizmoMode;
+            
+                glm::mat4 matrix;
+                ImGuizmo::RecomposeMatrixFromComponents(
+                    glm::value_ptr(t->position),
+                    glm::value_ptr(t->rotation),
+                    glm::value_ptr(t->scale),
+                    glm::value_ptr(matrix)
+                );
+            
+                ImGuizmo::Manipulate(
+                    glm::value_ptr(view),
+                    glm::value_ptr(proj),
+                    currentGizmoOperation,
+                    mode,
+                    glm::value_ptr(matrix)
+                );
+            
+                if (ImGuizmo::IsUsing())
+                {
+                    ImGuizmo::DecomposeMatrixToComponents(
+                        glm::value_ptr(matrix),
+                        glm::value_ptr(t->position),
+                        glm::value_ptr(t->rotation),
+                        glm::value_ptr(t->scale)
+                    );
+                }
+            }
+        }
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

@@ -24,7 +24,11 @@
 #include <UILabel.h>
 #include <UIPanel.h>
 #include <UIRenderer.h>
-#include <Window.h> 
+#include <Window.h>
+
+#ifndef NDEBUG
+#include <ImGuizmo.h>
+#endif
 
 class Application
 {
@@ -60,6 +64,8 @@ class Application
 
         std::string debugStats = "";
 
+#ifndef NDEBUG
         EntityID selectedEntityIdx = 999999;
         bool objSelected = false;
+#endif
 };

@@ -38,6 +38,8 @@ class Scene
         std::unordered_map<EntityID, SkinnedMeshComponent> *getSkinnedMeshMap();
         std::unordered_map<EntityID, TransformComponent> *getTransformMap();
         std::unordered_map<EntityID, LightComponent> *getLights();
+        std::unordered_map<EntityID, RigidBody*> *getRigidBodyMap();
+        std::unordered_map<EntityID, ParticleComponent> *getParticlesMap();
 
         void update(float deltaTime);
         void render(Renderer *renderer);

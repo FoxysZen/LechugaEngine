@@ -1,366 +1,747 @@
 {
     "entities": [
         {
-            "transform": {
-                "position": [0, 5, 0],
-                "rotation": [0, 0, 0],
-                "scale": [1, 1, 1]
-            },
-            "skinnedMesh": {
-                "lods": [
-                    {"path": "assets/meshes/handkerchief_lod0.glb", "maxDistance": 10.0},
-                    {"path": "assets/meshes/handkerchief_lod1.glb", "maxDistance": 50.0}
-                ],
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
-            },
             "collider": {
-                "type": "CAPSULE",
-                "radius": 0.25,
                 "height": 1.5,
-                "offset": [0, 1, 0]
+                "offset": [
+                    0.0,
+                    1.0,
+                    0.0
+                ],
+                "radius": 0.25,
+                "type": "CAPSULE"
             },
             "material": {
                 "cellShaded": true,
+                "diffuse": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
                 "foliage": false,
-                "diffuse": [1.0, 1.0, 1.0],
-                "specular": [1.0, 1.0, 1.0],
-                "shin": 0
-            }
-        },
-        {
-            "transform": {
-                "position": [0, 5, 7],
-                "rotation": [0, 0, 0],
-                "scale": [1, 1, 1]
+                "shin": 0,
+                "specular": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             },
             "skinnedMesh": {
                 "lods": [
-                    {"path": "assets/meshes/handkerchief_lod0.glb", "maxDistance": 10.0},
-                    {"path": "assets/meshes/handkerchief_lod1.glb", "maxDistance": 50.0}
+                    {
+                        "maxDistance": 10.0,
+                        "path": "assets/meshes/handkerchief_lod0.glb"
+                    },
+                    {
+                        "maxDistance": 50.0,
+                        "path": "assets/meshes/handkerchief_lod1.glb"
+                    }
                 ],
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
+                "loop": true,
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
             },
+            "transform": {
+                "position": [
+                    0.0,
+                    -2.7728123664855957,
+                    0.0
+                ],
+                "rotation": [
+                    0.0007093623862601817,
+                    25.070817947387695,
+                    -0.00019206629076506943
+                ],
+                "scale": [
+                    0.9999998807907104,
+                    1.0,
+                    0.9999998807907104
+                ]
+            }
+        },
+        {
             "collider": {
-                "type": "SPHERE",
+                "offset": [
+                    0.0,
+                    1.0,
+                    0.0
+                ],
                 "radius": 0.25,
-                "offset": [0, 1, 0]
+                "type": "SPHERE"
             },
             "rigidBody": {
-                "mass": 1,
-                "useGravity": true,
-                "isKinematic": false
-            }
-        },
-        {
-            "transform": {
-                "position": [10, -2, -10],
-                "rotation": [0, 30, 0],
-                "scale": [1, 1, 1]
+                "isKinematic": false,
+                "mass": 1.0,
+                "useGravity": true
             },
             "skinnedMesh": {
                 "lods": [
-                    {"path": "assets/meshes/building/train.glb", "maxDistance": 10.0},
-                    {"path": "assets/meshes/building/train.glb", "maxDistance": 50.0}
+                    {
+                        "maxDistance": 10.0,
+                        "path": "assets/meshes/handkerchief_lod0.glb"
+                    },
+                    {
+                        "maxDistance": 50.0,
+                        "path": "assets/meshes/handkerchief_lod1.glb"
+                    }
                 ],
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
+                "loop": true,
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
             },
+            "transform": {
+                "position": [
+                    1.4557563066482544,
+                    -3.522583484649658,
+                    8.213685989379883
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
             "collider": {
-                "type": "BOX",
-                "halfExtents": [0.25, 1.5, 0.25],
-                "offset": [0, 1.5, 0]
+                "halfExtents": [
+                    0.25,
+                    1.5,
+                    0.25
+                ],
+                "offset": [
+                    0.0,
+                    1.5,
+                    0.0
+                ],
+                "type": "BOX"
             },
             "material": {
                 "cellShaded": false,
+                "diffuse": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
                 "foliage": false,
-                "diffuse": [1.0, 1.0, 1.0],
-                "specular": [1.0, 1.0, 1.0],
-                "shin": 150
-            }
-        },
-        {
-            "transform": {
-                "position": [5, 5, 5],
-                "rotation": [0, 0, 0],
-                "scale": [1, 1, 1]
+                "shin": 150,
+                "specular": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             },
             "skinnedMesh": {
                 "lods": [
-                    {"path": "assets/meshes/fauna/pygmy.glb", "maxDistance": 10.0},
-                    {"path": "assets/meshes/fauna/pygmy.glb", "maxDistance": 50.0}
+                    {
+                        "maxDistance": 10.0,
+                        "path": "assets/meshes/building/train.glb"
+                    },
+                    {
+                        "maxDistance": 50.0,
+                        "path": "assets/meshes/building/train.glb"
+                    }
                 ],
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "animation": "looking",
-                "loop": true
+                "loop": true,
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
             },
+            "transform": {
+                "position": [
+                    10.221158981323242,
+                    -2.736722469329834,
+                    -10.981589317321777
+                ],
+                "rotation": [
+                    4.800070762634277,
+                    27.6983585357666,
+                    24.587194442749023
+                ],
+                "scale": [
+                    1.0,
+                    0.999998927116394,
+                    1.0000001192092896
+                ]
+            }
+        },
+        {
             "collider": {
-                "type": "CAPSULE",
-                "radius": 0.25,
                 "height": 1.5,
-                "offset": [0, 1, 0]
+                "offset": [
+                    0.0,
+                    1.0,
+                    0.0
+                ],
+                "radius": 0.25,
+                "type": "CAPSULE"
             },
             "rigidBody": {
-                "mass": 2,
-                "useGravity": true,
-                "isKinematic": false
+                "isKinematic": false,
+                "mass": 2.0,
+                "useGravity": true
+            },
+            "skinnedMesh": {
+                "animation": "looking",
+                "lods": [
+                    {
+                        "maxDistance": 10.0,
+                        "path": "assets/meshes/fauna/pygmy.glb"
+                    },
+                    {
+                        "maxDistance": 50.0,
+                        "path": "assets/meshes/fauna/pygmy.glb"
+                    }
+                ],
+                "loop": true,
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
+            },
+            "transform": {
+                "position": [
+                    -1.9532181024551392,
+                    -5083.98828125,
+                    12.146900177001953
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             }
         },
         {
-            "transform": {
-                "position": [0, -5, 0],
-                "rotation": [0, 0, 0],
-                "scale": [1, 1, 1]
+            "collider": {
+                "offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "path": "assets/meshes/terrain/terrain_col.glb",
+                "type": "MESH"
             },
             "skinnedMesh": {
+                "loop": true,
                 "path": "assets/meshes/terrain/terrain.glb",
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
             },
-            "collider": {
-                "type": "MESH",
-                "path": "assets/meshes/terrain/terrain_col.glb"
+            "transform": {
+                "position": [
+                    0.0,
+                    -5.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             }
         },
         {
-            "transform": {
-                "position": [-7, 3.8, 7],
-                "rotation": [0, 0, 0],
-                "scale": [1, 1, 1]
+            "collider": {
+                "halfExtents": [
+                    0.25,
+                    1.5,
+                    0.25
+                ],
+                "offset": [
+                    0.0,
+                    1.5,
+                    0.0
+                ],
+                "type": "BOX"
             },
             "skinnedMesh": {
+                "loop": true,
                 "path": "assets/meshes/terrain/flora/palm_tree.glb",
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
             },
-            "collider": {
-                "type": "BOX",
-                "halfExtents": [0.25, 1.5, 0.25],
-                "offset": [0, 1.5, 0]
+            "transform": {
+                "position": [
+                    -7.509474754333496,
+                    3.799999952316284,
+                    6.842202186584473
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             }
         },
         {
-            "transform": {
-                "position": [-10, -0.5, -10],
-                "rotation": [0, 140, 0],
-                "scale": [1, 1, 1]
+            "collider": {
+                "halfExtents": [
+                    5.0,
+                    2.0,
+                    5.0
+                ],
+                "offset": [
+                    0.0,
+                    2.0,
+                    0.0
+                ],
+                "type": "BOX"
             },
             "skinnedMesh": {
+                "loop": true,
                 "path": "assets/meshes/building/house.glb",
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
             },
-            "collider": {
-                "type": "BOX",
-                "halfExtents": [5, 2, 5],
-                "offset": [0, 2, 0]
+            "transform": {
+                "position": [
+                    -8.675616264343262,
+                    -0.986391007900238,
+                    -9.3875732421875
+                ],
+                "rotation": [
+                    -179.99989318847656,
+                    30.532068252563477,
+                    -179.99989318847656
+                ],
+                "scale": [
+                    1.0,
+                    0.9999999403953552,
+                    1.0
+                ]
             }
         },
         {
-            "transform": {
-                "position": [-6, -2.79, 14.85],
-                "rotation": [0, 0, 0],
-                "scale": [1, 1, 1]
+            "collider": {
+                "offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "path": "assets/meshes/terrain/wall_col.glb",
+                "type": "MESH"
             },
             "skinnedMesh": {
+                "loop": true,
                 "path": "assets/meshes/terrain/wall.glb",
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
             },
-            "collider": {
-                "type": "MESH",
-                "path": "assets/meshes/terrain/wall_col.glb"
+            "transform": {
+                "position": [
+                    -6.0,
+                    -2.7899999618530273,
+                    14.850000381469727
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             }
         },
         {
-            "transform": {
-                "position": [-8, -2.79, 12.85],
-                "rotation": [0, -90, 0],
-                "scale": [1, 1, 1]
+            "collider": {
+                "offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "path": "assets/meshes/terrain/wall_col.glb",
+                "type": "MESH"
             },
             "skinnedMesh": {
+                "loop": true,
                 "path": "assets/meshes/terrain/wall.glb",
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
             },
-            "collider": {
-                "type": "MESH",
-                "path": "assets/meshes/terrain/wall_col.glb"
+            "transform": {
+                "position": [
+                    -8.0,
+                    -2.7899999618530273,
+                    12.850000381469727
+                ],
+                "rotation": [
+                    0.0,
+                    -90.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             }
         },
         {
-            "transform": {
-                "position": [-8, -2.79, 10.85],
-                "rotation": [0, 90, 0],
-                "scale": [1, 1, 1]
+            "collider": {
+                "offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "path": "assets/meshes/terrain/wall_end_col.glb",
+                "type": "MESH"
             },
             "skinnedMesh": {
+                "loop": true,
                 "path": "assets/meshes/terrain/wall_end.glb",
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
             },
-            "collider": {
-                "type": "MESH",
-                "path": "assets/meshes/terrain/wall_end_col.glb"
+            "transform": {
+                "position": [
+                    -8.0,
+                    -2.7899999618530273,
+                    10.850000381469727
+                ],
+                "rotation": [
+                    0.0,
+                    90.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             }
         },
         {
-            "transform": {
-                "position": [-4, -2.79, 14.85],
-                "rotation": [0, 0, 0],
-                "scale": [1, 1, 1]
+            "collider": {
+                "offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "path": "assets/meshes/terrain/wall_end_col.glb",
+                "type": "MESH"
             },
             "skinnedMesh": {
+                "loop": true,
                 "path": "assets/meshes/terrain/wall_end.glb",
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
             },
-            "collider": {
-                "type": "MESH",
-                "path": "assets/meshes/terrain/wall_end_col.glb"
+            "transform": {
+                "position": [
+                    -4.0,
+                    -2.7899999618530273,
+                    14.850000381469727
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             }
         },
         {
-            "transform": {
-                "position": [-7, -2.79, 14.85],
-                "rotation": [0, 0, 0],
-                "scale": [1, 1, 1]
+            "collider": {
+                "offset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "path": "assets/meshes/terrain/wall_curve_col.glb",
+                "type": "MESH"
             },
             "skinnedMesh": {
+                "loop": true,
                 "path": "assets/meshes/terrain/wall_curve.glb",
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
             },
-            "collider": {
-                "type": "MESH",
-                "path": "assets/meshes/terrain/wall_curve_col.glb"
+            "transform": {
+                "position": [
+                    -7.0,
+                    -2.7899999618530273,
+                    14.850000381469727
+                ],
+                "rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             }
         },
         {
-            "transform": {
-                "position": [-6.2, -2.94, 13.25],
-                "rotation": [0, 0, 0],
-                "scale": [1, 1, 1]
-            },
-            "skinnedMesh": {
-                "path": "assets/meshes/terrain/flora/bush.glb",
-                "shader": ["assets/shaders/skinning.vert", "assets/shaders/basic.frag"],
-                "loop": true
-            },
             "material": {
                 "cellShaded": false,
+                "diffuse": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
                 "foliage": true,
-                "diffuse": [1.0, 1.0, 1.0],
-                "specular": [1.0, 1.0, 1.0],
-                "shin": 0
+                "shin": 0,
+                "specular": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "skinnedMesh": {
+                "loop": true,
+                "path": "assets/meshes/terrain/flora/bush.glb",
+                "shader": [
+                    "assets/shaders/skinning.vert",
+                    "assets/shaders/basic.frag"
+                ]
+            },
+            "transform": {
+                "position": [
+                    -6.199999809265137,
+                    -2.940000057220459,
+                    13.25
+                ],
+                "rotation": [
+                    0.0006538726156577468,
+                    34.22046661376953,
+                    -0.00013431816478259861
+                ],
+                "scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
             }
         }
     ],
     "lights": [
         {
-            "position": [5, 5, 5],
-            "color": [1, 1, 1],
-            "intensity": 0.1
+            "color": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "intensity": 0.10000000149011612,
+            "position": [
+                5.0,
+                5.0,
+                5.0
+            ]
         }
     ],
     "particles": [
         {
-            "position": [-5, 0, 0],
-            "direction": [0, 1, 0],
-            "startColor": [1, 1, 0],
-            "endColor": [1, 0, 0],
-            "velocity": 2.0,
-            "lifeTime": 1.0,
-            "startSize": 1,
-            "endSize": 0.01,
-            "sizeCurve": 0.5,
-            "colorCurve": 0.3,
-            "spread": 0.5,
-            "emissionRate": 25.0,
-            "spiralSpeed": 2.0,
+            "colorCurve": 0.30000001192092896,
+            "direction": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "emissionRate": 25,
+            "endColor": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "endSize": 0.009999999776482582,
             "gravity": 8.5,
+            "lifeTime": 1.0,
             "maxParticles": 500,
-            "type": "BILLBOARD",
+            "position": [
+                -5.0,
+                0.0,
+                0.0
+            ],
+            "renderMode": "TEXTURE",
             "shape": "POINT",
-            "renderMode": "TEXTURE",
-            "texture": "assets/textures/particle.png"
+            "sizeCurve": 0.5,
+            "spiralSpeed": 2.0,
+            "spread": 0.5,
+            "startColor": [
+                1.0,
+                1.0,
+                0.0
+            ],
+            "startSize": 1.0,
+            "texture": "assets/textures/particle.png",
+            "type": "BILLBOARD",
+            "velocity": 2.0
         },
         {
-            "position": [-7.5, 0, 0],
-            "direction": [0, 1, 0],
-            "startColor": [1, 1, 0],
-            "endColor": [1, 0, 0],
-            "velocity": 5.0,
-            "lifeTime": 1.5,
-            "startSize": 0.01,
+            "colorCurve": 0.30000001192092896,
+            "direction": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "emissionRate": 25,
+            "endColor": [
+                1.0,
+                0.0,
+                0.0
+            ],
             "endSize": 0.5,
-            "sizeCurve": 0.5,
-            "colorCurve": 0.3,
-            "spread": 2.0,
-            "emissionRate": 25.0,
-            "spiralSpeed": 2.0,
             "gravity": 8.5,
+            "lifeTime": 1.5,
             "maxParticles": 500,
-            "type": "BILLBOARD",
+            "position": [
+                -7.5,
+                0.0,
+                0.0
+            ],
+            "renderMode": "TEXTURE",
             "shape": "FOUNTAIN",
-            "renderMode": "TEXTURE",
-            "texture": "assets/textures/particle.png"
+            "sizeCurve": 0.5,
+            "spiralSpeed": 2.0,
+            "spread": 2.0,
+            "startColor": [
+                1.0,
+                1.0,
+                0.0
+            ],
+            "startSize": 0.009999999776482582,
+            "texture": "assets/textures/particle.png",
+            "type": "BILLBOARD",
+            "velocity": 5.0
         },
         {
-            "position": [-10, 0, 0],
-            "direction": [0, 0, 0],
-            "startColor": [1, 1, 0],
-            "endColor": [1, 0, 0],
-            "velocity": 2.0,
+            "colorCurve": 0.30000001192092896,
+            "direction": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "emissionRate": 50,
+            "endColor": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "endSize": 0.10000000149011612,
+            "gravity": 0.0,
             "lifeTime": 1.0,
-            "startSize": 0.5,
-            "endSize": 0.1,
-            "sizeCurve": 0.5,
-            "colorCurve": 0.3,
-            "spread": 1.0,
-            "emissionRate": 50.0,
-            "spiralSpeed": 2.0,
-            "gravity": 0.0,
             "maxParticles": 1000,
-            "type": "BILLBOARD",
-            "shape": "CIRCLE",
+            "position": [
+                -10.0,
+                0.0,
+                0.0
+            ],
             "renderMode": "TEXTURE",
-            "texture": "assets/textures/particle.png"
+            "shape": "CIRCLE",
+            "sizeCurve": 0.5,
+            "spiralSpeed": 2.0,
+            "spread": 1.0,
+            "startColor": [
+                1.0,
+                1.0,
+                0.0
+            ],
+            "startSize": 0.5,
+            "texture": "assets/textures/particle.png",
+            "type": "BILLBOARD",
+            "velocity": 2.0
         },
         {
-            "position": [-12.5, 0, 0],
-            "direction": [0, 1, 0],
-            "startColor": [1, 1, 0],
-            "endColor": [1, 0, 0],
-            "velocity": 2.0,
-            "lifeTime": 2.0,
-            "startSize": 0.5,
-            "endSize": 0.01,
-            "sizeCurve": 0.5,
-            "colorCurve": 0.3,
-            "spread": 0.3,
-            "emissionRate": 25.0,
-            "spiralSpeed": 2.0,
+            "colorCurve": 0.30000001192092896,
+            "direction": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "emissionRate": 25,
+            "endColor": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "endSize": 0.009999999776482582,
             "gravity": 0.0,
+            "lifeTime": 2.0,
             "maxParticles": 500,
-            "type": "BILLBOARD",
-            "shape": "SPIRAL",
+            "position": [
+                -12.5,
+                0.0,
+                0.0
+            ],
             "renderMode": "TEXTURE",
-            "texture": "assets/textures/particle.png"
+            "shape": "SPIRAL",
+            "sizeCurve": 0.5,
+            "spiralSpeed": 2.0,
+            "spread": 0.30000001192092896,
+            "startColor": [
+                1.0,
+                1.0,
+                0.0
+            ],
+            "startSize": 0.5,
+            "texture": "assets/textures/particle.png",
+            "type": "BILLBOARD",
+            "velocity": 2.0
         }
     ],
     "ui": [
         {
-            "type": "button",
-            "id": "btnPlay",
-            "x": 100,
-            "y": 200,
-            "width": 50,
-            "height": 50,
-            "normalTexture": "assets/textures/ui/key_3.png",
+            "height": 50.0,
             "hoverTexture": "assets/textures/btn_hover.png",
-            "visible": true
+            "id": "btnPlay",
+            "normalTexture": "assets/textures/ui/key_3.png",
+            "type": "button",
+            "visible": true,
+            "width": 50.0,
+            "x": 100.0,
+            "y": 200.0
         }
     ]
 }

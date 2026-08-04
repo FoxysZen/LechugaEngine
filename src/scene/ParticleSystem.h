@@ -36,6 +36,23 @@ class ParticleSystem
         void setSpiralSpeed(float _spiralSpeed);
         void setGravity(float _gravity);
         void setTexture(Texture *_texture);
+
+        const glm::vec3 &getPosition() const;
+        const glm::vec3 &getDirection() const;
+        const glm::vec3 &getStartColor() const;
+        const glm::vec3 &getEndColor() const;
+        float getVelocity() const;
+        float getLifeTime() const;
+        float getStartSize() const;
+        float getEndSize() const;
+        float getSizeCurve() const;
+        float getColorCurve() const;
+        float getSpread() const;
+        float getEmissionAccumulator() const;
+        float getSpiralSpeed() const;
+        float getGravity() const;
+        int getEmissionRate() const;
+        int getMaxParticles() const;
         
         float getBoundsRadius();
         glm::vec3 getBoundsCenter();

@@ -1,4 +1,9 @@
+#include "ColliderType.h"
+#include "ParticleSystem.h"
+#include "SphereCollider.h"
 #include <SceneLoader.h>
+#include <fstream>
+
 
 SceneLoader::SceneLoader(Scene *_scene, ResourceManager *_resourceManager,
     UIManager *_uiManager, PhysicsEngine *_physicsEngine)
@@ -410,181 +415,284 @@ Logger::info("Loading mesh...");
 
 void SceneLoader::saveScene(const std::string &path)
 {
-    //nlohmann::json rootJson;
-    //
-    //auto *transformMap = scene->getTransformMap();
-    //if (!transformMap) return;
+    nlohmann::json rootJson;
+    std::ifstream inFile(path);
+    if (!inFile.is_open()) return;
+    
+    try
+    {
+        inFile >> rootJson;
+    }
+    catch (...)
+    {
+        Logger::error("Could not save the scene: Empty or corrupted file.");
+        inFile.close();
+        return;
+    }
+    inFile.close();
+
+    auto *transformMap = scene->getTransformMap();
+    auto *colliderMap = scene->getColliderMap();
+    auto *rbMap = scene->getRigidBodyMap();
+
+    unsigned int globalEntityId = 0;
+
+    if (transformMap && rootJson.contains("entities"))
+    {
+        for (auto &entityJson : rootJson["entities"])
+        {
+            unsigned int entityId = globalEntityId++;
+            
+            auto transformIt = transformMap->find(entityId);
+            if (transformIt != transformMap->end())
+            {
+                const auto &transform = transformIt->second;
+                entityJson["transform"]["position"] = {
+                    transform.position.x,
+                    transform.position.y,
+                    transform.position.z
+                };
+                entityJson["transform"]["rotation"] = {
+                    transform.rotation.x,
+                    transform.rotation.y,
+                    transform.rotation.z
+                };
+                entityJson["transform"]["scale"] = {
+                    transform.scale.x,
+                    transform.scale.y,
+                    transform.scale.z
+                };
+            }
+
+            if (colliderMap)
+            {
+                auto colIt = colliderMap->find(entityId);
+                if (colIt != colliderMap->end())
+                {
+                    const auto &col = colIt->second;
+                    entityJson["collider"]["offset"] = {
+                        col.collider->offset.x,
+                        col.collider->offset.y,
+                        col.collider->offset.z
+                    };
+
+                    if (col.collider->getType() == ColliderType::BOX)
+                    {
+                        auto *box = static_cast<BoxCollider*>(col.collider);
+                        glm::vec3 halfExtents = box->getHalfExtents();
+                        entityJson["collider"]["halfExtents"] = { 
+                            halfExtents.x, 
+                            halfExtents.y, 
+                            halfExtents.z
+                        };
+                    }
+                    else if (col.collider->getType() == ColliderType::SPHERE)
+                    {
+                        auto *sph = static_cast<SphereCollider*>(col.collider);
+                        entityJson["collider"]["radius"] = sph->getRadius();
+                    }
+                    else if (col.collider->getType() == ColliderType::CAPSULE)
+                    {
+                        auto *cap = static_cast<CapsuleCollider*>(col.collider);
+                        entityJson["collider"]["radius"] = cap->getRadius();
+                        entityJson["collider"]["height"] = cap->getHeight();
+                    }
+                }
+            }
+
+            if (rbMap)
+            {
+                auto rbIt = rbMap->find(entityId);
+                if (rbIt != rbMap->end())
+                {
+                    const auto &rb = rbIt->second;
+                    entityJson["rigidBody"]["mass"] = rb->getMass();
+                    entityJson["rigidBody"]["useGravity"] = rb->getUseGravity();
+                    entityJson["rigidBody"]["isKinematic"] = rb->getIsKinematic();
+                }
+            }
+        }
+    }
+
+    if (rootJson.contains("lights"))
+    {
+        //size_t index = 0;
+        //for (const auto &light : *scene->getLights())
+        //{
+        //    if (index >= rootJson["lights"].size()) break;
+        //    auto &lightJson = rootJson["lights"][index++];
+        //    lightJson["position"] = {
+        //        light.second.position.x,
+        //        light.second.position.y,
+        //        light.second.position.z
+        //    };
+        //    lightJson["color"] = {
+        //        light.second.color.r,
+        //        light.second.color.g,
+        //        light.second.color.b
+        //    };
+        //    lightJson["intensity"] = light.second.intensity;
+        //}
+        for (auto &lightJson : rootJson["lights"])
+        {
+            unsigned int lightEntityId = globalEntityId++;
+
+            auto lightsMap = scene->getLights();
+            auto lightIt = lightsMap->find(lightEntityId);
+            if (lightIt != lightsMap->end())
+            {
+                const auto &light = lightIt->second;
+                lightJson["position"] = {
+                    light.position.x,
+                    light.position.y,
+                    light.position.z
+                };
+                lightJson["color"] = {
+                    light.color.r,
+                    light.color.g,
+                    light.color.b
+                };
+                lightJson["intensity"] = light.intensity;
+            }
+        }
+    }
+
+    if (rootJson.contains("particles"))
+    {
+        //size_t index = 0;
+        //for (const auto &component : *scene->getParticlesMap())
+        //{
+        //    if (index >= rootJson["particles"].size()) break;
+        //    ParticleSystem *particle = component.second.system;
+        //    auto &pJson = rootJson["particles"][index++];
 //
-    //nlohmann::json jsonEntities = nlohmann::json::array();
+        //    const auto &pos = particle->getPosition();
+        //    const auto &dir = particle->getDirection();
+        //    const auto &sCol = particle->getStartColor();
+        //    const auto &eCol = particle->getEndColor();
 //
-    //for (auto &[entityId, transform] : *transformMap)
-    //{
-    //    nlohmann::json entityJson;
+        //    pJson["position"] = {
+        //        pos.x,
+        //        pos.y,
+        //        pos.z
+        //    };
+        //    pJson["direction"] = {
+        //        dir.x,
+        //        dir.y,
+        //        dir.z
+        //    };
+        //    pJson["startColor"] = {
+        //        sCol.r,
+        //        sCol.g,
+        //        sCol.b
+        //    };
+        //    pJson["endColor"] = {
+        //        eCol.r,
+        //        eCol.g,
+        //        eCol.b
+        //    };
 //
-    //    entityJson["transform"]["position"] = {
-    //        transform.position.x,
-    //        transform.position.y,
-    //        transform.position.z};
-    //    entityJson["transform"]["rotation"] = {
-    //        transform.rotation.x,
-    //        transform.rotation.y,
-    //        transform.rotation.z };
-    //    entityJson["transform"]["scale"] = {
-    //        transform.scale.x,
-    //        transform.scale.y,
-    //        transform.scale.z};
-//
-    //    auto *meshMap = scene->getSkinnedMeshMap();
-    //    if (meshMap && meshMap->find(entityId) != meshMap->end())
-    //    {
-    //        auto &mesh = meshMap->at(entityId);
-    //        
-    //        if (!mesh.lods.empty())
-    //        {
-    //            nlohmann::json lodsArray = nlohmann::json::array();
-    //            for (auto &lod : mesh.lods)
-    //            {
-    //                std::string modelPath = resourceManager->getModelPath(lod.modelPtr);
-    //                lodsArray.push_back({{"path", modelPath}, {"maxDistance", lod.maxDistance}});
-    //            }
-    //            entityJson["skinnedMesh"]["lods"] = lodsArray;
-    //        }
-    //        else
-    //        {
-    //            entityJson["skinnedMesh"]["path"] = resourceManager->getModelPath(mesh.modelPtr);
-    //        }
-    //        
-    //        entityJson["skinnedMesh"]["shader"] = { 
-    //            resourceManager->getShaderPath(mesh.vertexShaderPtr),
-    //            resourceManager->getShaderPath(mesh.fragmentShaderPtr) 
-    //        };
-    //        
-    //        entityJson["skinnedMesh"]["loop"] = mesh.loop;
-    //        if (!mesh.currentAnimation.empty())
-    //        {
-    //            entityJson["skinnedMesh"]["animation"] = mesh.currentAnimation;
-    //        }
-    //    }
-//
-    //    auto *colliderMap = scene->getColliderMap();
-    //    if (colliderMap && colliderMap->find(entityId) != colliderMap->end())
-    //    {
-    //        auto &col = colliderMap->at(entityId);
-    //        entityJson["collider"]["type"] = col.typeStr;
-    //        entityJson["collider"]["offset"] = { col.offset.x, col.offset.y, col.offset.z };
-    //        
-    //        if (col.typeStr == "BOX")
-    //        {
-    //            entityJson["collider"]["halfExtents"] = { col.halfExtents.x, col.halfExtents.y, col.halfExtents.z };
-    //        }
-    //        else if (col.typeStr == "SPHERE")
-    //        {
-    //            entityJson["collider"]["radius"] = col.radius;
-    //        }
-    //        else if (col.typeStr == "CAPSULE")
-    //        {
-    //            entityJson["collider"]["radius"] = col.radius;
-    //            entityJson["collider"]["height"] = col.height;
-    //        }
-    //        else if (col.typeStr == "MESH")
-    //        {
-    //            entityJson["collider"]["path"] = resourceManager->getColliderMeshPath(col.meshPtr);
-    //        }
-    //    }
-//
-    //    auto *rbMap = physicsEngine->getRigidBodyMap();
-    //    if (rbMap && rbMap->find(entityId) != rbMap->end())
-    //    {
-    //        auto &rb = rbMap->at(entityId);
-    //        entityJson["rigidBody"]["mass"] = rb.mass;
-    //        entityJson["rigidBody"]["useGravity"] = rb.useGravity;
-    //        entityJson["rigidBody"]["isKinematic"] = rb.isKinematic;
-    //    }
-//
-    //    jsonEntities.push_back(entityJson);
-    //}
-//
-    //rootJson["entities"] = jsonEntities;
-//
-    //// Lights
-    //nlohmann::json jsonLights = nlohmann::json::array();
-    //for (const auto &light : *scene->getLights()) 
-    //{
-    //    nlohmann::json lightJson;
-    //    lightJson["position"] = {
-    //        light.position.x,
-    //        light.position.y,
-    //        light.position.z};
-    //    lightJson["color"] = {
-    //        light.color.r,
-    //        light.color.g,
-    //        light.color.b};
-    //    lightJson["intensity"] = light.intensity;
-    //    jsonLights.push_back(lightJson);
-    //}
-    //rootJson["lights"] = jsonLights;
-//
-    //// Particles
-    //nlohmann::json jsonParticles = nlohmann::json::array();
-    //for (const auto &system : *particleSystem->getSystems()) 
-    //{
-    //    nlohmann::json pJson;
-    //    pJson["position"] = {
-    //        system.position.x,
-    //        system.position.y,
-    //        system.position.z};
-    //    pJson["direction"] = {
-    //        system.direction.x,
-    //        system.direction.y,
-    //        system.direction.z};
-    //    pJson["startColor"] = {
-    //        system.startColor.r,
-    //        system.startColor.g,
-    //        system.startColor.b};
-    //    pJson["endColor"] = {
-    //        system.endColor.r,
-    //        system.endColor.g,
-    //        system.endColor.b};
-    //    pJson["velocity"] = system.velocity;
-    //    pJson["lifeTime"] = system.lifeTime;
-    //    pJson["startSize"] = system.startSize;
-    //    pJson["endSize"] = system.endSize;
-    //    pJson["sizeCurve"] = system.sizeCurve;
-    //    pJson["colorCurve"] = system.colorCurve;
-    //    pJson["spread"] = system.spread;
-    //    pJson["emissionRate"] = system.emissionRate;
-    //    pJson["spiralSpeed"] = system.spiralSpeed;
-    //    pJson["gravity"] = system.gravity;
-    //    pJson["maxParticles"] = system.maxParticles;
-    //    pJson["type"] = system.typeStr;
-    //    pJson["shape"] = system.shapeStr;
-    //    pJson["renderMode"] = system.renderModeStr;
-    //    pJson["texture"] = system.texturePath;
-    //    jsonParticles.push_back(pJson);
-    //}
-    //rootJson["particles"] = jsonParticles;
-//
-    //// Ui
-    //nlohmann::json jsonUi = nlohmann::json::array();
-    //for (const auto &element : *uiManager->getElements()) 
-    //{
-    //    nlohmann::json uiJson;
-    //    uiJson["type"] = element->getTypeStr();
-    //    uiJson["id"] = element->getId();
-    //    uiJson["x"] = element->getX();
-    //    uiJson["y"] = element->getY();
-    //    uiJson["width"] = element->getWidth();
-    //    uiJson["height"] = element->getHeight();
-    //    uiJson["normalTexture"] = element->getNormalTexturePath();
-    //    uiJson["hoverTexture"] = element->getHoverTexturePath();
-    //    uiJson["visible"] = element->isVisible();
-    //    jsonUi.push_back(uiJson);
-    //}
-    //rootJson["ui"] = jsonUi;
-//
-    //std::ofstream file(path);
-    //if (file.is_open())
-    //{
-    //    file << rootJson.dump(4);
-    //}
+        //    pJson["velocity"] = particle->getVelocity();
+        //    pJson["lifeTime"] = particle->getLifeTime();
+        //    pJson["startSize"] = particle->getStartSize();
+        //    pJson["endSize"] = particle->getEndSize();
+        //    pJson["sizeCurve"] = particle->getSizeCurve();
+        //    pJson["colorCurve"] = particle->getColorCurve();
+        //    pJson["spread"] = particle->getSpread();
+        //    pJson["emissionRate"] = particle->getEmissionRate();
+        //    pJson["spiralSpeed"] = particle->getSpiralSpeed();
+        //    pJson["gravity"] = particle->getGravity();
+        //    pJson["maxParticles"] = particle->getMaxParticles();
+        //}
+        for (auto &pJson : rootJson["particles"])
+        {
+            unsigned int particleEntityId = globalEntityId++;
+
+            auto particlesMap = scene->getParticlesMap();
+            auto partIt = particlesMap->find(particleEntityId);
+            if (partIt != particlesMap->end())
+            {
+                ParticleSystem *particle = partIt->second.system;
+                if (!particle) continue;
+
+                const auto &pos = particle->getPosition();
+                const auto &dir = particle->getDirection();
+                const auto &sCol = particle->getStartColor();
+                const auto &eCol = particle->getEndColor();
+
+                pJson["position"] = {
+                    pos.x,
+                    pos.y,
+                    pos.z
+                };
+                pJson["direction"] = {
+                    dir.x,
+                    dir.y,
+                    dir.z
+                };
+                pJson["startColor"] = {
+                    sCol.r,
+                    sCol.g,
+                    sCol.b
+                };
+                pJson["endColor"] = {
+                    eCol.r, eCol.g,
+                    eCol.b
+                };
+
+                pJson["velocity"] = particle->getVelocity();
+                pJson["lifeTime"] = particle->getLifeTime();
+                pJson["startSize"] = particle->getStartSize();
+                pJson["endSize"] = particle->getEndSize();
+                pJson["sizeCurve"] = particle->getSizeCurve();
+                pJson["colorCurve"] = particle->getColorCurve();
+                pJson["spread"] = particle->getSpread();
+                pJson["emissionRate"] = particle->getEmissionRate();
+                pJson["spiralSpeed"] = particle->getSpiralSpeed();
+                pJson["gravity"] = particle->getGravity();
+                pJson["maxParticles"] = particle->getMaxParticles();
+            }
+        }
+    }
+
+    if (rootJson.contains("ui"))
+    {
+        //size_t index = 0;
+        //for (const auto &element : *uiManager->getElements())
+        //{
+        //    if (index >= rootJson["ui"].size()) break;
+        //    auto &uiJson = rootJson["ui"][index++];
+        //    glm::vec4 param = element->getParameters();
+        //    uiJson["x"] = param.x;
+        //    uiJson["y"] = param.y;
+        //    uiJson["width"] = param.z;
+        //    uiJson["height"] = param.w;
+        //    uiJson["visible"] = element->isVisible();
+        //}
+        const auto &elements = *uiManager->getElements();
+        size_t uiIndex = 0;
+
+        for (auto &uiJson : rootJson["ui"])
+        {
+            ++globalEntityId;
+
+            if (uiIndex >= elements.size()) break;
+
+            auto *element = elements[uiIndex++];
+            if (!element) continue;
+
+            glm::vec4 param = element->getParameters();
+            uiJson["x"] = param.x;
+            uiJson["y"] = param.y;
+            uiJson["width"] = param.z;
+            uiJson["height"] = param.w;
+            uiJson["visible"] = element->isVisible();
+        }
+    }
+
+    std::ofstream outFile(path);
+    if (outFile.is_open())
+    {
+        outFile << rootJson.dump(4);
+    }
 }

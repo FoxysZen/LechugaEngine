@@ -25,6 +25,7 @@ set(IMGUI_SOURCES
     vendor/imgui/imgui_widgets.cpp
     vendor/imgui/imgui_impl_sdl3.cpp
     vendor/imgui/imgui_impl_opengl3.cpp
+    vendor/imguizmo/ImGuizmo.cpp
 )
 
 add_executable(LechugaEngine
@@ -104,6 +105,7 @@ target_include_directories(LechugaEngine SYSTEM PRIVATE
     vendor/SDL3/include
     vendor/stb
     vendor/imgui
+    vendor/imguizmo
 )
 
 target_link_libraries(LechugaEngine PRIVATE

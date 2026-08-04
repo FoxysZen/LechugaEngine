@@ -100,6 +100,16 @@ std::unordered_map<EntityID, LightComponent> *Scene::getLights()
     return &lights;
 }
 
+std::unordered_map<EntityID, RigidBody*> *Scene::getRigidBodyMap()
+{
+    return &rigidBodies;
+}
+
+std::unordered_map<EntityID, ParticleComponent> *Scene::getParticlesMap()
+{
+    return &particles;
+}
+
 RigidBody *Scene::getRigidBody(EntityID id)
 {
     return rigidBodies[id];

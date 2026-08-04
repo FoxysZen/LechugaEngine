@@ -264,6 +264,86 @@ void ParticleSystem::setTexture(Texture *_texture)
     renderMode = ParticleRenderMode::TEXTURE;
 }
 
+const glm::vec3& ParticleSystem::getPosition() const
+{
+    return position;
+}
+
+const glm::vec3& ParticleSystem::getDirection() const
+{
+    return direction;
+}
+
+const glm::vec3& ParticleSystem::getStartColor() const
+{
+    return startColor;
+}
+
+const glm::vec3& ParticleSystem::getEndColor() const
+{
+    return endColor;
+}
+
+float ParticleSystem::getVelocity() const
+{
+    return velocity;
+}
+
+float ParticleSystem::getLifeTime() const
+{
+    return lifeTime;
+}
+
+float ParticleSystem::getStartSize() const
+{
+    return startSize;
+}
+
+float ParticleSystem::getEndSize() const
+{
+    return endSize;
+}
+
+float ParticleSystem::getSizeCurve() const
+{
+    return sizeCurve;
+}
+
+float ParticleSystem::getColorCurve() const
+{
+    return colorCurve;
+}
+
+float ParticleSystem::getSpread() const
+{
+    return spread;
+}
+
+float ParticleSystem::getEmissionAccumulator() const
+{
+    return emissionAccumulator;
+}
+
+float ParticleSystem::getSpiralSpeed() const
+{
+    return spiralSpeed;
+}
+
+float ParticleSystem::getGravity() const
+{
+    return gravity;
+}
+
+int ParticleSystem::getEmissionRate() const
+{
+    return emissionRate;
+}
+
+int ParticleSystem::getMaxParticles() const
+{
+    return maxParticles;
+}
+
 float ParticleSystem::getBoundsRadius()
 {
     return (spread / 2.0f) + velocity * lifeTime;
