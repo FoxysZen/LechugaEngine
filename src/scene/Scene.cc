@@ -16,6 +16,12 @@ EntityID Scene::createEntity()
     return nextID++;
 }
 
+void Scene::addName(EntityID id, std::string name)
+{
+    IDs[name] = id;
+    names[id] = name;
+}
+
 void Scene::addTransform(EntityID id, TransformComponent transform)
 {
     transforms[id] = transform;
@@ -46,6 +52,16 @@ void Scene::addCollider(EntityID id, ColliderComponent collider)
     colliders[id] = collider;
 }
 
+void Scene::addTriggerCollider(EntityID id, ColliderComponent collider)
+{
+    triggerColliders[id] = collider;
+}
+
+void Scene::addTrigger(EntityID id, TriggerComponent trigger)
+{
+    triggers[id] = trigger;
+}
+
 void Scene::addRigidBody(EntityID id, RigidBody *rigidbody)
 {
     rigidBodies[id] = rigidbody;
@@ -54,6 +70,16 @@ void Scene::addRigidBody(EntityID id, RigidBody *rigidbody)
 void Scene::addMaterial(EntityID id, Material material)
 {
     materials[id] = material;
+}
+
+EntityID Scene::getIdByName(const std::string &name)
+{
+    return IDs[name];
+}
+
+std::string Scene::getNameById(EntityID id)
+{
+    return names[id];
 }
 
 TransformComponent *Scene::getTransform(EntityID id)
@@ -81,9 +107,24 @@ ColliderComponent *Scene::getCollider(EntityID id)
     return &colliders[id];
 }
 
+ColliderComponent *Scene::getTriggerCollider(EntityID id)
+{
+    return &triggerColliders[id];
+}
+
+TriggerComponent *Scene::getTrigger(EntityID id)
+{
+    return &triggers[id];
+}
+
 std::unordered_map<EntityID, ColliderComponent> *Scene::getColliderMap()
 {
     return &colliders;
+}
+
+std::unordered_map<EntityID, ColliderComponent> *Scene::getTriggerColliderMap()
+{
+    return &triggerColliders;
 }
 
 std::unordered_map<EntityID, SkinnedMeshComponent> *Scene::getSkinnedMeshMap()

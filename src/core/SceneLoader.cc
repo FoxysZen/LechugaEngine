@@ -1,17 +1,22 @@
 #include "ColliderType.h"
+#include "EntityID.h"
 #include "ParticleSystem.h"
 #include "SphereCollider.h"
+#include "TriggerComponent.h"
 #include <SceneLoader.h>
 #include <fstream>
+#include <string>
 
 
 SceneLoader::SceneLoader(Scene *_scene, ResourceManager *_resourceManager,
-    UIManager *_uiManager, PhysicsEngine *_physicsEngine)
+                         UIManager *_uiManager, PhysicsEngine *_physicsEngine, 
+                         AudioManager *_audioManager)
 {
     scene = _scene;
     resourceManager = _resourceManager;
     uiManager = _uiManager;
     physicsEngine = _physicsEngine;
+    audioManager = _audioManager;
 }
 
 SceneLoader::~SceneLoader() {}
@@ -24,9 +29,20 @@ void SceneLoader::loadScene(const std::string &sceneName)
     int size = json["entities"].size();
     for (int i = 0; i < size; ++i)
     {
-        Logger::info("Loading entity " + std::to_string(i));
         EntityID id = scene->createEntity();
-Logger::info("Loading transform...");
+        std::string name = "Unnamed";
+        if (json["entities"][i].contains("name"))
+        {
+            name = json["entities"][i]["name"];
+        }
+        else
+        {
+            Logger::error("Entity " + std::to_string(i) + " has no name.");
+            continue;
+        }
+        scene->addName(id, name);
+        Logger::info("Loading entity " + name + " | ID: " + std::to_string(i));
+
         glm::vec3 position = glm::vec3(
             json["entities"][i]["transform"]["position"][0],
             json["entities"][i]["transform"]["position"][1],
@@ -48,7 +64,7 @@ Logger::info("Loading transform...");
         );
 
         scene->addTransform(id, {position, rotation, scale});
-Logger::info("Loading mesh...");
+
         if (json["entities"][i].contains("skinnedMesh"))
         {
             std::vector<SkinnedLOD> lods;
@@ -93,117 +109,42 @@ Logger::info("Loading mesh...");
             scene->addSkinnedMesh(id, {lods, shader, animSys});
         }
 
+        if (json["entities"][i].contains("trigger"))
+        {
+            createCollider(true, json, i, id, position, rotation, scale);
+
+            if (!json["entities"][i]["trigger"].contains("onEnter") &&
+                !json["entities"][i]["trigger"].contains("onExit"))
+            {
+                Logger::warn("Trigger of " + name + " has no actions.");
+            }
+            else
+            {
+                TriggerComponent trigger;
+                nlohmann::json jsonComp = json["entities"][i]["trigger"];
+
+                if (json["entities"][i]["trigger"].contains("onEnter"))
+                {
+                    parseTriggerActions(trigger, jsonComp["onEnter"], true);
+                }
+
+                if (json["entities"][i]["trigger"].contains("onExit"))
+                {
+                    parseTriggerActions(trigger, jsonComp["onExit"], false);
+                }
+
+                scene->addTrigger(id, trigger);
+            }
+        }
+
         if (json["entities"][i].contains("collider"))
         {
-            std::string colType = json["entities"][i]["collider"]["type"];
-            Collider *collider = nullptr;
+            createCollider(false, json, i, id, position, rotation, scale);
+        }
 
-            glm::vec3 offset = glm::vec3(0.0f);
-            if (json["entities"][i]["collider"].contains("offset"))
-            {
-                offset = glm::vec3(
-                    json["entities"][i]["collider"]["offset"][0],
-                    json["entities"][i]["collider"]["offset"][1],
-                    json["entities"][i]["collider"]["offset"][2]
-                );
-            }
-
-            if (colType == "SPHERE")
-            {
-                float radius = json["entities"][i]["collider"]["radius"];
-                collider = new SphereCollider(radius, offset);
-            }
-            else if (colType == "CAPSULE")
-            {
-                float radius = json["entities"][i]["collider"]["radius"];
-                float height = json["entities"][i]["collider"]["height"];
-                collider = new CapsuleCollider(radius, height);
-                collider->offset = offset;
-            }
-            else if (colType == "BOX")
-            {
-                glm::vec3 halfExtents = glm::vec3(
-                    json["entities"][i]["collider"]["halfExtents"][0],
-                    json["entities"][i]["collider"]["halfExtents"][1],
-                    json["entities"][i]["collider"]["halfExtents"][2]
-                );
-                collider = new BoxCollider(halfExtents);
-                collider->offset = offset;
-            }
-            else if (colType == "MESH")
-            {
-                std::string path = json["entities"][i]["collider"]["path"];
-                std::vector<glm::vec3> triangles;
-            
-                glm::mat4 model = glm::translate(glm::mat4(1.0f), position);
-                model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1, 0, 0));
-                model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0, 1, 0));
-                model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0, 0, 1));
-                model = glm::scale(model, scale);
-            
-                if (path.substr(path.find_last_of(".") + 1) == "glb")
-                {
-                    cgltf_options options = {};
-                    cgltf_data *data = nullptr;
-                
-                    if (cgltf_parse_file(&options, path.c_str(), &data) == cgltf_result_success &&
-                        cgltf_load_buffers(&options, data, path.c_str()) == cgltf_result_success)
-                    {
-                        for (size_t mi = 0; mi < data->meshes_count; ++mi)
-                        {
-                            const cgltf_mesh &mesh = data->meshes[mi];
-                            for (size_t pi = 0; pi < mesh.primitives_count; ++pi)
-                            {
-                                const cgltf_primitive &prim = mesh.primitives[pi];
-
-                                std::vector<glm::vec3> positions;
-                                for (size_t ai = 0; ai < prim.attributes_count; ++ai)
-                                {
-                                    const cgltf_attribute &attr = prim.attributes[ai];
-                                    if (attr.type == cgltf_attribute_type_position)
-                                    {
-                                        positions.resize(attr.data->count);
-                                        for (size_t v = 0; v < attr.data->count; ++v)
-                                        {
-                                            cgltf_accessor_read_float(attr.data, 
-                                                v, 
-                                                (float*)&positions[v], 
-                                                3);
-                                        }
-                                        break;
-                                    }
-                                }
-                            
-                                if (prim.indices && !positions.empty())
-                                {
-                                    size_t indexCount = prim.indices->count;
-                                    for (size_t ii = 0; ii < indexCount; ++ii)
-                                    {
-                                        uint32_t idx = 
-                                            (uint32_t)cgltf_accessor_read_index(prim.indices, ii);
-                                        glm::vec4 worldPos = 
-                                            model * glm::vec4(positions[idx], 1.0f);
-                                        triangles.push_back(glm::vec3(worldPos));
-                                    }
-                                }
-                            }
-                        }
-                        cgltf_free(data);
-                    }
-                    else
-                    {
-                        Logger::error("SceneLoader: Failed to load GLB collider: " + path);
-                    }
-                }
-            
-                collider = new MeshCollider(triangles);
-            }
-
-            if (collider)
-            {
-                scene->addCollider(id, {collider});
-                physicsEngine->addCollider(id, collider);
-            }
+        if (name == "player")
+        {
+            physicsEngine->addPlayer(id);
         }
 
         if (json["entities"][i].contains("rigidBody"))
@@ -516,23 +457,6 @@ void SceneLoader::saveScene(const std::string &path)
 
     if (rootJson.contains("lights"))
     {
-        //size_t index = 0;
-        //for (const auto &light : *scene->getLights())
-        //{
-        //    if (index >= rootJson["lights"].size()) break;
-        //    auto &lightJson = rootJson["lights"][index++];
-        //    lightJson["position"] = {
-        //        light.second.position.x,
-        //        light.second.position.y,
-        //        light.second.position.z
-        //    };
-        //    lightJson["color"] = {
-        //        light.second.color.r,
-        //        light.second.color.g,
-        //        light.second.color.b
-        //    };
-        //    lightJson["intensity"] = light.second.intensity;
-        //}
         for (auto &lightJson : rootJson["lights"])
         {
             unsigned int lightEntityId = globalEntityId++;
@@ -559,51 +483,6 @@ void SceneLoader::saveScene(const std::string &path)
 
     if (rootJson.contains("particles"))
     {
-        //size_t index = 0;
-        //for (const auto &component : *scene->getParticlesMap())
-        //{
-        //    if (index >= rootJson["particles"].size()) break;
-        //    ParticleSystem *particle = component.second.system;
-        //    auto &pJson = rootJson["particles"][index++];
-//
-        //    const auto &pos = particle->getPosition();
-        //    const auto &dir = particle->getDirection();
-        //    const auto &sCol = particle->getStartColor();
-        //    const auto &eCol = particle->getEndColor();
-//
-        //    pJson["position"] = {
-        //        pos.x,
-        //        pos.y,
-        //        pos.z
-        //    };
-        //    pJson["direction"] = {
-        //        dir.x,
-        //        dir.y,
-        //        dir.z
-        //    };
-        //    pJson["startColor"] = {
-        //        sCol.r,
-        //        sCol.g,
-        //        sCol.b
-        //    };
-        //    pJson["endColor"] = {
-        //        eCol.r,
-        //        eCol.g,
-        //        eCol.b
-        //    };
-//
-        //    pJson["velocity"] = particle->getVelocity();
-        //    pJson["lifeTime"] = particle->getLifeTime();
-        //    pJson["startSize"] = particle->getStartSize();
-        //    pJson["endSize"] = particle->getEndSize();
-        //    pJson["sizeCurve"] = particle->getSizeCurve();
-        //    pJson["colorCurve"] = particle->getColorCurve();
-        //    pJson["spread"] = particle->getSpread();
-        //    pJson["emissionRate"] = particle->getEmissionRate();
-        //    pJson["spiralSpeed"] = particle->getSpiralSpeed();
-        //    pJson["gravity"] = particle->getGravity();
-        //    pJson["maxParticles"] = particle->getMaxParticles();
-        //}
         for (auto &pJson : rootJson["particles"])
         {
             unsigned int particleEntityId = globalEntityId++;
@@ -657,18 +536,6 @@ void SceneLoader::saveScene(const std::string &path)
 
     if (rootJson.contains("ui"))
     {
-        //size_t index = 0;
-        //for (const auto &element : *uiManager->getElements())
-        //{
-        //    if (index >= rootJson["ui"].size()) break;
-        //    auto &uiJson = rootJson["ui"][index++];
-        //    glm::vec4 param = element->getParameters();
-        //    uiJson["x"] = param.x;
-        //    uiJson["y"] = param.y;
-        //    uiJson["width"] = param.z;
-        //    uiJson["height"] = param.w;
-        //    uiJson["visible"] = element->isVisible();
-        //}
         const auto &elements = *uiManager->getElements();
         size_t uiIndex = 0;
 
@@ -694,5 +561,175 @@ void SceneLoader::saveScene(const std::string &path)
     if (outFile.is_open())
     {
         outFile << rootJson.dump(4);
+    }
+}
+
+void SceneLoader::createCollider(bool isTrigger, const nlohmann::json &json, 
+                                 int i, EntityID id, const glm::vec3 &pos, 
+                                 const glm::vec3 &rot, const glm::vec3 &sca)
+{
+    const nlohmann::json &entityJson = json["entities"][i];
+    const nlohmann::json &colJson = isTrigger ? 
+                entityJson["trigger"]["collider"] : entityJson["collider"];
+
+    std::string colType = colJson["type"];
+    Collider *collider = nullptr;
+
+    glm::vec3 offset = glm::vec3(0.0f);
+    if (colJson.contains("offset"))
+    {
+        offset = glm::vec3(
+            colJson["offset"][0],
+            colJson["offset"][1],
+            colJson["offset"][2]
+        );
+    }
+
+    if (colType == "SPHERE")
+    {
+        float radius = colJson["radius"];
+        collider = new SphereCollider(radius, offset);
+    }
+    else if (colType == "CAPSULE")
+    {
+        float radius = colJson["radius"];
+        float height = colJson["height"];
+        collider = new CapsuleCollider(radius, height);
+        collider->offset = offset;
+    }
+    else if (colType == "BOX")
+    {
+        glm::vec3 halfExtents = glm::vec3(
+            colJson["halfExtents"][0],
+            colJson["halfExtents"][1],
+            colJson["halfExtents"][2]
+        );
+        collider = new BoxCollider(halfExtents);
+        collider->offset = offset;
+    }
+    else if (colType == "MESH")
+    {
+        std::string path = colJson["path"];
+        std::vector<glm::vec3> triangles;
+    
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), pos);
+        model = glm::rotate(model, glm::radians(rot.x), glm::vec3(1, 0, 0));
+        model = glm::rotate(model, glm::radians(rot.y), glm::vec3(0, 1, 0));
+        model = glm::rotate(model, glm::radians(rot.z), glm::vec3(0, 0, 1));
+        model = glm::scale(model, sca);
+    
+        if (path.substr(path.find_last_of(".") + 1) == "glb")
+        {
+            cgltf_options options = {};
+            cgltf_data *data = nullptr;
+        
+            if (cgltf_parse_file(&options, path.c_str(), &data) == cgltf_result_success &&
+                cgltf_load_buffers(&options, data, path.c_str()) == cgltf_result_success)
+            {
+                for (size_t mi = 0; mi < data->meshes_count; ++mi)
+                {
+                    const cgltf_mesh &mesh = data->meshes[mi];
+                    for (size_t pi = 0; pi < mesh.primitives_count; ++pi)
+                    {
+                        const cgltf_primitive &prim = mesh.primitives[pi];
+
+                        std::vector<glm::vec3> positions;
+                        for (size_t ai = 0; ai < prim.attributes_count; ++ai)
+                        {
+                            const cgltf_attribute &attr = prim.attributes[ai];
+                            if (attr.type == cgltf_attribute_type_position)
+                            {
+                                positions.resize(attr.data->count);
+                                for (size_t v = 0; v < attr.data->count; ++v)
+                                {
+                                    cgltf_accessor_read_float(attr.data, 
+                                        v, 
+                                        (float*)&positions[v], 
+                                        3);
+                                }
+                                break;
+                            }
+                        }
+                    
+                        if (prim.indices && !positions.empty())
+                        {
+                            size_t indexCount = prim.indices->count;
+                            for (size_t ii = 0; ii < indexCount; ++ii)
+                            {
+                                uint32_t idx = 
+                                    (uint32_t)cgltf_accessor_read_index(prim.indices, ii);
+                                glm::vec4 worldPos = 
+                                    model * glm::vec4(positions[idx], 1.0f);
+                                triangles.push_back(glm::vec3(worldPos));
+                            }
+                        }
+                    }
+                }
+                cgltf_free(data);
+            }
+            else
+            {
+                Logger::error("SceneLoader: Failed to load GLB collider: " + path);
+            }
+        }
+    
+        collider = new MeshCollider(triangles);
+    }
+
+    if (collider)
+    {
+        if (isTrigger)
+        {
+            scene->addTriggerCollider(id, {collider});
+            physicsEngine->addTriggerCollider(id, collider);
+        }
+        else
+        {
+            scene->addCollider(id, {collider});
+            physicsEngine->addCollider(id, collider);
+        }
+        
+    }
+}
+
+void SceneLoader::parseTriggerActions(TriggerComponent &trigger, 
+                                      const nlohmann::json &jsonArray,
+                                      bool isEnter)
+{
+    for (const auto &actionJson : jsonArray)
+    {
+        std::string actionType = actionJson.value("action", "");
+
+        if (actionType == "PLAY_MUSIC")
+        {
+            std::string path = actionJson.value("file", "");
+            bool loop = actionJson.value("loop", false);
+            TriggerCallback callback = [this, path, loop](EntityID /*id*/) {
+                audioManager->playMusic(path, loop);
+            };
+
+            if (isEnter) trigger.onEnter(callback);
+            else trigger.onExit(callback);
+        }
+        else if (actionType == "PLAY_SFX")
+        {
+            std::string path = actionJson.value("file", "");
+            TriggerCallback callback = [this, path](EntityID /*id*/) {
+                audioManager->playSFX(path);
+            };
+
+            if (isEnter) trigger.onEnter(callback);
+            else trigger.onExit(callback);
+        }
+        else if (actionType == "DEBUG_TEXT_INFO")
+        {
+            std::string msg = actionJson.value("msg", "");
+            TriggerCallback callback = [this, msg](EntityID id) {
+                Logger::info("[Trigger]: " + msg + " (Actibated by: " + scene->getNameById(id) + ")");
+            };
+
+            if (isEnter) trigger.onEnter(callback);
+            else trigger.onExit(callback);
+        }
     }
 }

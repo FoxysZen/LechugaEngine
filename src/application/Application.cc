@@ -23,13 +23,13 @@ bool Application::init()
     Logger::info("Reading config.json");
     Config::getInstance().load("assets/config.json");
 
-    Logger::info("Creating window...");
+    Logger::info("Creating window");
     int width = Config::getInstance().windowWidth;
     int height = Config::getInstance().windowHeight;
     std::string title = Config::getInstance().windowTitle;
     window = std::make_unique<Window>(title, width, height);
 
-    Logger::info("Creating resourceManager...");
+    Logger::info("Creating resourceManager");
     resourceManager = std::make_unique<ResourceManager>();
     
     audioManager = std::make_unique<AudioManager>();
@@ -38,13 +38,12 @@ bool Application::init()
     audioManager->setVolume(AudioChannel::SFX,   0.5f);
     audioManager->setVolume(AudioChannel::UI,    0.6f);
 
-    Logger::info("Creating renderer...");
+    Logger::info("Creating renderer");
     renderer = std::make_unique<Renderer>(width, height);
 
-    Logger::info("Creating physics engine...");
+    Logger::info("Creating physics engine");
     physicsEngine = std::make_unique<PhysicsEngine>();
 
-    Logger::info("Creating skydome...");
     skydome = std::make_unique<Skydome>();
     skydome->init(
         resourceManager->loadShader(Config::getInstance().skydomeVertShader, 
@@ -53,15 +52,14 @@ bool Application::init()
     );
     renderer->setSkydome(skydome.get());
 
-    Logger::info("Creating camera...");
+    Logger::info("Creating camera");
     float fov = Config::getInstance().cameraFov;
     float zN = Config::getInstance().cameraNear;
     float zF = Config::getInstance().cameraFar;
     camera = std::make_unique<Camera>(width, height, fov, zN, zF);
-    Logger::info("Creating input...");
+
     input = std::make_unique<InputManager>();
     timer = std::make_unique<Timer>();
-    Logger::info("Creating scene...");
     scene = std::make_unique<Scene>();
 
     Logger::info("Loading UI");
@@ -77,12 +75,13 @@ bool Application::init()
 
     Logger::info("Loading Scene");
     sceneLoader = std::make_unique<SceneLoader>(scene.get(), 
-        resourceManager.get(), uiManager.get(), physicsEngine.get());
+        resourceManager.get(), uiManager.get(), physicsEngine.get(), 
+        audioManager.get());
     sceneLoader->loadScene("testScene.json");
 
     Logger::info("Creating CHaracterController");
-    characterController = std::make_unique<CharacterController>(0, 
-                                            physicsEngine.get(), scene.get());
+    characterController = std::make_unique<CharacterController>(
+            scene->getIdByName("player"), physicsEngine.get(), scene.get());
 
     Font *font = resourceManager->loadFont("assets/fonts/SansSerif.fnt",
                                            "assets/fonts/SansSerif.png");
@@ -270,6 +269,13 @@ void Application::run()
                 debugRenderer->draw(collider.collider, t, viewProj, color);
                 renderer->addDrawCalls(1);
             }
+            for (auto& [id, collider] : *scene->getTriggerColliderMap())
+            {
+                TransformComponent* t = scene->getTransform(id);
+                glm::vec3 color = glm::vec3(0, 0, 1);
+                debugRenderer->draw(collider.collider, t, viewProj, color);
+                renderer->addDrawCalls(1);
+            }
         }
 
 #ifndef NDEBUG
@@ -280,7 +286,7 @@ void Application::run()
         {
             for (auto &[id, mesh] : *meshesMap)
             {
-                std::string name = "Entity ID: " + std::to_string(id);
+                std::string name = scene->getNameById(id) + " ID: " + std::to_string(id);
 
                 bool isSelected = (objSelected && selectedEntityIdx == id);
                 if (ImGui::Selectable(name.c_str(), isSelected))

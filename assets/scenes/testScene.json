@@ -26,6 +26,7 @@
                     1.0
                 ]
             },
+            "name": "player",
             "skinnedMesh": {
                 "lods": [
                     {
@@ -71,6 +72,7 @@
                 "radius": 0.25,
                 "type": "SPHERE"
             },
+            "name": "smallPlayer",
             "rigidBody": {
                 "isKinematic": false,
                 "mass": 1.0,
@@ -95,9 +97,9 @@
             },
             "transform": {
                 "position": [
-                    1.4557563066482544,
-                    -3.522583484649658,
-                    8.213685989379883
+                    1.5781992673873901,
+                    -0.9714140295982361,
+                    8.184640884399414
                 ],
                 "rotation": [
                     0.0,
@@ -140,6 +142,7 @@
                     1.0
                 ]
             },
+            "name": "train",
             "skinnedMesh": {
                 "lods": [
                     {
@@ -186,6 +189,7 @@
                 "radius": 0.25,
                 "type": "CAPSULE"
             },
+            "name": "pygmy_00",
             "rigidBody": {
                 "isKinematic": false,
                 "mass": 2.0,
@@ -211,9 +215,9 @@
             },
             "transform": {
                 "position": [
-                    -1.9532181024551392,
-                    -5083.98828125,
-                    12.146900177001953
+                    -2.0,
+                    -286.9619140625,
+                    12.0
                 ],
                 "rotation": [
                     0.0,
@@ -237,6 +241,7 @@
                 "path": "assets/meshes/terrain/terrain_col.glb",
                 "type": "MESH"
             },
+            "name": "terrain",
             "skinnedMesh": {
                 "loop": true,
                 "path": "assets/meshes/terrain/terrain.glb",
@@ -277,6 +282,7 @@
                 ],
                 "type": "BOX"
             },
+            "name": "palm_tree_00",
             "skinnedMesh": {
                 "loop": true,
                 "path": "assets/meshes/terrain/flora/palm_tree.glb",
@@ -317,6 +323,7 @@
                 ],
                 "type": "BOX"
             },
+            "name": "house_00",
             "skinnedMesh": {
                 "loop": true,
                 "path": "assets/meshes/building/house.glb",
@@ -353,6 +360,7 @@
                 "path": "assets/meshes/terrain/wall_col.glb",
                 "type": "MESH"
             },
+            "name": "wall_00",
             "skinnedMesh": {
                 "loop": true,
                 "path": "assets/meshes/terrain/wall.glb",
@@ -389,6 +397,7 @@
                 "path": "assets/meshes/terrain/wall_col.glb",
                 "type": "MESH"
             },
+            "name": "wall_01",
             "skinnedMesh": {
                 "loop": true,
                 "path": "assets/meshes/terrain/wall.glb",
@@ -425,6 +434,7 @@
                 "path": "assets/meshes/terrain/wall_end_col.glb",
                 "type": "MESH"
             },
+            "name": "wall_02",
             "skinnedMesh": {
                 "loop": true,
                 "path": "assets/meshes/terrain/wall_end.glb",
@@ -461,6 +471,7 @@
                 "path": "assets/meshes/terrain/wall_end_col.glb",
                 "type": "MESH"
             },
+            "name": "wall_03",
             "skinnedMesh": {
                 "loop": true,
                 "path": "assets/meshes/terrain/wall_end.glb",
@@ -497,6 +508,7 @@
                 "path": "assets/meshes/terrain/wall_curve_col.glb",
                 "type": "MESH"
             },
+            "name": "wall_03",
             "skinnedMesh": {
                 "loop": true,
                 "path": "assets/meshes/terrain/wall_curve.glb",
@@ -539,6 +551,7 @@
                     1.0
                 ]
             },
+            "name": "bush_00",
             "skinnedMesh": {
                 "loop": true,
                 "path": "assets/meshes/terrain/flora/bush.glb",
@@ -549,9 +562,9 @@
             },
             "transform": {
                 "position": [
-                    -6.199999809265137,
-                    -2.940000057220459,
-                    13.25
+                    -6.2787766456604,
+                    -2.939997673034668,
+                    13.1342191696167
                 ],
                 "rotation": [
                     0.0006538726156577468,
@@ -562,6 +575,37 @@
                     1.0,
                     1.0,
                     1.0
+                ]
+            },
+            "trigger": {
+                "collider": {
+                    "halfExtents": [
+                        0.8,
+                        0.8,
+                        0.8
+                    ],
+                    "offset": [
+                        0.0,
+                        0.8,
+                        0.0
+                    ],
+                    "type": "BOX"
+                },
+                "onEnter": [
+                    {
+                        "action": "PLAY_SFX",
+                        "file": "assets/audio/sfx/button.mp3"
+                    },
+                    {
+                        "action": "DEBUG_TEXT_INFO",
+                        "msg": "Enter!"
+                    }
+                ],
+                "onExit": [
+                    {
+                        "action": "DEBUG_TEXT_INFO",
+                        "msg": "Exit!"
+                    }
                 ]
             }
         }

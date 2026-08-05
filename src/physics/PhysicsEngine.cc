@@ -1,3 +1,5 @@
+#include "Logger.h"
+#include "TriggerComponent.h"
 #include <ColliderType.h>
 #include <PhysicsEngine.h>
 #include <cstddef>
@@ -6,6 +8,11 @@
 PhysicsEngine::PhysicsEngine() {}
 
 PhysicsEngine::~PhysicsEngine() {}
+
+void PhysicsEngine::addPlayer(EntityID id)
+{
+    dynamicObjects.push_back(id);
+}
 
 void PhysicsEngine::addBody(EntityID id, RigidBody *body)
 {
@@ -25,6 +32,54 @@ void PhysicsEngine::addBody(EntityID id, RigidBody *body)
 void PhysicsEngine::addCollider(EntityID id, Collider *collider)
 {
     colliders[id] = collider;
+
+    if (collider->getType() == ColliderType::MESH)
+    {
+        staticObjects.push_back(id);
+
+        // AABB infinite grid
+        MeshCollider *meshCollider = static_cast<MeshCollider*>(collider);
+        auto &tris = meshCollider->getTriangles();
+        size_t size = tris.size();
+        if (size % 3 != 0)
+        {
+            Logger::error("PhysicsEngine: The triangles vector is incomplete or wrong");
+            return;
+        }
+
+        for (size_t i = 0; i < size; i = i + 3)
+        {
+            float minX = std::min(tris[i].x, std::min(tris[i + 1].x,
+                                                      tris[i + 2].x));
+            float minZ = std::min(tris[i].z, std::min(tris[i + 1].z,
+                                                      tris[i + 2].z));
+            float maxX = std::max(tris[i].x, std::max(tris[i + 1].x,
+                                                      tris[i + 2].x));
+            float maxZ = std::max(tris[i].z, std::max(tris[i + 1].z,
+                                                      tris[i + 2].z));
+
+            int minCellX = std::floor(minX / cellSize);
+            int minCellZ = std::floor(minZ / cellSize);
+            int maxCellX = std::floor(maxX / cellSize);
+            int maxCellZ = std::floor(maxZ / cellSize);
+
+            for (int x = minCellX; x <= maxCellX; ++x)
+            {
+                uint64_t hashX = static_cast<uint64_t>(x) << 32;
+                for (int z = minCellZ; z <= maxCellZ; ++z)
+                {
+                    uint64_t hash = hashX | (static_cast<uint64_t>(z) & 0xFFFFFFFF);
+
+                    cells[hash].trisIndex.push_back({id, i});
+                }
+            }
+        }
+    }
+}
+
+void PhysicsEngine::addTriggerCollider(EntityID id, Collider *collider)
+{
+    triggerColliders[id] = collider;
 
     if (collider->getType() == ColliderType::MESH)
     {
@@ -114,6 +169,8 @@ void PhysicsEngine::step(float deltaTime, Scene *scene)
     {
         resolveCollision(scene, info);
     }
+
+    detectTriggerCollisions(scene);
 }
 
 void PhysicsEngine::detectCollisions(Scene *scene, 
@@ -143,6 +200,43 @@ void PhysicsEngine::detectCollisions(Scene *scene,
         
         // Dynamic with MESH
         testMeshCollisions(col1, trans1, id1, info);
+    }
+}
+
+void PhysicsEngine::detectTriggerCollisions(Scene *scene)
+{
+    for (EntityID id1 : dynamicObjects)
+    {
+        Collider *col1 = colliders[id1];
+        TransformComponent *trans1 = scene->getTransform(id1);
+        
+        if (!col1 || !trans1) continue;
+        
+        // Dynamic with Triggers
+        for (auto &[id2, col2] : triggerColliders)
+        {
+            if (id1 == id2) continue;
+
+            TransformComponent *trans2 = scene->getTransform(id2);
+            if (!trans2 || !col2) continue;
+
+            CollisionInfo result;
+            TriggerComponent *trigger = scene->getTrigger(id2);
+            if (testCollision(col1, trans1, id1, col2, trans2, id2, result))
+            {
+                // Execute Trigger
+                if (!trigger->entitiesInside.count(id1))
+                {
+                    trigger->entitiesInside.insert(id1);
+                    trigger->notifyEnter(id1);
+                }
+            }
+            else if (trigger->entitiesInside.count(id1))
+            {
+                trigger->entitiesInside.erase(id1);
+                trigger->notifyExit(id1);
+            }
+        }
     }
 }
 
@@ -417,6 +511,7 @@ bool PhysicsEngine::testCollision(
 {
     ColliderType type1 = col1->getType();
     ColliderType type2 = col2->getType();
+    bool swapped = false;
 
     if (type1 > type2)
     {
@@ -424,7 +519,10 @@ bool PhysicsEngine::testCollision(
         std::swap(trans1, trans2);
         std::swap(type1, type2);
         std::swap(id1, id2);
+        swapped = true;
     }
+
+    bool hit = false;
 
     SphereCollider *sphere1 = 
         (type1 == ColliderType::SPHERE) ? static_cast<SphereCollider*>(col1) : nullptr;
@@ -449,7 +547,7 @@ bool PhysicsEngine::testCollision(
             result = {id1, id2,
                 dist > 0.0001f ? diff / dist : glm::vec3(0,1,0),
                 sumRadius - dist};
-            return true;
+            hit = true;
         }
     }
     else if (type1 == ColliderType::CAPSULE && type2 == ColliderType::CAPSULE)
@@ -477,7 +575,7 @@ bool PhysicsEngine::testCollision(
             result = {id1, id2,
                 dist > 0.0001f ? diff / dist : glm::vec3(0,1,0),
                 sumRadius - dist};
-            return true;
+            hit = true;
         }
     }
     else if (type1 == ColliderType::BOX && type2 == ColliderType::CAPSULE)
@@ -548,7 +646,7 @@ bool PhysicsEngine::testCollision(
             }
 
             result = {id1, id2, normal, depth};
-            return true;
+            hit = true;
         }
     }
     else if (type1 == ColliderType::SPHERE && type2 == ColliderType::CAPSULE)
@@ -591,10 +689,17 @@ bool PhysicsEngine::testCollision(
             }
 
             result = {id1, id2, normal, depth};
-            return true;
+            hit = true;
         }
     }
-    return false;
+    
+    if (hit && swapped)
+    {
+        std::swap(result.entity1, result.entity2);
+        result.normal = -result.normal;
+    }
+
+    return hit;
 }
 
 glm::vec3 PhysicsEngine::closestPointOnTriangle(glm::vec3 P, glm::vec3 A, 
