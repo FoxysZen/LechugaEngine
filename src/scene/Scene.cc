@@ -1,5 +1,6 @@
 #include "EntityID.h"
 #include <Scene.h>
+#include <string>
 
 Scene::Scene()
 {
@@ -74,12 +75,26 @@ void Scene::addMaterial(EntityID id, Material material)
 
 EntityID Scene::getIdByName(const std::string &name)
 {
-    return IDs[name];
+    auto it = IDs.find(name);
+    if (it != IDs.end())
+    {
+        return it->second;
+    }
+
+    Logger::error("Entity with name '" + name + "' not found!");
+    return static_cast<EntityID>(-1);
 }
 
 std::string Scene::getNameById(EntityID id)
 {
-    return names[id];
+    auto it = names.find(id);
+    if (it != names.end())
+    {
+        return it->second;
+    }
+
+    Logger::error("Entity with ID: " + std::to_string(id) + " not found!");
+    return "";
 }
 
 TransformComponent *Scene::getTransform(EntityID id)

@@ -117,7 +117,7 @@ void ParticleSystem::update(float deltaTime)
     {
         for (auto &p : particles)
         {
-            if (!p.active)
+            if (!p.active && isActive)
             {
                 emit(&p);
                 break;
@@ -200,6 +200,11 @@ void ParticleSystem::draw(const glm::mat4 &view, const glm::mat4 &proj)
     shader->unbind();
 
     glDisable(GL_BLEND);
+}
+
+void ParticleSystem::setActiveness(bool _isActive)
+{
+    isActive = _isActive;
 }
 
 void ParticleSystem::setDirection(const glm::vec3 &_direction)

@@ -41,15 +41,13 @@ void SceneLoader::loadScene(const std::string &sceneName)
             continue;
         }
         scene->addName(id, name);
-        Logger::info("Loading entity " + name + " | ID: " + std::to_string(i));
+        Logger::info("Loading entity " + name + " | ID: " + std::to_string(id));
 
         glm::vec3 position = glm::vec3(
             json["entities"][i]["transform"]["position"][0],
             json["entities"][i]["transform"]["position"][1],
             json["entities"][i]["transform"]["position"][2]
         );
-        Logger::info("position: " + std::to_string(position.x) + " " + 
-             std::to_string(position.y) + " " + std::to_string(position.z));
 
         glm::vec3 rotation = glm::vec3(
             json["entities"][i]["transform"]["rotation"][0],
@@ -229,6 +227,7 @@ void SceneLoader::loadScene(const std::string &sceneName)
             json["particles"][i]["endColor"][2]
         };
 
+        bool isActive = json["particles"][i]["isActive"];
         float vel = json["particles"][i]["velocity"];
         float life = json["particles"][i]["lifeTime"];
         float startSize = json["particles"][i]["startSize"];
@@ -268,6 +267,7 @@ void SceneLoader::loadScene(const std::string &sceneName)
 
         ParticleSystem* ps = new ParticleSystem(particleShader, pType, pMode, 
             pShape, max);
+        ps->setActiveness(isActive);
         ps->setPosition(position);
         ps->setDirection(direction);
         ps->setColor(startColor, endColor, colorCurve);
@@ -285,6 +285,18 @@ void SceneLoader::loadScene(const std::string &sceneName)
         ps->init();
 
         EntityID id = scene->createEntity();
+        std::string name = "Unnamed";
+        if (json["particles"][i].contains("name"))
+        {
+            name = json["particles"][i]["name"];
+        }
+        else
+        {
+            Logger::error("Particle " + std::to_string(i) + " has no name.");
+            continue;
+        }
+
+        scene->addName(id, name);
         scene->addParticle(id, {ps});
     }
 
@@ -716,6 +728,19 @@ void SceneLoader::parseTriggerActions(TriggerComponent &trigger,
             std::string path = actionJson.value("file", "");
             TriggerCallback callback = [this, path](EntityID /*id*/) {
                 audioManager->playSFX(path);
+            };
+
+            if (isEnter) trigger.onEnter(callback);
+            else trigger.onExit(callback);
+        }
+        else if (actionType == "SET_PARTICLE")
+        {
+            std::string name = actionJson.value("name", "");
+            bool isActive = actionJson.value("isActive", true);
+            TriggerCallback callback = [this, name, isActive](EntityID /*id*/) {
+                EntityID id = scene->getIdByName(name);
+                ParticleComponent *ps = scene->getParticle(id);
+                ps->system->setActiveness(isActive);
             };
 
             if (isEnter) trigger.onEnter(callback);

@@ -24,6 +24,7 @@ class ParticleSystem
         void update(float deltaTime);
         void draw(const glm::mat4 &view, const glm::mat4 &proj);
 
+        void setActiveness(bool _isActive);
         void setDirection(const glm::vec3 &_direction);
         void setPosition(const glm::vec3 &_position);
         void setVelocity(float _velocity);
@@ -68,6 +69,7 @@ class ParticleSystem
         float spiralAngle = 0;
 
         std::vector<Particle> particles;
+        bool isActive;
         glm::vec3 position;
         glm::vec3 direction;
         glm::vec3 startColor;

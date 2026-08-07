@@ -508,7 +508,7 @@
                 "path": "assets/meshes/terrain/wall_curve_col.glb",
                 "type": "MESH"
             },
-            "name": "wall_03",
+            "name": "wall_04",
             "skinnedMesh": {
                 "loop": true,
                 "path": "assets/meshes/terrain/wall_curve.glb",
@@ -599,12 +599,22 @@
                     {
                         "action": "DEBUG_TEXT_INFO",
                         "msg": "Enter!"
+                    },
+                    {
+                        "action": "SET_PARTICLE",
+                        "name": "circle",
+                        "isActive": true
                     }
                 ],
                 "onExit": [
                     {
                         "action": "DEBUG_TEXT_INFO",
                         "msg": "Exit!"
+                    },
+                    {
+                        "action": "SET_PARTICLE",
+                        "name": "circle",
+                        "isActive": false
                     }
                 ]
             }
@@ -627,6 +637,8 @@
     ],
     "particles": [
         {
+            "name": "fire",
+            "isActive": true,
             "colorCurve": 0.30000001192092896,
             "direction": [
                 0.0,
@@ -664,6 +676,8 @@
             "velocity": 2.0
         },
         {
+            "name": "fountain",
+            "isActive": true,
             "colorCurve": 0.30000001192092896,
             "direction": [
                 0.0,
@@ -679,7 +693,7 @@
             "endSize": 0.5,
             "gravity": 8.5,
             "lifeTime": 1.5,
-            "maxParticles": 500,
+            "maxParticles": 1500,
             "position": [
                 -7.5,
                 0.0,
@@ -689,7 +703,7 @@
             "shape": "FOUNTAIN",
             "sizeCurve": 0.5,
             "spiralSpeed": 2.0,
-            "spread": 2.0,
+            "spread": 3.0,
             "startColor": [
                 1.0,
                 1.0,
@@ -701,6 +715,8 @@
             "velocity": 5.0
         },
         {
+            "name": "circle",
+            "isActive": false,
             "colorCurve": 0.30000001192092896,
             "direction": [
                 0.0,
@@ -718,15 +734,15 @@
             "lifeTime": 1.0,
             "maxParticles": 1000,
             "position": [
-                -10.0,
-                0.0,
-                0.0
+                -6.2787766456604,
+                -2.5,
+                13.1342191696167
             ],
             "renderMode": "TEXTURE",
             "shape": "CIRCLE",
             "sizeCurve": 0.5,
             "spiralSpeed": 2.0,
-            "spread": 1.0,
+            "spread": 1.5,
             "startColor": [
                 1.0,
                 1.0,
@@ -738,6 +754,8 @@
             "velocity": 2.0
         },
         {
+            "name": "spiral",
+            "isActive": true,
             "colorCurve": 0.30000001192092896,
             "direction": [
                 0.0,
