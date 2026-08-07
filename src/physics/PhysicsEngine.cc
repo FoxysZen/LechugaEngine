@@ -5,7 +5,10 @@
 #include <cstddef>
 #include <cstdint>
 
-PhysicsEngine::PhysicsEngine() {}
+PhysicsEngine::PhysicsEngine()
+{
+    collisions.reserve(128);
+}
 
 PhysicsEngine::~PhysicsEngine() {}
 
@@ -80,49 +83,6 @@ void PhysicsEngine::addCollider(EntityID id, Collider *collider)
 void PhysicsEngine::addTriggerCollider(EntityID id, Collider *collider)
 {
     triggerColliders[id] = collider;
-
-    if (collider->getType() == ColliderType::MESH)
-    {
-        staticObjects.push_back(id);
-
-        // AABB infinite grid
-        MeshCollider *meshCollider = static_cast<MeshCollider*>(collider);
-        auto &tris = meshCollider->getTriangles();
-        size_t size = tris.size();
-        if (size % 3 != 0)
-        {
-            Logger::error("PhysicsEngine: The triangles vector is incomplete or wrong");
-            return;
-        }
-
-        for (size_t i = 0; i < size; i = i + 3)
-        {
-            float minX = std::min(tris[i].x, std::min(tris[i + 1].x,
-                                                      tris[i + 2].x));
-            float minZ = std::min(tris[i].z, std::min(tris[i + 1].z,
-                                                      tris[i + 2].z));
-            float maxX = std::max(tris[i].x, std::max(tris[i + 1].x,
-                                                      tris[i + 2].x));
-            float maxZ = std::max(tris[i].z, std::max(tris[i + 1].z,
-                                                      tris[i + 2].z));
-
-            int minCellX = std::floor(minX / cellSize);
-            int minCellZ = std::floor(minZ / cellSize);
-            int maxCellX = std::floor(maxX / cellSize);
-            int maxCellZ = std::floor(maxZ / cellSize);
-
-            for (int x = minCellX; x <= maxCellX; ++x)
-            {
-                uint64_t hashX = static_cast<uint64_t>(x) << 32;
-                for (int z = minCellZ; z <= maxCellZ; ++z)
-                {
-                    uint64_t hash = hashX | (static_cast<uint64_t>(z) & 0xFFFFFFFF);
-
-                    cells[hash].trisIndex.push_back({id, i});
-                }
-            }
-        }
-    }
 }
 
 void PhysicsEngine::step(float deltaTime, Scene *scene)
@@ -169,8 +129,6 @@ void PhysicsEngine::step(float deltaTime, Scene *scene)
     {
         resolveCollision(scene, info);
     }
-
-    detectTriggerCollisions(scene);
 }
 
 void PhysicsEngine::detectCollisions(Scene *scene, 
@@ -197,44 +155,42 @@ void PhysicsEngine::detectCollisions(Scene *scene,
                 info.push_back(result);
             }
         }
-        
+
         // Dynamic with MESH
         testMeshCollisions(col1, trans1, id1, info);
-    }
-}
 
-void PhysicsEngine::detectTriggerCollisions(Scene *scene)
-{
-    for (EntityID id1 : dynamicObjects)
-    {
-        Collider *col1 = colliders[id1];
-        TransformComponent *trans1 = scene->getTransform(id1);
-        
-        if (!col1 || !trans1) continue;
-        
         // Dynamic with Triggers
-        for (auto &[id2, col2] : triggerColliders)
+        for (auto &[id2, col2] : triggerColliders) // TODO: check only the triggers near the dynamic
         {
             if (id1 == id2) continue;
-
+        
             TransformComponent *trans2 = scene->getTransform(id2);
             if (!trans2 || !col2) continue;
-
-            CollisionInfo result;
+        
             TriggerComponent *trigger = scene->getTrigger(id2);
-            if (testCollision(col1, trans1, id1, col2, trans2, id2, result))
+            if (!trigger) continue;
+        
+            CollisionInfo result;
+            bool isColliding = testCollision(col1, trans1, id1, col2, trans2, id2, result);
+        
+            auto it = trigger->entitiesInside.find(id1);
+            bool isInside = (it != trigger->entitiesInside.end());
+        
+            if (isColliding)
             {
-                // Execute Trigger
-                if (!trigger->entitiesInside.count(id1))
+                if (!isInside)
                 {
                     trigger->entitiesInside.insert(id1);
                     trigger->notifyEnter(id1);
                 }
             }
-            else if (trigger->entitiesInside.count(id1))
+            else
             {
-                trigger->entitiesInside.erase(id1);
-                trigger->notifyExit(id1);
+                if (isInside)
+                {
+                    trigger->entitiesInside.erase(it);
+                    trigger->notifyExit(id1);
+                }
             }
         }
     }
@@ -409,7 +365,7 @@ void PhysicsEngine::testMeshCollisions(Collider *col,
     for (auto &[meshId, col] : bestWall)  info.push_back(col);
 }
 
-void PhysicsEngine::resolveCollision(Scene *scene, CollisionInfo info)
+void PhysicsEngine::resolveCollision(Scene *scene, const CollisionInfo &info)
 {
     RigidBody *body1 = nullptr;
     RigidBody *body2 = nullptr;

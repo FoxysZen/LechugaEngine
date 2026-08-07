@@ -33,8 +33,7 @@ class PhysicsEngine
 
         void step(float deltaTime, Scene *scene);
         void detectCollisions(Scene *scene, std::vector<CollisionInfo> &info);
-        void detectTriggerCollisions(Scene *scene);
-        void resolveCollision(Scene *scene, CollisionInfo info);
+        void resolveCollision(Scene *scene, const CollisionInfo &info);
         void getCollisionsFor(EntityID id, Scene *scene, 
                               std::vector<CollisionInfo> &outCollisions);
         bool testCollision(
